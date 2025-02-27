@@ -4,10 +4,10 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronDown, faChevronUp } from '@fortawesome/free-solid-svg-icons';
 import { FaSignOutAlt, FaWhatsapp } from "react-icons/fa";
 import logo from '../../Pages/Images/logo.jpeg';
-import './Navbar.css';
+import './CustomerNavbar.css';
 import Swal from 'sweetalert2';
 
-function Navbar() {
+function VendorNavbar() {
     const [isOpen, setIsOpen] = useState(false);
     const [ordersDropdownOpen, setOrdersDropdownOpen] = useState(false);
 
@@ -41,49 +41,49 @@ function Navbar() {
 
             <nav className={`navbar-links ${isOpen ? 'open' : ''}`}>
                 <Link
-                    to="/a-dashboard"
+                    to="/c-dashboard"
                     onClick={handleItemClick}
                     style={{
-                        color: window.location.pathname === '/a-dashboard' ? '#a36e29' : 'black',
+                        color: window.location.pathname === '/c-dashboard' ? '#a36e29' : 'black',
                         backgroundColor: 'transparent',
                         textDecoration: 'none',
                     }}
                 >
                     Dashboard</Link>
                 <Link
-                    to="/a-customertable"
+                    to="/c-vieworders"
                     onClick={handleItemClick}
                     style={{
-                        color: window.location.pathname === '/a-customertable' ? '#a36e29' : 'black',
+                        color: window.location.pathname === '/c-vieworders' ? '#a36e29' : 'black',
                         backgroundColor: 'transparent',
                         textDecoration: 'none',
                     }}
                 >
-                    Customers</Link>
+                    View Orders</Link>
                 <Link
-                    to="/a-workertable"
+                    to="/c-cancelorders"
                     onClick={handleItemClick}
                     style={{
-                        color: window.location.pathname === '/a-workertable' ? '#a36e29' : 'black',
+                        color: window.location.pathname === '/c-cancelorders' ? '#a36e29' : 'black',
                         backgroundColor: 'transparent',
                         textDecoration: 'none',
                     }}
                 >
-                    Workers</Link>
-                <div className="navbar-dropdown" onMouseEnter={toggleDropdown} onMouseLeave={toggleDropdown}>
+                    Cancel Orders</Link>
+                {/* <div className="navbar-dropdown" onMouseEnter={toggleDropdown} onMouseLeave={toggleDropdown}>
                     <span className="navbar-dropdown-title">
                         Orders <FontAwesomeIcon icon={ordersDropdownOpen ? faChevronUp : faChevronDown} className="dropdown-arrow-icon" />
                     </span>
                     {ordersDropdownOpen && (
                         <div className="navbar-dropdown-content">
-                            <Link to="/a-view-orders" onClick={handleItemClick} className={isActive('/a-orders')}>View Orders</Link>
+                            <Link to="/a-orders" onClick={handleItemClick} className={isActive('/a-orders')}>View Orders</Link>
                             <Link to="/a-cancel-orders" onClick={handleItemClick} className={isActive('/a-cancel-orders')}>Cancel Order</Link>
                         </div>
                     )}
-                </div>
+                </div> */}
             </nav>
         </header>
     );
 }
 
-export default Navbar;
+export default VendorNavbar;

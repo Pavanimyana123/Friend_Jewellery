@@ -51,11 +51,11 @@ const WorkerTable = () => {
             />            
             <FaEdit
               style={{ cursor: 'pointer', marginLeft: '10px', color: 'blue', }}
-              onClick={() => handleEdit(row.original.account_id)}
+              onClick={() => handleEdit(row.original.id)}
             />            
             <FaTrash
               style={{ cursor: 'pointer', marginLeft: '10px', color: 'red', }}
-              onClick={() => handleDelete(row.original.account_id)}
+              onClick={() => handleDelete(row.original.id)}
             />            
           </div>
         ),
@@ -78,7 +78,7 @@ const WorkerTable = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch(`${baseURL}/get/account-details`);
+        const response = await fetch(`${baseURL}/accounts`);
         if (!response.ok) {
           throw new Error('Failed to fetch data');
         }
@@ -86,7 +86,7 @@ const WorkerTable = () => {
 
         // Filter only customers and format dates
         const customers = result
-          .filter((item) => item.account_group === 'Employee Compensation')
+          .filter((item) => item.account_group === 'WORKER')
           .map((item) => ({
             ...item,
             birthday: formatDate(item.birthday),
@@ -108,13 +108,13 @@ const WorkerTable = () => {
   const handleDelete = async (id) => {
     if (window.confirm('Are you sure you want to delete this customer?')) {
       try {
-        const response = await fetch(`${baseURL}/delete/account-details/${id}`, {
+        const response = await fetch(`${baseURL}/delete-account/${id}`, {
           method: 'DELETE',
         });
 
         if (response.ok) {
           alert('Customer deleted successfully!');
-          setData((prevData) => prevData.filter((customer) => customer.account_id !== id));
+          setData((prevData) => prevData.filter((customer) => customer.id !== id));
         } else {
           console.error('Failed to delete customer');
           alert('Failed to delete customer.');
@@ -128,7 +128,7 @@ const WorkerTable = () => {
 
   // Navigate to edit form
   const handleEdit = (id) => {
-    navigate(`/workermaster/${id}`);
+    navigate(`/a-workers/${id}`);
   };
 
   // Open the modal and set data for the selected row

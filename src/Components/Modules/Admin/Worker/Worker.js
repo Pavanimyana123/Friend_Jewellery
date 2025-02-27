@@ -5,7 +5,7 @@ import InputField from '../../../Pages/InputField/InputField';
 import './Worker.css';
 import axios from "axios";
 import Navbar from '../../../Pages/Navbar/Navbar';
-import { Row, Col } from 'react-bootstrap';
+import { Row, Col, Button } from 'react-bootstrap';
 import baseURL from '../../../../Url/NodeBaseURL';
 
 
@@ -36,7 +36,7 @@ function Worker_Master() {
   });
   const [existingMobiles, setExistingMobiles] = useState([]); // Track existing mobile numbers
 
-  const [tcsApplicable, setTcsApplicable] = useState(false);
+  
   const navigate = useNavigate();
   const { id } = useParams(); // Get ID from URL
   const [states, setStates] = useState([]);
@@ -63,7 +63,7 @@ function Worker_Master() {
     const fetchWorker = async () => {
       if (id) {
         try {
-          const response = await fetch(`${baseURL}/get/account-details/${id}`);
+          const response = await fetch(`${baseURL}/account/${id}`);
           if (response.ok) {
             const result = await response.json();
             // Parse dates without timezone adjustment
@@ -155,10 +155,6 @@ function Worker_Master() {
   };
 
 
-  const handleCheckboxChange = () => {
-    setTcsApplicable(!tcsApplicable);
-  };
-
   const validateForm = () => {
     if (!formData.account_name.trim()) {
       alert("Worker Name is required.");
@@ -200,37 +196,37 @@ function Worker_Master() {
 
     try {
       // Check for duplicate mobile only when creating a new worker
-      if (!id) {
-        const response = await fetch(`${baseURL}/get/account-details`);
-        if (!response.ok) {
-          throw new Error("Failed to fetch data for duplicate check.");
-        }
-        const result = await response.json();
-        const isDuplicateMobile = result.some((item) => item.mobile === formData.mobile);
+      // if (!id) {
+      //   const response = await fetch(`${baseURL}/get/account-details`);
+      //   if (!response.ok) {
+      //     throw new Error("Failed to fetch data for duplicate check.");
+      //   }
+      //   const result = await response.json();
+      //   const isDuplicateMobile = result.some((item) => item.mobile === formData.mobile);
 
-        if (isDuplicateMobile) {
-          alert("This mobile number is already associated with another entry.");
-          return;
-        }
-      }
+      //   if (isDuplicateMobile) {
+      //     alert("This mobile number is already associated with another entry.");
+      //     return;
+      //   }
+      // }
 
       // Proceed with saving the record (POST or PUT)
       const method = id ? "PUT" : "POST";
       const endpoint = id
-        ? `${baseURL}/edit/account-details/${id}`
-        : `${baseURL}/account-details`;
+        ? `${baseURL}/update-account/${id}`
+        : `${baseURL}/add-account`;
 
       const saveResponse = await fetch(endpoint, {
         method,
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ ...formData, tcsApplicable }),
+        body: JSON.stringify({ ...formData }),
       });
 
       if (saveResponse.ok) {
         alert(`Worker ${id ? "updated" : "created"} successfully!`);
-        navigate("/workerstable");
+        navigate("/a-workertable");
       } else {
         alert("Failed to save worker.");
       }
@@ -475,41 +471,23 @@ function Worker_Master() {
                 />
               </Col>
             </Row>
+            <div className="form-buttons">
 
-            {/* Checkbox */}
-            <Row>
-              <Col>
-                <div className="form-group">
-                  <label className="checkbox-label" htmlFor="tcs">
-                    <input
-                      type="checkbox"
-                      id="tcs"
-                      name="tcsApplicable"
-                      className="checkbox-input"
-                      checked={tcsApplicable}
-                      onChange={handleCheckboxChange}
-                    />
-                    TCS Applicable
-                  </label>
-                </div>
-              </Col>
-            </Row>
-
-            {/* Buttons */}
-            <div className="sup-button-container">
-              <button
-                type="button"
-                className="cus-back-btn"
-                onClick={handleBack}
+              {/* <Button type="submit" variant="success" style={{ backgroundColor: '#a36e29', borderColor: '#a36e29' }}>Print</Button> */}
+              <Button
+                variant="secondary"
+                onClick={handleBack} style={{ backgroundColor: 'gray', }}
               >
-                Close
-              </button>
-              <button
+                cancel
+              </Button>
+              <Button
                 type="submit"
-                className="cus-submit-btn"
+                variant="success"
+                style={{ backgroundColor: '#a36e29', borderColor: '#a36e29' }}
+                onClick={handleSubmit}
               >
-                {id ? 'Update' : 'Save'}
-              </button>
+                Save
+              </Button>
             </div>
           </form>
         </div>

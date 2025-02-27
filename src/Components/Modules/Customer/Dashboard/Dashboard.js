@@ -1,8 +1,15 @@
 import React from 'react'
+import VendorNavbar from '../../../Pages/Navbar/CustomerNavbar'
+import './Dashboard.css'
 
-function Dashboard() {
+const Dashboard = () => {
   return (
-    <div>Dashboard</div>
+    <>
+    <VendorNavbar />
+    <div className="vendor-dashboard-container">
+        <h1>Dashboard</h1>
+      </div>
+    </>
   )
 }
 
