@@ -51,20 +51,20 @@ function Navbar() {
                 >
                     Dashboard</Link>
                 <Link
-                    to="/a-customers"
+                    to="/a-customertable"
                     onClick={handleItemClick}
                     style={{
-                        color: window.location.pathname === '/a-customers' ? '#a36e29' : 'black',
+                        color: window.location.pathname === '/a-customertable' ? '#a36e29' : 'black',
                         backgroundColor: 'transparent',
                         textDecoration: 'none',
                     }}
                 >
                     Customers</Link>
                 <Link
-                    to="/a-workers"
+                    to="/a-workertable"
                     onClick={handleItemClick}
                     style={{
-                        color: window.location.pathname === '/a-workers' ? '#a36e29' : 'black',
+                        color: window.location.pathname === '/a-workertable' ? '#a36e29' : 'black',
                         backgroundColor: 'transparent',
                         textDecoration: 'none',
                     }}

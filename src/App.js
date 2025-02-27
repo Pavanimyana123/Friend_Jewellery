@@ -10,6 +10,8 @@ import AdminWorker from "./Components/Modules/Admin/Worker/Worker";
 import AdminDashboard from './Components/Modules/Admin/Dashboard/Dashboard';
 import AdminOrder from './Components/Modules/Admin/Orders/ViewOrders';
 import AdminCancelOrders from './Components/Modules/Admin/Orders/CancelOrders';
+import AdminCustomerTable from './Components/Modules/Admin/Customer/CustomerTable';
+import AdminWorkerTable from './Components/Modules/Admin/Worker/WorkerTable';
 
 export default function MainApp() {
   return (
@@ -21,7 +23,11 @@ export default function MainApp() {
       <Route path="/a-workers" exact element={<AdminWorker />} />  
       <Route path="/a-dashboard" exact element={<AdminDashboard />} /> 
       <Route path="/a-orders" exact element={<AdminOrder />} />  
-      <Route path="/a-cancel-orders" exact element={<AdminCancelOrders />} />    
+      <Route path="/a-cancel-orders" exact element={<AdminCancelOrders />} />
+
+
+      <Route path="/a-customertable" exact element={<AdminCustomerTable />} /> 
+      <Route path="/a-workertable" exact element={<AdminWorkerTable />} />  
       </Routes>
     </Router>
   );
