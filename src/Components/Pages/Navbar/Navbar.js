@@ -3,6 +3,7 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronDown, faChevronUp } from '@fortawesome/free-solid-svg-icons';
 import { FaSignOutAlt, FaWhatsapp } from "react-icons/fa";
+// import { FaSignOutAlt } from "react-icons/fa";  
 import logo from '../../Pages/Images/logo.jpeg';
 import './Navbar.css';
 import Swal from 'sweetalert2';
@@ -25,12 +26,14 @@ function Navbar() {
         return location.pathname === path ? 'active' : '';  // Return 'active' if the path matches the current location
     };
 
-
+    const handleLogout = () => {
+        navigate("/");  
+    };
 
     return (
         <header className="navbar-header">
             <div className="navbar-brand">
-                <img src={logo} alt="Logo" style={{ width: "150px" }} />
+                <img src={logo} alt="Logo" style={{ width: "130px" }} />
             </div>
 
             <div className={`navbar-hamburger ${isOpen ? 'open' : ''}`} onClick={toggleMenu}>
@@ -82,6 +85,10 @@ function Navbar() {
                     )}
                 </div>
             </nav>
+            <div className="navbar-logout" onClick={handleLogout}>
+    <FaSignOutAlt className="logout-icon" />
+</div>
+
         </header>
     );
 }
