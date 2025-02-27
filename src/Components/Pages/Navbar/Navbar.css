@@ -22,7 +22,19 @@
   position: absolute;
   top: 25px;
   right: 35px;
+  cursor: pointer;
 }
+
+.logout-icon {
+  color: red; /* Red color for the icon */
+  font-size: 30px;
+  transition: color 0.3s ease;
+}
+
+.logout-icon:hover {
+  color: darkred; /* Slightly darker red on hover */
+}
+
 
 .logout-button {
   background-color: #a36e29;
@@ -34,9 +46,8 @@
   font-size: 14px;
 }
 
-.logout-button:hover {
-  background-color: #864c1a;
-}
+
+
 
 
 
