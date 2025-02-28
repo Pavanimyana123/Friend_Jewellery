@@ -92,6 +92,18 @@ function Worker_Master() {
     fetchWorker();
   }, [id]);
 
+  useEffect(() => {
+    const fetchStates = async () => {
+      try {
+        const response = await axios.get(`${baseURL}/states`);
+        setStates(response.data);
+      } catch (error) {
+        console.error("Error fetching states:", error);
+      }
+    };
+    fetchStates();
+  }, []);
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     let updatedValue = value;
@@ -486,7 +498,7 @@ function Worker_Master() {
                 style={{ backgroundColor: '#a36e29', borderColor: '#a36e29' }}
                 onClick={handleSubmit}
               >
-                Save
+                 {id ? 'Update' : 'Save'}
               </Button>
             </div>
           </form>

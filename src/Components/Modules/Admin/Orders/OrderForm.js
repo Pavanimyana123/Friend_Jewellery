@@ -11,6 +11,7 @@ import { DropdownButton, Dropdown } from "react-bootstrap";
 import { FaUpload, FaCamera, FaTrash } from "react-icons/fa";
 import Webcam from "react-webcam";
 import axios from "axios";
+import baseURL from '../../../../Url/NodeBaseURL';
 
 function Order() {
   const [customers, setCustomers] = useState([]);
@@ -42,7 +43,7 @@ function Order() {
 
   useEffect(() => {
     // Fetch customer data from API when component loads
-    axios.get("http://localhost:5000/accounts")
+    axios.get(`${baseURL}/accounts`)
       .then((response) => {
         const filteredCustomers = response.data.filter(
           (item) => item.account_group === "CUSTOMERS"
