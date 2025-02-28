@@ -25,8 +25,8 @@ function Order() {
   const webcamRef = useRef(null);
   const [formData, setFormData] = useState({
     imagePreview: null,
-    metal: "",
-    purity: "",
+    // metal: "",
+    // purity: "",
     amount: "",
     // mc_on: "",
   });
@@ -42,12 +42,13 @@ function Order() {
 
   useEffect(() => {
     // Fetch customer data from API when component loads
-    axios.get("http://localhost:5000/accounts")
+    axios.get("http://localhost:5001/accounts")
       .then((response) => {
         const filteredCustomers = response.data.filter(
           (item) => item.account_group === "CUSTOMERS"
         );
         setCustomers(filteredCustomers);
+        console.log("Customers=",filteredCustomers)
       })
       .catch((error) => console.error("Error fetching customers:", error));
 
