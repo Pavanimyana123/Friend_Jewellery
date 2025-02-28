@@ -25,12 +25,16 @@ function VendorNavbar() {
         return location.pathname === path ? 'active' : '';  // Return 'active' if the path matches the current location
     };
 
+    const handleLogout = () => {
+        navigate("/");
+    };
+
 
 
     return (
         <header className="navbar-header">
             <div className="navbar-brand">
-                <img src={logo} alt="Logo" style={{ width: "150px" }} />
+                <img src={logo} alt="Logo" style={{ width: "130px" }} />
             </div>
 
             <div className={`navbar-hamburger ${isOpen ? 'open' : ''}`} onClick={toggleMenu}>
@@ -82,6 +86,9 @@ function VendorNavbar() {
                     )}
                 </div> */}
             </nav>
+            <div className="navbar-logout" onClick={handleLogout}>
+                <FaSignOutAlt className="logout-icon" />
+            </div>
         </header>
     );
 }

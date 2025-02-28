@@ -27,7 +27,7 @@ function Navbar() {
     };
 
     const handleLogout = () => {
-        navigate("/");  
+        navigate("/");
     };
 
     return (
@@ -86,8 +86,8 @@ function Navbar() {
                 </div>
             </nav>
             <div className="navbar-logout" onClick={handleLogout}>
-    <FaSignOutAlt className="logout-icon" />
-</div>
+                <FaSignOutAlt className="logout-icon" />
+            </div>
 
         </header>
     );
