@@ -4,10 +4,13 @@ import logo from "../Images/logo.jpeg"; // Logo Image
 import jewelleryImage from "../Images/login_banner.jpg"; // Jewellery Image
 import './Login.css';
 import axios from "axios";
+import { FaEye, FaEyeSlash } from "react-icons/fa"; // Import eye icons
+import baseURL from '../../../Url/NodeBaseURL';
 
 function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false); // State for password visibility
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
@@ -21,7 +24,7 @@ function Login() {
 
     // Dynamic Customer Login via API
     try {
-      const response = await axios.post("http://localhost:5000/login", {
+      const response = await axios.post(`${baseURL}/login`, {
         email,
         password,
       });
@@ -65,14 +68,22 @@ function Login() {
               </div>
               <div className="mb-3">
                 <label className="form-label">Password:</label>
-                <input
-                  type="password"
-                  className="form-control"
-                  placeholder="Enter password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  required
-                />
+                <div className="password-wrapper">
+                  <input
+                    type={showPassword ? "text" : "password"}
+                    className="form-control"
+                    placeholder="Enter password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    required
+                  />
+                  <span
+                    className="password-toggle"
+                    onClick={() => setShowPassword(!showPassword)}
+                  >
+                    {showPassword ? <FaEyeSlash /> : <FaEye />}
+                  </span>
+                </div>
               </div>
               <button type="submit" className="btn btn-login">
                 Login

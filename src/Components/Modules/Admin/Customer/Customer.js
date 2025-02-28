@@ -156,6 +156,19 @@ function Customer_Master() {
     }));
   };
 
+  useEffect(() => {
+    const fetchStates = async () => {
+      try {
+        const response = await axios.get(`${baseURL}/states`);
+        setStates(response.data);
+      } catch (error) {
+        console.error("Error fetching states:", error);
+      }
+    };
+    fetchStates();
+  }, []);
+  
+
 
  
 
