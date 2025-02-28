@@ -24,11 +24,45 @@ function Order() {
   const fileInputRef = useRef(null);
   const webcamRef = useRef(null);
   const [formData, setFormData] = useState({
-    imagePreview: null,
+    imagePreview: null, // For image preview before upload
+    account_id: "",
+    mobile: "",
+    account_name: "",
+    email: "",
+    address1: "",
+    address2: "",
+    city: "",
+    pincode: "",
+    state: "",
+    state_code: "",
+    aadhar_card: "",
+    gst_in: "",
+    pan_card: "",
+    date: "",
+    order_number: "",
     metal: "",
+    category: "",
+    subcategory: "",
+    product_design_name: "",
     purity: "",
+    gross_weight: "",
+    stone_weight: "",
+    stone_price: "",
+    weight_bw: "",
+    wastage_on: "",
+    wastage_percentage: "",
+    wastage_weight: "",
+    total_weight_aw: "",
+    rate: "",
     amount: "",
-    // mc_on: "",
+    mc_on: "",
+    mc_percentage: "",
+    total_mc: "",
+    tax_percentage: "",
+    tax_amount: "",
+    total_price: "",
+    remarks: "",
+    image_url: null, // Image URL after upload
   });
 
   // Handle changes for all fields
@@ -56,19 +90,58 @@ function Order() {
     setOrders(storedOrders);
   }, []);
 
-
   const handleCustomerSelection = (event, type) => {
     const value = event.target.value;
-    const customer = customers.find((c) => c[type] === value);
-    if (customer) setSelectedCustomer(customer);
-  };
 
+    if (!value) {
+      // If the value is cleared, reset the selectedCustomer state
+      setSelectedCustomer(null);
+      return;
+    }
+
+    const customer = customers.find((c) => c[type] === value);
+    if (customer) {
+      setSelectedCustomer(customer);
+    }
+  };
   const handleAddItem = () => {
-    const newOrder = { ...formData, selectedCustomer, selectedDate };
-    const updatedOrders = [...orders, newOrder];
+    const updatedFormData = {
+      ...formData,
+      ...selectedCustomer,
+      date: selectedDate,
+    };
+
+    const updatedOrders = [...orders, updatedFormData];
     setOrders(updatedOrders);
     localStorage.setItem("orders", JSON.stringify(updatedOrders)); // Save to local storage
-    setFormData({ imagePreview: null, metal: "", purity: "", amount: "" }); // Reset form data
+
+    // Reset form fields
+    setFormData({
+      imagePreview: null,
+      metal: "",
+      category: "",
+      subcategory: "",
+      product_design_name: "",
+      purity: "",
+      gross_weight: "",
+      stone_weight: "",
+      stone_price: "",
+      weight_bw: "",
+      wastage_on: "",
+      wastage_percentage: "",
+      wastage_weight: "",
+      total_weight_aw: "",
+      rate: "",
+      amount: "",
+      mc_on: "",
+      mc_percentage: "",
+      total_mc: "",
+      tax_percentage: "",
+      tax_amount: "",
+      total_price: "",
+      remarks: "",
+      image_url: null, // Image URL after upload
+    });
   };
 
   const handleImageChange = (event) => {
@@ -429,7 +502,7 @@ function Order() {
             </div>
           </Form>
           {/* Orders Table */}
-          <div className="order-form-section mt-4">
+          <div className="order-form-section mt-1">
             <h4>Stored Orders</h4>
             <Table bordered hover responsive>
               <thead>
@@ -446,9 +519,9 @@ function Order() {
               <tbody>
                 {orders.map((order, index) => (
                   <tr key={index}>
-                    <td>{order.selectedCustomer?.mobile}</td>
-                    <td>{order.selectedCustomer?.account_name}</td>
-                    <td>{order.selectedDate}</td>
+                    <td>{order.mobile}</td>
+                    <td>{order.account_name}</td>
+                    <td>{order.date}</td>
                     <td>{order.metal}</td>
                     <td>{order.purity}</td>
                     <td>{order.amount}</td>
