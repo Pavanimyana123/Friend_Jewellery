@@ -485,9 +485,9 @@ function Customer_Master() {
                 type="submit"
                 variant="success"
                 style={{ backgroundColor: '#a36e29', borderColor: '#a36e29' }}
-                onClick={handleSubmit}
+                onClick={handleSubmit}  
               >
-                Save
+                {id ? 'Update' : 'Save'}
               </Button>
             </div>
           </form>

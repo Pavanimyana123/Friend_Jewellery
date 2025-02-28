@@ -3,23 +3,37 @@ import { useNavigate } from "react-router-dom";
 import logo from "../Images/logo.jpeg"; // Logo Image
 import jewelleryImage from "../Images/login_banner.jpg"; // Jewellery Image
 import './Login.css';
+import axios from "axios";
 
 function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
 
-    if (email === "admin@gmail.com" && password === "123") {
+    // Static Admin Login
+    if (email === "admin@gmail.com" && password === "admin@123") {
       navigate("/a-dashboard");
-    } else if (email === "customer@gmail.com" && password === "456") {
-      navigate("/c-dashboard");
-    } else {
-      alert("Invalid Credentials");
+      return;
+    }
+
+    // Dynamic Customer Login via API
+    try {
+      const response = await axios.post("http://localhost:5000/login", {
+        email,
+        password,
+      });
+
+      if (response.status === 200) {
+        navigate("/c-dashboard");
+      }
+    } catch (error) {
+      alert(error.response?.data?.message || "Invalid Credentials");
     }
   };
+
 
   return (
     <div className="login-container">
