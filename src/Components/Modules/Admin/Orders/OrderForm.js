@@ -172,10 +172,66 @@ function Order() {
     navigate(from);
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    console.log("Form submitted!");
-  };
+
+    // Retrieve all stored orders from localStorage
+    const storedOrders = JSON.parse(localStorage.getItem("orders")) || [];
+
+    if (storedOrders.length === 0) {
+        alert("No orders to submit.");
+        return;
+    }
+
+    console.log("Submitting orders:", storedOrders); // Debugging: Check what is being sent
+
+    try {
+        const response = await axios.post("http://localhost:5000/api/orders", storedOrders, {
+            headers: { "Content-Type": "application/json" },
+        });
+
+        console.log("Orders added successfully", response.data);
+        alert("Orders submitted successfully!");
+
+        // Clear local storage after successful submission
+        localStorage.removeItem("orders");
+        setOrders([]); // Clear state
+
+        // Reset form fields
+        setFormData({
+            imagePreview: null,
+            metal: "",
+            category: "",
+            subcategory: "",
+            product_design_name: "",
+            purity: "",
+            gross_weight: "",
+            stone_weight: "",
+            stone_price: "",
+            weight_bw: "",
+            wastage_on: "",
+            wastage_percentage: "",
+            wastage_weight: "",
+            total_weight_aw: "",
+            rate: "",
+            amount: "",
+            mc_on: "",
+            mc_percentage: "",
+            total_mc: "",
+            tax_percentage: "",
+            tax_amount: "",
+            total_price: "",
+            remarks: "",
+            image_url: null,
+        });
+
+    } catch (error) {
+        console.error("Error submitting orders:", error.response?.data || error.message);
+        alert(`Failed to submit orders: ${error.response?.data?.error || "Unknown error"}`);
+    }
+};
+
+  
 
   return (
     <>
