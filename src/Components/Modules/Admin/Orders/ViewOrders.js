@@ -23,11 +23,14 @@ const ViewOrders = () => {
       },
       {
         Header: 'Date',
-        accessor: 'date',
+        accessor: row => {
+          const date = new Date(row.date);
+          return date.toLocaleDateString('en-GB'); // Formats as dd/mm/yyyy
+        },
       },
       {
         Header: 'Mobile Number',
-        accessor: 'mobile_number',
+        accessor: 'mobile',
       },
       {
         Header: 'Order Number',
@@ -39,39 +42,39 @@ const ViewOrders = () => {
       },
       {
         Header: 'Total Amt ',
-        accessor: 'total_amt',
+        accessor: 'total_price',
       },
-      {
-        Header: 'Paid Amount ',
-        accessor: 'paid_amount',
-      },
-      {
-        Header: 'Status',
-        accessor: 'status',
-      },
+      // {
+      //   Header: 'Paid Amount ',
+      //   accessor: 'paid_amount',
+      // },
+      // {
+      //   Header: 'Status',
+      //   accessor: 'status',
+      // },
       {
         Header: 'Order Status',
         accessor: 'order_status',
       },
-      {
-        Header: 'Action',
-        Cell: ({ row }) => (
-          <div >
-            <FaEye
-              style={{ cursor: 'pointer', marginLeft: '10px', color: 'green' }}
-              onClick={() => handleView(row.original)}
-            />            
-            <FaEdit
-              style={{ cursor: 'pointer', marginLeft: '10px', color: 'blue', }}
-              onClick={() => handleEdit(row.original.account_id)}
-            />            
-            <FaTrash
-              style={{ cursor: 'pointer', marginLeft: '10px', color: 'red', }}
-              onClick={() => handleDelete(row.original.account_id)}
-            />            
-          </div>
-        ),
-      },
+      // {
+      //   Header: 'Action',
+      //   Cell: ({ row }) => (
+      //     <div >
+      //       <FaEye
+      //         style={{ cursor: 'pointer', marginLeft: '10px', color: 'green' }}
+      //         onClick={() => handleView(row.original)}
+      //       />            
+      //       <FaEdit
+      //         style={{ cursor: 'pointer', marginLeft: '10px', color: 'blue', }}
+      //         onClick={() => handleEdit(row.original.account_id)}
+      //       />            
+      //       <FaTrash
+      //         style={{ cursor: 'pointer', marginLeft: '10px', color: 'red', }}
+      //         onClick={() => handleDelete(row.original.account_id)}
+      //       />            
+      //     </div>
+      //   ),
+      // },
     ],
     []
   );
@@ -90,31 +93,24 @@ const ViewOrders = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch(`${baseURL}/get/account-details`);
+        const response = await fetch(`${baseURL}/api/orders`);
         if (!response.ok) {
           throw new Error('Failed to fetch data');
         }
         const result = await response.json();
-
-        // Filter only Orders and format dates
-        const orders = result
-          .filter((item) => item.account_group === 'ORDERS')
-          .map((item) => ({
-            ...item,
-            birthday: formatDate(item.birthday),
-            anniversary: formatDate(item.anniversary),
-          }));
-
-        setData(orders);
-        setLoading(false);
+  
+        setData(result); // Directly set the fetched data
+        console.log("orders=",result);
       } catch (error) {
         console.error('Error fetching data:', error);
+      } finally {
         setLoading(false);
       }
     };
-
+  
     fetchData();
-  }, []);
+  }, [baseURL]); // Include baseURL in dependencies if it might change
+  
 
   // Delete a order
   const handleDelete = async (id) => {

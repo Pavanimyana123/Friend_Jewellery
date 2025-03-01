@@ -63,6 +63,7 @@ function Order() {
     total_price: "",
     remarks: "",
     image_url: null, // Image URL after upload
+    order_status: "Placed",
   });
 
   // Handle changes for all fields
@@ -143,6 +144,7 @@ function Order() {
       total_price: "",
       remarks: "",
       image_url: null, // Image URL after upload
+      order_status: "Placed",
     });
   };
 
@@ -188,9 +190,12 @@ function Order() {
     console.log("Submitting orders:", storedOrders); // Debugging: Check what is being sent
 
     try {
-        const response = await axios.post("http://localhost:5000/api/orders", storedOrders, {
-            headers: { "Content-Type": "application/json" },
-        });
+        const response = await axios.post("http://localhost:5000/api/orders", 
+            { orders: storedOrders }, // Wrap orders inside an object
+            {
+                headers: { "Content-Type": "application/json" },
+            }
+        );
 
         console.log("Orders added successfully", response.data);
         alert("Orders submitted successfully!");
@@ -225,12 +230,13 @@ function Order() {
             total_price: "",
             remarks: "",
             image_url: null,
+            order_status: "Placed",
         });
 
     } catch (error) {
         console.error("Error submitting orders:", error.response?.data || error.message);
         alert(`Failed to submit orders: ${error.response?.data?.error || "Unknown error"}`);
-    }
+    }
 };
 
   return (
@@ -328,7 +334,7 @@ function Order() {
                     />
                   </Row>
                   <Row>
-                    <InputField label="Order No" name="order_number" value={formData.purity}/>
+                    <InputField label="Order No" name="order_number" value={formData.order_number} onChange={handleChange}/>
                   </Row>
                 </div>
               </div>
@@ -358,6 +364,7 @@ function Order() {
                     label="Category"
                     name="category"
                     value={formData.category}
+                    onChange={handleChange}
                   />
                 </Col>
                 <Col xs={12} md={2}>
@@ -365,6 +372,7 @@ function Order() {
                     label="Subcategory"
                     name="subcategory"
                     value={formData.subcategory}
+                    onChange={handleChange}
                   />
                 </Col>
                 <Col xs={12} md={2}>
@@ -372,6 +380,7 @@ function Order() {
                     label="Product Design Name"
                     name="product_design_name"
                     value={formData.product_design_name}
+                    onChange={handleChange}
                   />
                 </Col>
                 < Col xs={12} md={2}>
@@ -390,16 +399,16 @@ function Order() {
                   />
                 </Col>
                 <Col xs={12} md={2}>
-                  <InputField label="Gross Wt" name="gross_weight" value={formData.gross_weight} type="text" />
+                  <InputField label="Gross Wt" name="gross_weight" value={formData.gross_weight} type="text" onChange={handleChange} />
                 </Col>
                 <Col xs={12} md={2}>
-                  <InputField label="Stone Wt" name="stone_weight" value={formData.stone_weight} type="text" />
+                  <InputField label="Stone Wt" name="stone_weight" value={formData.stone_weight} type="text" onChange={handleChange} />
                 </Col>
                 <Col xs={12} md={2}>
-                  <InputField label="St Price" name="stone_price" value={formData.stone_price} type="text" />
+                  <InputField label="St Price" name="stone_price" value={formData.stone_price} type="text" onChange={handleChange} />
                 </Col>
                 <Col xs={12} md={2}>
-                  <InputField label="Weight BW" name="weight_bw" value={formData.weight_bw} type="text" />
+                  <InputField label="Weight BW" name="weight_bw" value={formData.weight_bw} type="text" onChange={handleChange}/>
                 </Col>
                 <Col xs={12} md={2}>
                   <InputField
@@ -415,16 +424,16 @@ function Order() {
                   />
                 </Col>
                 <Col xs={12} md={2}>
-                  <InputField label="Wastage %" name="wastage_percentage" value={formData.wastage_percentage} type="text" />
+                  <InputField label="Wastage %" name="wastage_percentage" value={formData.wastage_percentage} type="text" onChange={handleChange} />
                 </Col>
                 <Col xs={12} md={2}>
-                  <InputField label="Wastage Weight" name="wastage_weight" value={formData.wastage_weight} type="text" />
+                  <InputField label="Wastage Weight" name="wastage_weight" value={formData.wastage_weight} type="text" onChange={handleChange}/>
                 </Col>
                 <Col xs={12} md={2}>
-                  <InputField label="Total Weight AW" name="total_weight_aw" value={formData.total_weight_aw} type="text" />
+                  <InputField label="Total Weight AW" name="total_weight_aw" value={formData.total_weight_aw} type="text" onChange={handleChange}/>
                 </Col>
                 <Col xs={12} md={2}>
-                  <InputField label="Rate" name="rate" value={formData.rate} type="text" />
+                  <InputField label="Rate" name="rate" value={formData.rate} type="text" onChange={handleChange}/>
                 </Col>
                 <Col xs={12} md={2}>
                   <InputField
@@ -451,22 +460,22 @@ function Order() {
                 </Col>
 
                 <Col xs={12} md={2}>
-                  <InputField label="MC %" name="mc_percentage" value={formData.mc_percentage} type="text" />
+                  <InputField label="MC %" name="mc_percentage" value={formData.mc_percentage} type="text" onChange={handleChange}/>
                 </Col>
                 <Col xs={12} md={2}>
-                  <InputField label="Total MC" name="total_mc" value={formData.total_mc} type="text" />
+                  <InputField label="Total MC" name="total_mc" value={formData.total_mc} type="text"onChange={handleChange} />
                 </Col>
                 <Col xs={12} md={2}>
-                  <InputField label="Tax %" name="tax_percentage" value={formData.tax_percentage} type="text" />
+                  <InputField label="Tax %" name="tax_percentage" value={formData.tax_percentage} type="text" onChange={handleChange}/>
                 </Col>
                 <Col xs={12} md={2}>
-                  <InputField label="Tax Amount" name="tax_amount" value={formData.tax_amount}type="text" />
+                  <InputField label="Tax Amount" name="tax_amount" value={formData.tax_amount}type="text" onChange={handleChange} />
                 </Col>
                 <Col xs={12} md={2}>
-                  <InputField label="Total Price" name="total_price" value={formData.total_price} type="text" />
+                  <InputField label="Total Price" name="total_price" value={formData.total_price} type="text" onChange={handleChange}/>
                 </Col>
                 <Col xs={12} md={2}>
-                  <InputField label="Remarks" name="remarks" value={formData.remarks} type="text" />
+                  <InputField label="Remarks" name="remarks" value={formData.remarks} type="text" onChange={handleChange}/>
                 </Col>
                 <Col xs={12} md={2}>
                   <DropdownButton
