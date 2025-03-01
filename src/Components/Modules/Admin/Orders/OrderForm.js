@@ -104,11 +104,13 @@ function Order() {
       setSelectedCustomer(customer);
     }
   };
+  
   const handleAddItem = () => {
     const updatedFormData = {
       ...formData,
       ...selectedCustomer,
       date: selectedDate,
+      account_id:selectedCustomer?.id,
     };
 
     const updatedOrders = [...orders, updatedFormData];
@@ -172,10 +174,29 @@ function Order() {
     navigate(from);
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    console.log("Form submitted!");
+  
+    const storedOrders = JSON.parse(localStorage.getItem("orders")) || [];
+  
+    if (storedOrders.length === 0) {
+      console.log("No orders to save.");
+      return;
+    }
+  
+    try {
+      const response = await axios.post("http://localhost:5000/api/orders", { orders: storedOrders });
+  
+      if (response.status === 201) {
+        console.log("Orders saved successfully!");
+        localStorage.removeItem("orders"); // Clear local storage after saving
+        setOrders([]); // Reset state
+      }
+    } catch (error) {
+      console.error("Error saving orders:", error);
+    }
   };
+  
 
   return (
     <>
@@ -225,8 +246,6 @@ function Order() {
                         }))}
                       />
                     </Col>
-
-                    {/* Other Fields (Auto-Fill on Selection) */}
                     <Col xs={12} md={2}>
                       <InputField label="Email" name="email" type="email" value={selectedCustomer?.email || ""} readOnly />
                     </Col>
@@ -274,7 +293,7 @@ function Order() {
                     />
                   </Row>
                   <Row>
-                    <InputField label="Order No" name="order_number" />
+                    <InputField label="Order No" name="order_number" value={formData.purity}/>
                   </Row>
                 </div>
               </div>
@@ -303,18 +322,21 @@ function Order() {
                   <InputField
                     label="Category"
                     name="category"
+                    value={formData.category}
                   />
                 </Col>
                 <Col xs={12} md={2}>
                   <InputField
                     label="Subcategory"
                     name="subcategory"
+                    value={formData.subcategory}
                   />
                 </Col>
                 <Col xs={12} md={2}>
                   <InputField
                     label="Product Design Name"
                     name="product_design_name"
+                    value={formData.product_design_name}
                   />
                 </Col>
                 < Col xs={12} md={2}>
@@ -333,16 +355,16 @@ function Order() {
                   />
                 </Col>
                 <Col xs={12} md={2}>
-                  <InputField label="Gross Wt" name="gross_weight" type="text" />
+                  <InputField label="Gross Wt" name="gross_weight" value={formData.gross_weight} type="text" />
                 </Col>
                 <Col xs={12} md={2}>
-                  <InputField label="Stone Wt" name="stone_weight" type="text" />
+                  <InputField label="Stone Wt" name="stone_weight" value={formData.stone_weight} type="text" />
                 </Col>
                 <Col xs={12} md={2}>
-                  <InputField label="St Price" name="stone_price" type="text" />
+                  <InputField label="St Price" name="stone_price" value={formData.stone_price} type="text" />
                 </Col>
                 <Col xs={12} md={2}>
-                  <InputField label="Weight BW" name="weight_bw" type="text" />
+                  <InputField label="Weight BW" name="weight_bw" value={formData.weight_bw} type="text" />
                 </Col>
                 <Col xs={12} md={2}>
                   <InputField
@@ -358,16 +380,16 @@ function Order() {
                   />
                 </Col>
                 <Col xs={12} md={2}>
-                  <InputField label="Wastage %" name="wastage_percentage" type="text" />
+                  <InputField label="Wastage %" name="wastage_percentage" value={formData.wastage_percentage} type="text" />
                 </Col>
                 <Col xs={12} md={2}>
-                  <InputField label="Wastage Weight" name="wastage_weight" type="text" />
+                  <InputField label="Wastage Weight" name="wastage_weight" value={formData.wastage_weight} type="text" />
                 </Col>
                 <Col xs={12} md={2}>
-                  <InputField label="Total Weight AW" name="total_weight_aw" type="text" />
+                  <InputField label="Total Weight AW" name="total_weight_aw" value={formData.total_weight_aw} type="text" />
                 </Col>
                 <Col xs={12} md={2}>
-                  <InputField label="Rate" name="rate" type="text" />
+                  <InputField label="Rate" name="rate" value={formData.rate} type="text" />
                 </Col>
                 <Col xs={12} md={2}>
                   <InputField
@@ -394,22 +416,22 @@ function Order() {
                 </Col>
 
                 <Col xs={12} md={2}>
-                  <InputField label="MC %" name="mc_percentage" type="text" />
+                  <InputField label="MC %" name="mc_percentage" value={formData.mc_percentage} type="text" />
                 </Col>
                 <Col xs={12} md={2}>
-                  <InputField label="Total MC" name="total_mc" type="text" />
+                  <InputField label="Total MC" name="total_mc" value={formData.total_mc} type="text" />
                 </Col>
                 <Col xs={12} md={2}>
-                  <InputField label="Tax %" name="tax_percentage" type="text" />
+                  <InputField label="Tax %" name="tax_percentage" value={formData.tax_percentage} type="text" />
                 </Col>
                 <Col xs={12} md={2}>
-                  <InputField label="Tax Amount" name="tax_amount" type="text" />
+                  <InputField label="Tax Amount" name="tax_amount" value={formData.tax_amount}type="text" />
                 </Col>
                 <Col xs={12} md={2}>
-                  <InputField label="Total Price" name="total_price" type="text" />
+                  <InputField label="Total Price" name="total_price" value={formData.total_price} type="text" />
                 </Col>
                 <Col xs={12} md={2}>
-                  <InputField label="Remarks" name="remarks" type="text" />
+                  <InputField label="Remarks" name="remarks" value={formData.remarks} type="text" />
                 </Col>
                 <Col xs={12} md={2}>
                   <DropdownButton
