@@ -104,7 +104,7 @@ function Order() {
       setSelectedCustomer(customer);
     }
   };
-  
+
   const handleAddItem = () => {
     const updatedFormData = {
       ...formData,
@@ -176,27 +176,62 @@ function Order() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-  
+
+    // Retrieve all stored orders from localStorage
     const storedOrders = JSON.parse(localStorage.getItem("orders")) || [];
-  
+
     if (storedOrders.length === 0) {
-      console.log("No orders to save.");
-      return;
+        alert("No orders to submit.");
+        return;
     }
-  
+
+    console.log("Submitting orders:", storedOrders); // Debugging: Check what is being sent
+
     try {
-      const response = await axios.post("http://localhost:5000/api/orders", { orders: storedOrders });
-  
-      if (response.status === 201) {
-        console.log("Orders saved successfully!");
-        localStorage.removeItem("orders"); // Clear local storage after saving
-        setOrders([]); // Reset state
-      }
+        const response = await axios.post("http://localhost:5000/api/orders", storedOrders, {
+            headers: { "Content-Type": "application/json" },
+        });
+
+        console.log("Orders added successfully", response.data);
+        alert("Orders submitted successfully!");
+
+        // Clear local storage after successful submission
+        localStorage.removeItem("orders");
+        setOrders([]); // Clear state
+
+        // Reset form fields
+        setFormData({
+            imagePreview: null,
+            metal: "",
+            category: "",
+            subcategory: "",
+            product_design_name: "",
+            purity: "",
+            gross_weight: "",
+            stone_weight: "",
+            stone_price: "",
+            weight_bw: "",
+            wastage_on: "",
+            wastage_percentage: "",
+            wastage_weight: "",
+            total_weight_aw: "",
+            rate: "",
+            amount: "",
+            mc_on: "",
+            mc_percentage: "",
+            total_mc: "",
+            tax_percentage: "",
+            tax_amount: "",
+            total_price: "",
+            remarks: "",
+            image_url: null,
+        });
+
     } catch (error) {
-      console.error("Error saving orders:", error);
+        console.error("Error submitting orders:", error.response?.data || error.message);
+        alert(`Failed to submit orders: ${error.response?.data?.error || "Unknown error"}`);
     }
-  };
-  
+};
 
   return (
     <>
