@@ -168,36 +168,50 @@ function Worker_Master() {
 
 
   const validateForm = () => {
-    if (!formData.account_name.trim()) {
-      alert("Worker Name is required.");
+    if (!formData.account_name?.trim()) {
+      alert("Account name is required.");
       return false;
     }
-    if (!formData.mobile.trim()) {
+    if (!formData.mobile?.trim()) {
       alert("Mobile number is required.");
       return false;
     }
-    if (formData.mobile.length !== 10) {
-      alert("Mobile number must be exactly 10 digits.");
+    if (!formData.email?.trim()) {
+      alert("Email is required.");
       return false;
     }
-    if (formData.aadhar_card.length !== 12) {
+  
+    // Email validation using regex
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    if (!emailRegex.test(formData.email)) {
+      alert("Invalid email format.");
+      return false;
+    }
+  
+    if (formData.pincode?.trim() && formData.pincode.length !== 6) {
+      alert("PinCode must be exactly 6 digits.");
+      return false;
+    }
+    if (formData.aadhar_card?.trim() && formData.aadhar_card.length !== 12) {
       alert("Aadhar Card must be exactly 12 digits.");
       return false;
     }
-    if (formData.pan_card.length !== 10) {
+    if (formData.pan_card?.trim() && formData.pan_card.length !== 10) {
       alert("PAN Card must be exactly 10 characters.");
       return false;
     }
-    if (formData.gst_in.length !== 15) {
+    if (formData.gst_in?.trim() && formData.gst_in.length !== 15) {
       alert("GSTIN must be exactly 15 characters.");
       return false;
     }
-    if (formData.ifsc_code.length !== 11) {
+    if (formData.ifsc_code?.trim() && formData.ifsc_code.length !== 11) {
       alert("IFSC Code must be exactly 11 characters.");
       return false;
     }
+  
     return true;
   };
+  
 
   const handleSubmit = async (e) => {
     e.preventDefault();

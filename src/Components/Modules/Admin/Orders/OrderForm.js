@@ -40,25 +40,25 @@ function Order() {
     pan_card: "",
     date: "",
     order_number: "",
-    metal: "",
+    metal: "Gold",
     category: "",
     subcategory: "",
     product_design_name: "",
-    purity: "",
+    purity: "24KT",
     gross_weight: "",
     stone_weight: "",
     stone_price: "",
     weight_bw: "",
-    wastage_on: "",
+    wastage_on: "Gross Weight",
     wastage_percentage: "",
     wastage_weight: "",
     total_weight_aw: "",
-    rate: "",
+    rate: "8662.00",
     amount: "",
-    mc_on: "",
+    mc_on: "MC %",
     mc_percentage: "",
     total_mc: "",
-    tax_percentage: "",
+    tax_percentage: "3 %",
     tax_amount: "",
     total_price: "",
     remarks: "",
@@ -106,6 +106,123 @@ function Order() {
     }
   };
 
+   useEffect(() => {
+    const grossWeight = parseFloat(formData.gross_weight) || 0;
+    const stonesWeight = parseFloat(formData.stone_weight) || 0;
+    const weightBW = grossWeight - stonesWeight;
+
+    setFormData(prev => ({
+      ...prev,
+      weight_bw: weightBW.toFixed(3),
+    }));
+  }, [formData.gross_weight, formData.stone_weight]);
+
+  // Calculate Wastage Weight and Total Weight
+  useEffect(() => {
+    const wastagePercentage = parseFloat(formData.wastage_percentage) || 0;
+    const grossWeight = parseFloat(formData.gross_weight) || 0;
+    const weightBW = parseFloat(formData.weight_bw) || 0;
+
+    let wastageWeight = 0;
+    let totalWeight = 0;
+
+    if (formData.wastage_on === "Gross Weight") {
+      wastageWeight = (grossWeight * wastagePercentage) / 100;
+      totalWeight = weightBW + wastageWeight;
+    } else if (formData.wastage_on === "Weight BW") {
+      wastageWeight = (weightBW * wastagePercentage) / 100;
+      totalWeight = weightBW + wastageWeight;
+    }
+
+    setFormData(prev => ({
+      ...prev,
+      wastage_weight: wastageWeight.toFixed(3),
+      total_weight_aw: totalWeight.toFixed(3),
+    }));
+  }, [formData.wastage_on, formData.wastage_percentage, formData.gross_weight, formData.weight_bw]);
+
+  // Calculate Making Charges
+  useEffect(() => {
+    const totalWeight = parseFloat(formData.total_weight_aw) || 0;
+    const mcPerGram = parseFloat(formData.mc_percentage) || 0;
+    const makingCharges = parseFloat(formData.total_mc) || 0;
+    const rateAmount = parseFloat(formData.amount) || 0;
+
+    if (formData.mc_on === "MC / Gram") {
+      // Calculate total_mc as mcPerGram * totalWeight
+      const calculatedMakingCharges = mcPerGram * totalWeight;
+      setFormData((prev) => ({
+        ...prev,
+        total_mc: calculatedMakingCharges.toFixed(2),
+      }));
+    } else if (formData.mc_on === "MC %") {
+      // Calculate total_mc as (mcPerGram * rateAmount) / 100
+      const calculatedMakingCharges = (mcPerGram * rateAmount) / 100;
+      setFormData((prev) => ({
+        ...prev,
+        total_mc: calculatedMakingCharges.toFixed(2),
+      }));
+    } else if (formData.mc_on === "MC / Piece") {
+      // If total_mc is manually entered, calculate mc_percentage
+      if (makingCharges && totalWeight > 0) {
+        const calculatedMcPerGram = makingCharges / totalWeight;
+        setFormData((prev) => ({
+          ...prev,
+          mc_percentage: calculatedMcPerGram.toFixed(2),
+        }));
+      }
+    }
+  }, [
+    formData.mc_on,
+    formData.mc_percentage,
+    formData.total_mc,
+    formData.total_weight_aw,
+    formData.amount,
+  ]);
+
+  // Calculate Rate Amount
+  useEffect(() => {
+    const rate = parseFloat(formData.rate) || 0;
+    const totalWeight = parseFloat(formData.total_weight_aw) || 0;
+    const qty = parseFloat(formData.qty) || 0;
+    const pieceCost = parseFloat(formData.pieace_cost) || 0;
+    let rateAmt = 0;
+
+    if (formData.pricing === "By fixed") {
+      rateAmt = pieceCost * qty;
+    } else {
+      rateAmt = rate * totalWeight;
+    }
+
+    setFormData((prev) => ({
+      ...prev,
+      amount: rateAmt.toFixed(2),
+    }));
+  }, [formData.rate, formData.total_weight_aw, formData.qty, formData.pricing, formData.pieace_cost]);
+
+  // Calculate Tax Amount and Total Price
+  useEffect(() => {
+    const taxPercent = parseFloat(formData.tax_percentage) || 0;
+    const rateAmt = parseFloat(formData.amount) || 0;
+    const stonePrice = parseFloat(formData.stone_price) || 0;
+    const makingCharges = parseFloat(formData.total_mc) || 0;
+    const discountAmt = parseFloat(formData.disscount) || 0;
+    const hmCharges = parseFloat(formData.hm_charges) || 0;
+
+    // Ensure discount is subtracted before tax calculation
+    const taxableAmount = rateAmt + stonePrice + makingCharges + hmCharges - discountAmt;
+    const taxAmt = (taxableAmount * taxPercent) / 100;
+
+    // Calculate Total Price
+    const totalPrice = taxableAmount + taxAmt;
+
+    setFormData((prev) => ({
+      ...prev,
+      tax_amount: taxAmt.toFixed(2),
+      total_price: totalPrice.toFixed(2),
+    }));
+  }, [formData.tax_percentage, formData.amount, formData.stone_price, formData.total_mc, formData.disscount, formData.hm_charges]);
+
   const handleAddItem = () => {
     const updatedFormData = {
       ...formData,
@@ -121,25 +238,25 @@ function Order() {
     // Reset form fields
     setFormData({
       imagePreview: null,
-      metal: "",
+      metal: "Gold",
       category: "",
       subcategory: "",
       product_design_name: "",
-      purity: "",
+      purity: "24KT",
       gross_weight: "",
       stone_weight: "",
       stone_price: "",
       weight_bw: "",
-      wastage_on: "",
+      wastage_on: "Gross Weight",
       wastage_percentage: "",
       wastage_weight: "",
       total_weight_aw: "",
-      rate: "",
+      rate: "8662.00",
       amount: "",
-      mc_on: "",
+      mc_on: "MC %",
       mc_percentage: "",
       total_mc: "",
-      tax_percentage: "",
+      tax_percentage: "3 %",
       tax_amount: "",
       total_price: "",
       remarks: "",
@@ -207,25 +324,25 @@ function Order() {
         // Reset form fields
         setFormData({
             imagePreview: null,
-            metal: "",
+            metal: "Gold",
             category: "",
             subcategory: "",
             product_design_name: "",
-            purity: "",
+            purity: "24KT",
             gross_weight: "",
             stone_weight: "",
             stone_price: "",
             weight_bw: "",
-            wastage_on: "",
+            wastage_on: "Gross Weight",
             wastage_percentage: "",
             wastage_weight: "",
             total_weight_aw: "",
-            rate: "",
+            rate: "8662.00",
             amount: "",
-            mc_on: "",
+            mc_on: "MC %",
             mc_percentage: "",
             total_mc: "",
-            tax_percentage: "",
+            tax_percentage: "3 %",
             tax_amount: "",
             total_price: "",
             remarks: "",
@@ -338,9 +455,7 @@ function Order() {
                   </Row>
                 </div>
               </div>
-
             </div>
-
             <div className="order-form-section mt-1">
               <h4 className="mb-3">Order Details</h4>
               <Row>
@@ -352,10 +467,10 @@ function Order() {
                     value={formData.metal}
                     onChange={handleChange}
                     options={[
-                      { value: "gold", label: "Gold" },
-                      { value: "silver", label: "Silver" },
-                      { value: "diamond", label: "Diamond" },
-                      { value: "platinum", label: "Platinum" },
+                      { value: "Gold", label: "Gold" },
+                      { value: "Silver", label: "Silver" },
+                      { value: "Diamond", label: "Diamond" },
+                      { value: "Platinum", label: "Platinum" },
                     ]}
                   />
                 </Col>
@@ -408,7 +523,7 @@ function Order() {
                   <InputField label="St Price" name="stone_price" value={formData.stone_price} type="text" onChange={handleChange} />
                 </Col>
                 <Col xs={12} md={2}>
-                  <InputField label="Weight BW" name="weight_bw" value={formData.weight_bw} type="text" onChange={handleChange}/>
+                  <InputField label="Weight BW" name="weight_bw" value={formData.weight_bw} type="text" onChange={handleChange} readOnly/>
                 </Col>
                 <Col xs={12} md={2}>
                   <InputField
@@ -418,8 +533,8 @@ function Order() {
                     value={formData.wastage_on}  // Ensure it's in state
                     onChange={handleChange}
                     options={[
-                      { value: "gross_wt", label: "Gross Wt" },
-                      { value: "weight_bw", label: "Weight BW" },
+                      { value: "Gross Weight", label: "Gross Weight" },
+                      { value: "Weight BW", label: "Weight BW" },
                     ]}
                   />
                 </Col>
@@ -427,10 +542,10 @@ function Order() {
                   <InputField label="Wastage %" name="wastage_percentage" value={formData.wastage_percentage} type="text" onChange={handleChange} />
                 </Col>
                 <Col xs={12} md={2}>
-                  <InputField label="Wastage Weight" name="wastage_weight" value={formData.wastage_weight} type="text" onChange={handleChange}/>
+                  <InputField label="Wastage Weight" name="wastage_weight" value={formData.wastage_weight} type="text" onChange={handleChange} readOnly/>
                 </Col>
                 <Col xs={12} md={2}>
-                  <InputField label="Total Weight AW" name="total_weight_aw" value={formData.total_weight_aw} type="text" onChange={handleChange}/>
+                  <InputField label="Total Weight AW" name="total_weight_aw" value={formData.total_weight_aw} type="text" onChange={handleChange} readOnly/>
                 </Col>
                 <Col xs={12} md={2}>
                   <InputField label="Rate" name="rate" value={formData.rate} type="text" onChange={handleChange}/>
@@ -442,6 +557,7 @@ function Order() {
                     type="text"
                     value={formData.amount} // Set the value to formData.amount
                     onChange={handleChange} // Ensure it calls handleChange
+                    readOnly
                   />
                 </Col>
                 <Col xs={12} md={2}>
@@ -452,9 +568,9 @@ function Order() {
                     value={formData.mc_on}  // Ensure this is part of the state
                     onChange={handleChange}
                     options={[
-                      { value: "mc_gram", label: "MC/GRAM" },
-                      { value: "mc_piece", label: "MC/PIECE" },
-                      { value: "mc_percent", label: "MC %" },
+                      { value: "MC %", label: "MC %" },
+                      { value: "MC/GRAM", label: "MC/GRAM" },
+                      { value: "MC/PIECE", label: "MC/PIECE" },                
                     ]}
                   />
                 </Col>
@@ -466,13 +582,22 @@ function Order() {
                   <InputField label="Total MC" name="total_mc" value={formData.total_mc} type="text"onChange={handleChange} />
                 </Col>
                 <Col xs={12} md={2}>
-                  <InputField label="Tax %" name="tax_percentage" value={formData.tax_percentage} type="text" onChange={handleChange}/>
+                  <InputField label="Tax %" name="tax_percentage" value={formData.tax_percentage} 
+                  type="select" 
+                  onChange={handleChange}
+                  options={[
+                    { value: "3 %", label: "3 %" },
+                    { value: "5 %", label: "5 %" },
+                    { value: "12 %", label: "12 %" },
+                    { value: "18 %", label: "18 %" },
+                  ]}
+                  />
                 </Col>
                 <Col xs={12} md={2}>
-                  <InputField label="Tax Amount" name="tax_amount" value={formData.tax_amount}type="text" onChange={handleChange} />
+                  <InputField label="Tax Amount" name="tax_amount" value={formData.tax_amount}type="text" onChange={handleChange} readOnly/>
                 </Col>
                 <Col xs={12} md={2}>
-                  <InputField label="Total Price" name="total_price" value={formData.total_price} type="text" onChange={handleChange}/>
+                  <InputField label="Total Price" name="total_price" value={formData.total_price} type="text" onChange={handleChange} readOnly/>
                 </Col>
                 <Col xs={12} md={2}>
                   <InputField label="Remarks" name="remarks" value={formData.remarks} type="text" onChange={handleChange}/>

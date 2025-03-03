@@ -10,11 +10,9 @@ import Navbar from '../../../Pages/Navbar/Navbar';
 
 const ViewOrders = () => {
   const navigate = useNavigate();
-  const [data, setData] = useState([]); // State to store table data
-  const [loading, setLoading] = useState(true); // State for loading indicator
-  const [modalData, setModalData] = useState(null); // State to store data for the modal
-  const [showModal, setShowModal] = useState(false); // State to control modal visibility
-
+  const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(true);
+  
   const columns = React.useMemo(
     () => [
       {
@@ -29,67 +27,42 @@ const ViewOrders = () => {
         },
       },
       {
-        Header: 'Mobile Number',
+        Header: 'Mobile',
         accessor: 'mobile',
+      },
+      {
+        Header: 'Customer Name',
+        accessor: 'account_name',
       },
       {
         Header: 'Order Number',
         accessor: 'order_number',
       },
+      
       {
-        Header: 'Account Name',
-        accessor: 'account_name',
+        Header: 'Metal',
+        accessor: 'metal',
+      },
+      {
+        Header: 'Category',
+        accessor: 'category',
+      },
+      {
+        Header: 'Sub Category',
+        accessor: 'subcategory',
       },
       {
         Header: 'Total Amt ',
         accessor: 'total_price',
       },
-      // {
-      //   Header: 'Paid Amount ',
-      //   accessor: 'paid_amount',
-      // },
-      // {
-      //   Header: 'Status',
-      //   accessor: 'status',
-      // },
       {
         Header: 'Order Status',
         accessor: 'order_status',
       },
-      // {
-      //   Header: 'Action',
-      //   Cell: ({ row }) => (
-      //     <div >
-      //       <FaEye
-      //         style={{ cursor: 'pointer', marginLeft: '10px', color: 'green' }}
-      //         onClick={() => handleView(row.original)}
-      //       />            
-      //       <FaEdit
-      //         style={{ cursor: 'pointer', marginLeft: '10px', color: 'blue', }}
-      //         onClick={() => handleEdit(row.original.account_id)}
-      //       />            
-      //       <FaTrash
-      //         style={{ cursor: 'pointer', marginLeft: '10px', color: 'red', }}
-      //         onClick={() => handleDelete(row.original.account_id)}
-      //       />            
-      //     </div>
-      //   ),
-      // },
     ],
     []
   );
 
-  // Utility function to format date to dd/mm/yyyy
-  const formatDate = (date) => {
-    if (!date) return '';
-    const d = new Date(date);
-    const day = String(d.getDate()).padStart(2, '0');
-    const month = String(d.getMonth() + 1).padStart(2, '0'); // Month is 0-based
-    const year = d.getFullYear();
-    return `${day}/${month}/${year}`;
-  };
-
-  // Fetch data and filter where account_group = "ORDERS"
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -109,44 +82,13 @@ const ViewOrders = () => {
     };
   
     fetchData();
-  }, [baseURL]); // Include baseURL in dependencies if it might change
-  
+  }, [baseURL]);
 
-  // Delete a order
-  const handleDelete = async (id) => {
-    if (window.confirm('Are you sure you want to delete this order?')) {
-      try {
-        const response = await fetch(`${baseURL}/delete/account-details/${id}`, {
-          method: 'DELETE',
-        });
-
-        if (response.ok) {
-          alert('Order deleted successfully!');
-          setData((prevData) => prevData.filter((order) => order.account_id !== id));
-        } else {
-          console.error('Failed to delete order');
-          alert('Failed to delete order.');
-        }
-      } catch (error) {
-        console.error('Error:', error);
-        alert('An error occurred while deleting.');
-      }
-    }
-  };
-
-  // Navigate to edit form
-  const handleEdit = (id) => {
-    navigate(`/customermaster/${id}`);
-  };
 
   const handleCreate = () => {
-    navigate('/a-orders'); // Navigate to the /orders page
+    navigate('/a-orders');
   };
 
-  const handleView = (rowData) => {
-    setModalData(rowData);
-    setShowModal(true);
-  };
 
   return (
     <>
@@ -171,60 +113,6 @@ const ViewOrders = () => {
           <DataTable columns={columns} data={[...data].reverse()} />
         )}
       </div>
-
-      {/* Modal for displaying full data */}
-      <Modal show={showModal} onHide={() => setShowModal(false)} size="lg">
-        <Modal.Header closeButton>
-          <Modal.Title>Order Details</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          {modalData && (
-            <div className="modal-content-grid">
-              <Row>
-                <Col md={6}><strong>Trade Name:</strong> {modalData.account_name}</Col>
-                <Col md={6}><strong>Print Name:</strong> {modalData.print_name}</Col>
-              </Row>
-              <Row>
-                <Col md={6}><strong>Account Group:</strong> {modalData.account_group}</Col>
-                <Col md={6}><strong>Pincode:</strong> {modalData.pincode}</Col>
-              </Row>
-              <Row>
-                <Col md={6}><strong>State:</strong> {modalData.state}</Col>
-                <Col md={6}><strong>State Code:</strong> {modalData.state_code}</Col>
-              </Row>
-              <Row>
-                <Col md={6}><strong>Phone:</strong> {modalData.phone}</Col>
-                <Col md={6}><strong>Mobile:</strong> {modalData.mobile}</Col>
-              </Row>
-              <Row>
-                <Col md={6}><strong>Email:</strong> {modalData.email}</Col>
-                <Col md={6}><strong>Birthday:</strong> {modalData.birthday}</Col>
-              </Row>
-              <Row>
-                <Col md={6}><strong>Anniversary:</strong> {modalData.anniversary}</Col>
-                <Col md={6}><strong>Bank Account No:</strong> {modalData.bank_account_no}</Col>
-              </Row>
-              <Row>
-                <Col md={6}><strong>Bank Name:</strong> {modalData.bank_name}</Col>
-                <Col md={6}><strong>IFSC Code:</strong> {modalData.ifsc_code}</Col>
-              </Row>
-              <Row>
-                <Col md={6}><strong>Branch:</strong> {modalData.branch}</Col>
-                <Col md={6}><strong>GSTIN:</strong> {modalData.gst_in}</Col>
-              </Row>
-              <Row>
-                <Col md={6}><strong>Aadhar Card:</strong> {modalData.aadhar_card}</Col>
-                <Col md={6}><strong>PAN Card:</strong> {modalData.pan_card}</Col>
-              </Row>
-            </div>
-          )}
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={() => setShowModal(false)}>
-            Close
-          </Button>
-        </Modal.Footer>
-      </Modal>
     </div>
     </>
   );
