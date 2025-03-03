@@ -1,6 +1,7 @@
-import React from "react";
+import React,{useContext} from "react";
 import { BrowserRouter as Router, Route, Routes, useLocation } from "react-router-dom";
 import './App.css';
+import  AuthProvider  from "./Components/AuthContext/ContextApi";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap-icons/font/bootstrap-icons.css';
 import Login from './Components/Pages/Login/Login';
@@ -15,10 +16,15 @@ import AdminCustomerTable from './Components/Modules/Admin/Customer/CustomerTabl
 import AdminWorkerTable from './Components/Modules/Admin/Worker/WorkerTable';
 import ViewOrders from "./Components/Modules/Customer/Orders/ViewOrders";
 import CancelOrders from "./Components/Modules/Customer/Orders/CancelOrders";
-import CustomerDashboard from "./Components/Modules/Customer/Dashboard/Dashboard"
+import CustomerDashboard from "./Components/Modules/Customer/Dashboard/Dashboard";
+import WorkerDashboard from "./Components/Modules/Worker/Dashboard/Dashboard"
+import AssignedOrders from "./Components/Modules/Worker/Orders/AssignedOrders";
+import InprogressOrders from "./Components/Modules/Worker/Orders/InprogressOrders";
+import CompletedOrders from "./Components/Modules/Worker/Orders/CompletedOrders";
 
 export default function MainApp() {
   return (
+    <AuthProvider>
     <Router>
       <Routes>
       <Route path="/" exact element={<Login />} />
@@ -39,9 +45,15 @@ export default function MainApp() {
       <Route path="/c-dashboard" exact element={<CustomerDashboard />} />
       <Route path="/c-vieworders" exact element={<ViewOrders />} /> 
       <Route path="/c-cancelorders" exact element={<CancelOrders />} /> 
+
+      <Route path="/w-dashboard" exact element={<WorkerDashboard />} />
+      <Route path="/w-assigned-orders" exact element={<AssignedOrders />} />
+      <Route path="/w-inprogress-orders" exact element={<InprogressOrders />} /> 
+      <Route path="/w-completed-orders" exact element={<CompletedOrders />} /> 
       
 
       </Routes>
     </Router>
+    </AuthProvider>
   );
 }

@@ -1,0 +1,96 @@
+import React, { useState, useContext } from 'react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faChevronDown, faChevronUp } from '@fortawesome/free-solid-svg-icons';
+import { FaSignOutAlt, FaWhatsapp } from "react-icons/fa";
+import logo from '../../Pages/Images/logo.jpeg';
+import './WorkerNavbar.css';
+import Swal from 'sweetalert2';
+
+function VendorNavbar() {
+    const [isOpen, setIsOpen] = useState(false);
+    const [ordersDropdownOpen, setOrdersDropdownOpen] = useState(false);
+
+    const location = useLocation();
+    const navigate = useNavigate();
+
+    const toggleMenu = () => setIsOpen(!isOpen);
+    const toggleDropdown = () => setOrdersDropdownOpen(!ordersDropdownOpen);
+
+    const handleItemClick = () => {
+        setOrdersDropdownOpen(false);
+    };
+
+    const isActive = (path) => {
+        return location.pathname === path ? 'active' : '';  // Return 'active' if the path matches the current location
+    };
+
+    const handleLogout = () => {
+        navigate("/");
+    };
+
+
+
+    return (
+        <header className="navbar-header">
+            <div className="navbar-brand">
+                <img src={logo} alt="Logo" style={{ width: "130px" }} />
+            </div>
+
+            <div className={`navbar-hamburger ${isOpen ? 'open' : ''}`} onClick={toggleMenu}>
+                <div className="navbar-bar"></div>
+                <div className="navbar-bar"></div>
+                <div className="navbar-bar"></div>
+            </div>
+
+            <nav className={`navbar-links ${isOpen ? 'open' : ''}`}>
+                <Link
+                    to="/w-dashboard"
+                    onClick={handleItemClick}
+                    style={{
+                        color: window.location.pathname === '/w-dashboard' ? '#a36e29' : 'black',
+                        backgroundColor: 'transparent',
+                        textDecoration: 'none',
+                    }}
+                >
+                    Dashboard</Link>
+                <Link
+                    to="/w-assigned-orders"
+                    onClick={handleItemClick}
+                    style={{
+                        color: window.location.pathname === '/w-assigned-orders' ? '#a36e29' : 'black',
+                        backgroundColor: 'transparent',
+                        textDecoration: 'none',
+                    }}
+                >
+                    Assigned Orders</Link>
+                <Link
+                    to="/w-inprogress-orders"
+                    onClick={handleItemClick}
+                    style={{
+                        color: window.location.pathname === '/w-inprogress-orders' ? '#a36e29' : 'black',
+                        backgroundColor: 'transparent',
+                        textDecoration: 'none',
+                    }}
+                >
+                    InProgress Orders</Link>
+                    <Link
+                    to="/w-completed-orders"
+                    onClick={handleItemClick}
+                    style={{
+                        color: window.location.pathname === '/w-completed-orders' ? '#a36e29' : 'black',
+                        backgroundColor: 'transparent',
+                        textDecoration: 'none',
+                    }}
+                >
+                    Completed Orders</Link>    
+
+            </nav>
+            <div className="navbar-logout" onClick={handleLogout}>
+                <FaSignOutAlt className="logout-icon" />
+            </div>
+        </header>
+    );
+}
+
+export default VendorNavbar;

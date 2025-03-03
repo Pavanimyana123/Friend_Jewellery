@@ -24,18 +24,18 @@ function Login() {
 
     // Dynamic Customer Login via API
     try {
-      const response = await axios.post(`${baseURL}/login`, {
-        email,
-        password,
-      });
+      const response = await axios.post(`${baseURL}/login`, { email, password });
 
       if (response.status === 200) {
+        const userData = response.data.user; // Extract user details
+        localStorage.setItem("user", JSON.stringify(userData)); // Store in local storage
         navigate("/c-dashboard");
       }
     } catch (error) {
       alert(error.response?.data?.message || "Invalid Credentials");
     }
-  };
+};
+
 
 
   return (
