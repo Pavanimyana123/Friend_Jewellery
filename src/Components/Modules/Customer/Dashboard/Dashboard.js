@@ -13,9 +13,9 @@ const Dashboard = () => {
         <h1>Dashboard</h1>
         <h1>Welcome, {user?.account_name}</h1>
       <p>Email: {user?.email}</p>
-      <p>Id: {user?.id}</p>
+      {/* <p>Id: {user?.id}</p> */}
       <p>Mobile: {user?.mobile}</p>
-      <p>Account Group: {user?.account_group}</p>
+      {/* <p>Account Group: {user?.account_group}</p> */}
       </div>
     </>
   )

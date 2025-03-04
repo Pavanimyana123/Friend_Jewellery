@@ -48,10 +48,10 @@ function Login() {
 
         {/* Right Side - Login Form */}
         <div className="login-form">
-          <div className="form-container">
+          <div className="login-form-container">
             {/* Logo */}
             <div className="text-center mb-3">
-              <img src={logo} alt="Logo" className="logo" />
+              <img src={logo} alt="Logo" className="login-logo" />
             </div>
             <h3 className="text-center mb-4">Login</h3>
             <form onSubmit={handleLogin}>
@@ -59,7 +59,7 @@ function Login() {
                 <label className="form-label">Email:</label>
                 <input
                   type="email"
-                  className="form-control"
+                  className="login-form-control"
                   placeholder="Enter email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
@@ -71,7 +71,7 @@ function Login() {
                 <div className="password-wrapper">
                   <input
                     type={showPassword ? "text" : "password"}
-                    className="form-control"
+                    className="login-form-control"
                     placeholder="Enter password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}

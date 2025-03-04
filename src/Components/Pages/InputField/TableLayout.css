@@ -1,15 +1,32 @@
-.dataTable_cell {
-    white-space: nowrap; /* Prevent text wrapping */
-    overflow: hidden;    /* Hide overflowing content */
-    text-overflow: ellipsis; /* Add ellipsis to truncated text */
-    max-width: 200px;    /* Set a maximum width for cells */
-  }
+/* Table styling */
+.table {
+  border: 1px solid #ddd; /* Border around the entire table */
+  border-collapse: collapse; /* Ensure borders do not double up */
+}
 
-  .dataTable_headerCell {
-    white-space: nowrap;  /* Prevent text wrapping */
-    overflow: hidden;     /* Hide overflowing content */
-    text-overflow: ellipsis; /* Add ellipsis for truncated text */
-    max-width: 200px;     /* Set a maximum width for the header cells */
-  }
-  
-  
+/* Table cell styling */
+.dataTable_cell {
+  white-space: nowrap; /* Prevent text wrapping */
+  overflow: hidden;    /* Hide overflowing content */
+  text-overflow: ellipsis; /* Add ellipsis to truncated text */
+  max-width: 200px;    /* Set a maximum width for cells */
+  border: 1px solid #ddd; /* Border around each cell */
+  padding: 8px;
+}
+
+/* Table header styling */
+.dataTable_headerCell {
+  white-space: nowrap;  /* Prevent text wrapping */
+  overflow: hidden;     /* Hide overflowing content */
+  text-overflow: ellipsis; /* Add ellipsis for truncated text */
+  max-width: 200px;     /* Set a maximum width for the header cells */
+  border: 1px solid #ddd; /* Border around each header cell */
+  background-color: #f8f9fa; /* Light gray background */
+  font-weight: bold;
+  padding: 10px;
+}
+
+/* Add border to the table rows */
+.dataTable_row {
+  border-bottom: 1px solid #ddd; /* Horizontal lines between rows */
+}

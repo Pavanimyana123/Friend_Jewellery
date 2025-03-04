@@ -66,7 +66,6 @@ function Order() {
     order_status: "Placed",
   });
 
-  // Handle changes for all fields
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
@@ -106,7 +105,7 @@ function Order() {
     }
   };
 
-   useEffect(() => {
+  useEffect(() => {
     const grossWeight = parseFloat(formData.gross_weight) || 0;
     const stonesWeight = parseFloat(formData.stone_weight) || 0;
     const weightBW = grossWeight - stonesWeight;
@@ -228,7 +227,7 @@ function Order() {
       ...formData,
       ...selectedCustomer,
       date: selectedDate,
-      account_id:selectedCustomer?.id,
+      account_id: selectedCustomer?.id,
     };
 
     const updatedOrders = [...orders, updatedFormData];
@@ -265,27 +264,26 @@ function Order() {
     });
   };
 
-  const handleImageChange = (event) => {
-    const file = event.target.files[0];
-    if (file) {
+  const handleImageChange = (e) => {
+    if (e.target.files.length > 0) {
+      const file = e.target.files[0];
       const reader = new FileReader();
       reader.onloadend = () => {
-        setFormData((prev) => ({ ...prev, imagePreview: reader.result }));
+        setFormData({ ...formData, imagePreview: reader.result });
       };
       reader.readAsDataURL(file);
     }
   };
 
+
   const captureImage = () => {
-    if (webcamRef.current) {
-      const imageSrc = webcamRef.current.getScreenshot();
-      setFormData((prev) => ({ ...prev, imagePreview: imageSrc }));
-      setShowWebcam(false);
-    }
+    const imageSrc = webcamRef.current.getScreenshot();
+    setFormData({ ...formData, imagePreview: imageSrc });
+    setShowWebcam(false);
   };
 
   const clearImage = () => {
-    setFormData((prev) => ({ ...prev, imagePreview: null }));
+    setFormData({ ...formData, imagePreview: null });
   };
 
   const handleBack = () => {
@@ -300,61 +298,61 @@ function Order() {
     const storedOrders = JSON.parse(localStorage.getItem("orders")) || [];
 
     if (storedOrders.length === 0) {
-        alert("No orders to submit.");
-        return;
+      alert("No orders to submit.");
+      return;
     }
 
     console.log("Submitting orders:", storedOrders); // Debugging: Check what is being sent
 
     try {
-        const response = await axios.post("http://localhost:5000/api/orders", 
-            { orders: storedOrders }, // Wrap orders inside an object
-            {
-                headers: { "Content-Type": "application/json" },
-            }
-        );
+      const response = await axios.post("http://localhost:5000/api/orders",
+        { orders: storedOrders }, // Wrap orders inside an object
+        {
+          headers: { "Content-Type": "application/json" },
+        }
+      );
 
-        console.log("Orders added successfully", response.data);
-        alert("Orders submitted successfully!");
+      console.log("Orders added successfully", response.data);
+      alert("Orders submitted successfully!");
 
-        // Clear local storage after successful submission
-        localStorage.removeItem("orders");
-        setOrders([]); // Clear state
+      // Clear local storage after successful submission
+      localStorage.removeItem("orders");
+      setOrders([]); // Clear state
 
-        // Reset form fields
-        setFormData({
-            imagePreview: null,
-            metal: "Gold",
-            category: "",
-            subcategory: "",
-            product_design_name: "",
-            purity: "24KT",
-            gross_weight: "",
-            stone_weight: "",
-            stone_price: "",
-            weight_bw: "",
-            wastage_on: "Gross Weight",
-            wastage_percentage: "",
-            wastage_weight: "",
-            total_weight_aw: "",
-            rate: "8662.00",
-            amount: "",
-            mc_on: "MC %",
-            mc_percentage: "",
-            total_mc: "",
-            tax_percentage: "3 %",
-            tax_amount: "",
-            total_price: "",
-            remarks: "",
-            image_url: null,
-            order_status: "Placed",
-        });
+      // Reset form fields
+      setFormData({
+        imagePreview: null,
+        metal: "Gold",
+        category: "",
+        subcategory: "",
+        product_design_name: "",
+        purity: "24KT",
+        gross_weight: "",
+        stone_weight: "",
+        stone_price: "",
+        weight_bw: "",
+        wastage_on: "Gross Weight",
+        wastage_percentage: "",
+        wastage_weight: "",
+        total_weight_aw: "",
+        rate: "8662.00",
+        amount: "",
+        mc_on: "MC %",
+        mc_percentage: "",
+        total_mc: "",
+        tax_percentage: "3 %",
+        tax_amount: "",
+        total_price: "",
+        remarks: "",
+        image_url: null,
+        order_status: "Placed",
+      });
 
     } catch (error) {
-        console.error("Error submitting orders:", error.response?.data || error.message);
-        alert(`Failed to submit orders: ${error.response?.data?.error || "Unknown error"}`);
-    }
-};
+      console.error("Error submitting orders:", error.response?.data || error.message);
+      alert(`Failed to submit orders: ${error.response?.data?.error || "Unknown error"}`);
+    }
+  };
 
   return (
     <>
@@ -451,7 +449,7 @@ function Order() {
                     />
                   </Row>
                   <Row>
-                    <InputField label="Order No" name="order_number" value={formData.order_number} onChange={handleChange}/>
+                    <InputField label="Order No" name="order_number" value={formData.order_number} onChange={handleChange} />
                   </Row>
                 </div>
               </div>
@@ -523,7 +521,7 @@ function Order() {
                   <InputField label="St Price" name="stone_price" value={formData.stone_price} type="text" onChange={handleChange} />
                 </Col>
                 <Col xs={12} md={2}>
-                  <InputField label="Weight BW" name="weight_bw" value={formData.weight_bw} type="text" onChange={handleChange} readOnly/>
+                  <InputField label="Weight BW" name="weight_bw" value={formData.weight_bw} type="text" onChange={handleChange} readOnly />
                 </Col>
                 <Col xs={12} md={2}>
                   <InputField
@@ -542,13 +540,13 @@ function Order() {
                   <InputField label="Wastage %" name="wastage_percentage" value={formData.wastage_percentage} type="text" onChange={handleChange} />
                 </Col>
                 <Col xs={12} md={2}>
-                  <InputField label="Wastage Weight" name="wastage_weight" value={formData.wastage_weight} type="text" onChange={handleChange} readOnly/>
+                  <InputField label="Wastage Weight" name="wastage_weight" value={formData.wastage_weight} type="text" onChange={handleChange} readOnly />
                 </Col>
                 <Col xs={12} md={2}>
-                  <InputField label="Total Weight AW" name="total_weight_aw" value={formData.total_weight_aw} type="text" onChange={handleChange} readOnly/>
+                  <InputField label="Total Weight AW" name="total_weight_aw" value={formData.total_weight_aw} type="text" onChange={handleChange} readOnly />
                 </Col>
                 <Col xs={12} md={2}>
-                  <InputField label="Rate" name="rate" value={formData.rate} type="text" onChange={handleChange}/>
+                  <InputField label="Rate" name="rate" value={formData.rate} type="text" onChange={handleChange} />
                 </Col>
                 <Col xs={12} md={2}>
                   <InputField
@@ -570,37 +568,37 @@ function Order() {
                     options={[
                       { value: "MC %", label: "MC %" },
                       { value: "MC/GRAM", label: "MC/GRAM" },
-                      { value: "MC/PIECE", label: "MC/PIECE" },                
+                      { value: "MC/PIECE", label: "MC/PIECE" },
                     ]}
                   />
                 </Col>
 
                 <Col xs={12} md={2}>
-                  <InputField label="MC %" name="mc_percentage" value={formData.mc_percentage} type="text" onChange={handleChange}/>
+                  <InputField label="MC %" name="mc_percentage" value={formData.mc_percentage} type="text" onChange={handleChange} />
                 </Col>
                 <Col xs={12} md={2}>
-                  <InputField label="Total MC" name="total_mc" value={formData.total_mc} type="text"onChange={handleChange} />
+                  <InputField label="Total MC" name="total_mc" value={formData.total_mc} type="text" onChange={handleChange} />
                 </Col>
                 <Col xs={12} md={2}>
-                  <InputField label="Tax %" name="tax_percentage" value={formData.tax_percentage} 
-                  type="select" 
-                  onChange={handleChange}
-                  options={[
-                    { value: "3 %", label: "3 %" },
-                    { value: "5 %", label: "5 %" },
-                    { value: "12 %", label: "12 %" },
-                    { value: "18 %", label: "18 %" },
-                  ]}
+                  <InputField label="Tax %" name="tax_percentage" value={formData.tax_percentage}
+                    type="select"
+                    onChange={handleChange}
+                    options={[
+                      { value: "3 %", label: "3 %" },
+                      { value: "5 %", label: "5 %" },
+                      { value: "12 %", label: "12 %" },
+                      { value: "18 %", label: "18 %" },
+                    ]}
                   />
                 </Col>
                 <Col xs={12} md={2}>
-                  <InputField label="Tax Amount" name="tax_amount" value={formData.tax_amount}type="text" onChange={handleChange} readOnly/>
+                  <InputField label="Tax Amount" name="tax_amount" value={formData.tax_amount} type="text" onChange={handleChange} readOnly />
                 </Col>
                 <Col xs={12} md={2}>
-                  <InputField label="Total Price" name="total_price" value={formData.total_price} type="text" onChange={handleChange} readOnly/>
+                  <InputField label="Total Price" name="total_price" value={formData.total_price} type="text" onChange={handleChange} readOnly />
                 </Col>
                 <Col xs={12} md={2}>
-                  <InputField label="Remarks" name="remarks" value={formData.remarks} type="text" onChange={handleChange}/>
+                  <InputField label="Remarks" name="remarks" value={formData.remarks} type="text" onChange={handleChange} />
                 </Col>
                 <Col xs={12} md={2}>
                   <DropdownButton
@@ -608,20 +606,13 @@ function Order() {
                     title="Choose / Capture Image"
                     variant="primary"
                     size="sm"
-                    onClick={() => setShowOptions(!showOptions)}
                   >
-                    {showOptions && (
-                      <>
-                        <Dropdown.Item
-                          onClick={() => fileInputRef.current && fileInputRef.current.click()}
-                        >
-                          <FaUpload /> Choose Image
-                        </Dropdown.Item>
-                        <Dropdown.Item onClick={() => setShowWebcam(true)}>
-                          <FaCamera /> Capture Image
-                        </Dropdown.Item>
-                      </>
-                    )}
+                    <Dropdown.Item onClick={() => fileInputRef.current && fileInputRef.current.click()}>
+                      <FaUpload /> Choose Image
+                    </Dropdown.Item>
+                    <Dropdown.Item onClick={() => setShowWebcam(true)}>
+                      <FaCamera /> Capture Image
+                    </Dropdown.Item>
                   </DropdownButton>
 
                   <input
@@ -650,6 +641,7 @@ function Order() {
                       </Button>
                     </div>
                   )}
+
                   {formData.imagePreview && (
                     <div style={{ position: "relative", display: "inline-block", marginTop: "10px" }}>
                       <img
@@ -681,6 +673,7 @@ function Order() {
                     </div>
                   )}
                 </Col>
+
                 <Col xs={12} md={1}>
                   <Button
                     style={{ backgroundColor: "#a36e29", borderColor: "#a36e29" }}

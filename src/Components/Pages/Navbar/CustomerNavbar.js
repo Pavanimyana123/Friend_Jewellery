@@ -6,8 +6,11 @@ import { FaSignOutAlt, FaWhatsapp } from "react-icons/fa";
 import logo from '../../Pages/Images/logo.jpeg';
 import './CustomerNavbar.css';
 import Swal from 'sweetalert2';
+import { AuthContext } from "../../AuthContext/ContextApi";
 
 function VendorNavbar() {
+    const { user } = useContext(AuthContext);
+    const userName = user?.account_name
     const [isOpen, setIsOpen] = useState(false);
     const [ordersDropdownOpen, setOrdersDropdownOpen] = useState(false);
 
@@ -86,6 +89,9 @@ function VendorNavbar() {
                     )}
                 </div> */}
             </nav>
+            <div className='username'>
+                {userName}
+            </div>
             <div className="navbar-logout" onClick={handleLogout}>
                 <FaSignOutAlt className="logout-icon" />
             </div>

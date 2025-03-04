@@ -216,8 +216,8 @@
 }
 
 .username{
-  margin-right: 115px;
-  margin-top: 5px;
+  margin-right: 80px;
+  margin-top: 2px;
   font-size: 23px;
   font-weight: bold;
   color: rgb(163, 110, 41);
@@ -321,6 +321,7 @@
       transform: translateY(-7px) rotate(-45deg);
   }
   }
+
   
   /* Extra small devices */
   @media (max-width: 480px) {

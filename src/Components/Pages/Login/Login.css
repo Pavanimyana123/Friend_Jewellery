@@ -52,13 +52,13 @@
 }
 
 /* Form container */
-.form-container {
+.login-form-container {
     width: 80%;
     
 }
 
 /* Logo Styling */
-.logo {
+.login-logo {
     width: 120px;
     height: auto;
 }
@@ -71,7 +71,7 @@ h3 {
 }
 
 /* Input fields */
-.form-control {
+.login-form-control {
     width: 100%;
     padding: 12px;
     border-radius: 6px;
@@ -82,7 +82,7 @@ h3 {
     background: #f9f9f9;
 }
 
-.form-control:focus {
+.login-form-control:focus {
     border-color: #d4af37;
     box-shadow: 0px 0px 8px rgba(212, 175, 55, 0.5);
     background: #fff;
@@ -143,7 +143,7 @@ h3 {
         height: 100%;
     }
 
-    .form-container {
+    .login-form-container {
         width: 100%;
         padding: 20px;
     }
