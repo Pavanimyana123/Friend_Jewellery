@@ -22,21 +22,26 @@ function Login() {
       return;
     }
 
-    // Dynamic Customer Login via API
+    // Dynamic Customer/Worker Login via API
     try {
       const response = await axios.post(`${baseURL}/login`, { email, password });
 
       if (response.status === 200) {
         const userData = response.data.user; // Extract user details
         localStorage.setItem("user", JSON.stringify(userData)); // Store in local storage
-        navigate("/c-dashboard");
+
+        if (userData.account_group === "CUSTOMERS") {
+          navigate("/c-dashboard");
+        } else if (userData.account_group === "WORKER") {
+          navigate("/w-dashboard");
+        } else {
+          alert("Unauthorized access");
+        }
       }
     } catch (error) {
       alert(error.response?.data?.message || "Invalid Credentials");
     }
-};
-
-
+  };
 
   return (
     <div className="login-container">

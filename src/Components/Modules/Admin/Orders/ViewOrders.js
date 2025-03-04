@@ -59,6 +59,10 @@ const ViewOrders = () => {
         Header: 'Order Status',
         accessor: 'order_status',
       },
+      {
+        Header: 'Image',
+        accessor: 'image', 
+      },
     ],
     []
   );
