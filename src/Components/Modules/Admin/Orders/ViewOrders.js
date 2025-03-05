@@ -93,8 +93,20 @@ const ViewOrders = () => {
       },
       {
         Header: 'Image',
-        accessor: 'image_url',
+        accessor: 'image_url', // Keep accessor as is
+        Cell: ({ value }) => (
+          value ? (
+            <img
+              src={`http://localhost:5000${value}`} // Construct full image URL
+              alt="Order Image"
+              style={{ width: '50px', height: '50px', borderRadius: '5px', objectFit: 'cover' }}
+            />
+          ) : (
+            'No Image' // Display text if image is missing
+          )
+        ),
       },
+      
       {
         Header: 'Assign Worker',
         Cell: ({ row }) => (
