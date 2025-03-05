@@ -52,6 +52,7 @@ const ViewOrders = () => {
                   <span><strong>Status:</strong> {order.order_status}</span>
                   <span><strong>Order Date:</strong> {new Date(order.date).toLocaleDateString()}</span>
                 </div>
+                <hr />
                 <div className="order-body">
                   <div className="order-content">
                     <img src={order.imageUrl} alt="Product" className="product-image" />
