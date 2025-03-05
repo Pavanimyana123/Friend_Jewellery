@@ -61,7 +61,7 @@ const ViewOrders = () => {
       },
       {
         Header: 'Image',
-        accessor: 'image', 
+        accessor: 'image_url', 
       },
     ],
     []
