@@ -4,7 +4,6 @@ import DataTable from '../../../Pages/InputField/TableLayout'; // Import the reu
 import { FaEdit, FaTrash, FaEye } from 'react-icons/fa';
 import { Button, Row, Col, Modal } from 'react-bootstrap';
 import './ViewOrders.css';
-
 import baseURL from '../../../../Url/NodeBaseURL';
 import Navbar from '../../../Pages/Navbar/Navbar';
 
@@ -12,18 +11,52 @@ const ViewOrders = () => {
   const navigate = useNavigate();
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [workers, setWorkers] = useState([]);
+
+  useEffect(() => {
+    const fetchWorkers = async () => {
+      try {
+        const response = await fetch(`${baseURL}/accounts`);
+        if (!response.ok) {
+          throw new Error('Failed to fetch data');
+        }
+        const result = await response.json();
+  
+        // Filter only workers
+        const workers = result
+          .filter((item) => item.account_group === 'WORKER')
+          .map((item) => ({
+            id: item.id,
+            name: item.account_name,
+          }));
+  
+        setWorkers(workers);
+        console.log("Workers=", workers);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+  
+    fetchWorkers();
+  }, []);
+  
+  const [assignedWorkers, setAssignedWorkers] = useState({});
+  
+  const handleWorkerAssign = (orderId, workerId) => {
+    setAssignedWorkers({ ...assignedWorkers, [orderId]: workerId });
+  };
   
   const columns = React.useMemo(
     () => [
       {
         Header: 'Sr. No.',
-        Cell: ({ row }) => row.index + 1, // Generate a sequential number based on the row index
+        Cell: ({ row }) => row.index + 1,
       },
       {
         Header: 'Date',
         accessor: row => {
           const date = new Date(row.date);
-          return date.toLocaleDateString('en-GB'); // Formats as dd/mm/yyyy
+          return date.toLocaleDateString('en-GB');
         },
       },
       {
@@ -38,7 +71,6 @@ const ViewOrders = () => {
         Header: 'Order Number',
         accessor: 'order_number',
       },
-      
       {
         Header: 'Metal',
         accessor: 'metal',
@@ -52,7 +84,7 @@ const ViewOrders = () => {
         accessor: 'subcategory',
       },
       {
-        Header: 'Total Amt ',
+        Header: 'Total Amt',
         accessor: 'total_price',
       },
       {
@@ -61,12 +93,28 @@ const ViewOrders = () => {
       },
       {
         Header: 'Image',
-        accessor: 'image_url', 
+        accessor: 'image_url',
+      },
+      {
+        Header: 'Assign Worker',
+        Cell: ({ row }) => (
+          <select
+            value={assignedWorkers[row.original.order_number] || ''}
+            onChange={(e) => handleWorkerAssign(row.original.order_number, e.target.value)}
+          >
+            <option value="">Select Worker</option>
+            {workers.map((worker) => (
+              <option key={worker.id} value={worker.id}>
+                {worker.name}
+              </option>
+            ))}
+          </select>
+        ),
       },
     ],
-    []
+    [workers, assignedWorkers]
   );
-
+  
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -75,9 +123,7 @@ const ViewOrders = () => {
           throw new Error('Failed to fetch data');
         }
         const result = await response.json();
-  
-        setData(result); // Directly set the fetched data
-        console.log("orders=",result);
+        setData(result); 
       } catch (error) {
         console.error('Error fetching data:', error);
       } finally {
@@ -87,7 +133,6 @@ const ViewOrders = () => {
   
     fetchData();
   }, [baseURL]);
-
 
   const handleCreate = () => {
     navigate('/a-orders');
