@@ -109,4 +109,75 @@ h2 {
   z-index: 0;
 }
 
+@media screen and (min-width: 768px) and (max-width: 1024px) {
 
+  /* Order Tracker */
+.order-tracker {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  flex: none;
+  position: relative;
+  width: 100%;
+}
+
+}
+
+
+
+
+
+@media screen and (max-width: 767px) {
+
+  .order-card .order-header{
+    display: flex;
+    flex-direction: column;
+    font-size: 25px;
+
+  }
+  .order-tracker {
+    display: flex
+;
+    flex-direction: column;
+    /* justify-content: space-around; */
+    align-items: center;
+    flex: none;
+    position: relative;
+    width: 100%;
+}
+.order-content {
+  display: flex
+;
+  flex-direction: column;
+  gap: 20px;
+  align-items: center;
+  flex: 1 1;
+}
+
+.order-tracker::before {
+  width: 3px;
+        height: 85%;
+        left: 50%;
+        top: 49px;
+        bottom: 0;
+  background: #ddd;
+  z-index: -1;
+}
+
+.tracker-step {
+  display: flex
+;
+  flex-direction: column;
+  align-items: center;
+  flex: 1 1;
+  font-size: 25px;
+}
+
+.product-details p{
+  font-size: 23px;
+}
+.main-container .order-title {
+  font-size: 36px;
+
+}
+}

@@ -13,6 +13,10 @@
     height: 82px;
 }
 
+.navbar-brand img {
+  width: 130px;
+}
+
 .active {
   background-color: #a36e29;
   color: #fff;
@@ -236,7 +240,7 @@
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     position: fixed;
     height: 80px; /* Fixed height */
-    z-index: 1;
+    z-index: 1001;
     width: 100%;
 }
 
@@ -320,6 +324,17 @@
     .navbar-hamburger.open .navbar-bar:nth-child(3) {
       transform: translateY(-7px) rotate(-45deg);
   }
+
+  .username {
+    margin-right: 354px;
+    margin-left: -368px;
+    margin-top: 2px;
+    font-size: 23px;
+    font-weight: bold;
+    color: rgb(163, 110, 41);
+}
+
+
   }
 
   
@@ -333,7 +348,7 @@
       background: #fff;
       box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
       position: fixed;
-      height: 55px;
+      height: 75px;
       width: 100%;
     }
 
@@ -378,4 +393,21 @@
       font-size: 1.2rem;
       margin-left: -35px;
     }
+
+    .username {
+      margin-right: 337px;
+      margin-left: -140px;
+      margin-top: 2px;
+      font-size: 23px;
+      font-weight: bold;
+      color: rgb(163, 110, 41);
+  }
+
+  .navbar-hamburger {
+    display: flex
+;
+    z-index: 1000;
+    margin-left: 112px;
+}
+
   }

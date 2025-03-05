@@ -37,7 +37,7 @@ function VendorNavbar() {
     return (
         <header className="navbar-header">
             <div className="navbar-brand">
-                <img src={logo} alt="Logo" style={{ width: "130px" }} />
+                <img src={logo} alt="Logo" />
             </div>
 
             <div className={`navbar-hamburger ${isOpen ? 'open' : ''}`} onClick={toggleMenu}>
