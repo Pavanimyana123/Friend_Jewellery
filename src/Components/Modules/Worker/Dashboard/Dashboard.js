@@ -19,8 +19,7 @@ const Dashboard = () => {
     <>
       <WorkerNavbar />
       <div className="worker-dashboard-container">
-        <h1>Worker Dashboard</h1>
-        
+      <h1 className="dashboard-title">Dashboard</h1>        
         <div className="dashboard-cards">
           {workerCards.map((card, index) => (
             <a href={card.link} key={index} className="dashboard-card">

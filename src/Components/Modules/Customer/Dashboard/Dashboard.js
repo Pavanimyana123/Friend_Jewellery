@@ -60,10 +60,9 @@ const Dashboard = () => {
     <>
       <CustomerNavbar />
       <div className="customer-dashboard-container">
-        <h1>Dashboard</h1>
-        <h2>Welcome, {user?.account_name}</h2>
+      <h1 className="dashboard-title">Dashboard</h1>        {/* <h2>Welcome, {user?.account_name}</h2>
         <p>Email: {user?.email}</p>
-        <p>Mobile: {user?.mobile}</p>
+        <p>Mobile: {user?.mobile}</p> */}
 
         <div className="dashboard-cards">
           {cards.map((card, index) => (
@@ -73,9 +72,7 @@ const Dashboard = () => {
             </a>
           ))}
         </div>
-        <h1>Welcome, {currentUser.account_name}</h1>
-        <p>Email: {currentUser.email}</p>
-        <p>Mobile: {currentUser.mobile}</p>
+      
       </div>
     </>
   );

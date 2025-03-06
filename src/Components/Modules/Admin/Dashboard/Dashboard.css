@@ -1,6 +1,9 @@
 .dashboard-container {
   padding-top: 80px; /* Adjust based on navbar height */
   text-align: center;
+  
+  background-color: rgba(183, 114, 24, 0.204); /* Updated background color */
+  min-height: 100vh; /* Ensure it covers the full viewport height */
 }
 
 .dashboard-title {
@@ -17,6 +20,10 @@
   padding: 20px;
   justify-content: center;
 }
+.dashboard-cards h3{
+  color: #a36e29;
+}
+
 
 /* Individual Card Styling */
 .dashboard-card {
