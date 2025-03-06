@@ -84,6 +84,17 @@ function Navbar() {
                         </div>
                     )}
                 </div>
+                <Link
+                    to="/"
+                    onClick={handleItemClick}
+                    className='logout-desktop'
+                    style={{
+                        color: window.location.pathname === '/' ? '#a36e29' : 'black',
+                        backgroundColor: 'transparent',
+                        textDecoration: 'none',
+                    }}
+                >
+                    Logout</Link>
             </nav>
             <div className='username'>
                 Admin

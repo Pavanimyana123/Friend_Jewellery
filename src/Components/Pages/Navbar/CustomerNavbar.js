@@ -78,6 +78,18 @@ function VendorNavbar() {
                     }}
                 >
                     Cancel Orders</Link>
+                    <Link
+                    to="/"
+                    onClick={handleItemClick}
+                    className='logout-desktop'
+
+                    style={{
+                        color: window.location.pathname === '/' ? '#a36e29' : 'black',
+                        backgroundColor: 'transparent',
+                        textDecoration: 'none',
+                    }}
+                >
+                    Logout</Link>
                 {/* <div className="navbar-dropdown" onMouseEnter={toggleDropdown} onMouseLeave={toggleDropdown}>
                     <span className="navbar-dropdown-title">
                         Orders <FontAwesomeIcon icon={ordersDropdownOpen ? faChevronUp : faChevronDown} className="dropdown-arrow-icon" />
