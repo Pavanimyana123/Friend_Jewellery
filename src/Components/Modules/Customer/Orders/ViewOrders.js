@@ -7,6 +7,7 @@ import './ViewOrders.css';
 
 const ViewOrders = () => {
   const { user } = useContext(AuthContext);
+  console.log("user=",user?.id)
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
 

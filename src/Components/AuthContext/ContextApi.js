@@ -8,9 +8,15 @@ const AuthProvider = ({ children }) => {
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
     if (storedUser) {
-      setUser(JSON.parse(storedUser));
+      try {
+        setUser(JSON.parse(storedUser));
+      } catch (error) {
+        console.error("Error parsing user data:", error);
+        localStorage.removeItem("user"); // Remove corrupted data
+      }
     }
   }, []);
+  
 
   const login = (userData) => {
     setUser(userData);

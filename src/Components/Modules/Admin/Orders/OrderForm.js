@@ -222,6 +222,32 @@ function Order() {
     }));
   }, [formData.tax_percentage, formData.amount, formData.stone_price, formData.total_mc, formData.disscount, formData.hm_charges]);
 
+  const handleImageChange = (e) => {
+    if (e.target.files.length > 0) {
+      const file = e.target.files[0];
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setFormData({ ...formData, imagePreview: reader.result });
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const captureImage = () => {
+    const imageSrc = webcamRef.current.getScreenshot();
+    setFormData({ ...formData, imagePreview: imageSrc });
+    setShowWebcam(false);
+  };
+
+  const clearImage = () => {
+    setFormData({ ...formData, imagePreview: null });
+  };
+
+  const handleBack = () => {
+    const from = location.state?.from || "/a-view-orders";
+    navigate(from);
+  };
+
   const handleAddItem = () => {
     const updatedFormData = {
       ...formData,
@@ -264,32 +290,6 @@ function Order() {
     });
   };
 
-  const handleImageChange = (e) => {
-    if (e.target.files.length > 0) {
-      const file = e.target.files[0];
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setFormData({ ...formData, imagePreview: reader.result });
-      };
-      reader.readAsDataURL(file);
-    }
-  };
-
-
-  const captureImage = () => {
-    const imageSrc = webcamRef.current.getScreenshot();
-    setFormData({ ...formData, imagePreview: imageSrc });
-    setShowWebcam(false);
-  };
-
-  const clearImage = () => {
-    setFormData({ ...formData, imagePreview: null });
-  };
-
-  const handleBack = () => {
-    const from = location.state?.from || "/a-view-orders";
-    navigate(from);
-  };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
