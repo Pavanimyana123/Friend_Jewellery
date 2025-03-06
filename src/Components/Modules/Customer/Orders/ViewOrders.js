@@ -7,7 +7,7 @@ import './ViewOrders.css';
 
 const ViewOrders = () => {
   const { user } = useContext(AuthContext);
-  console.log("user=",user?.id)
+  console.log("user=", user?.id)
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -56,7 +56,12 @@ const ViewOrders = () => {
                 <hr />
                 <div className="order-body">
                   <div className="order-content">
-                    <img src={order.imageUrl} alt="Product" className="product-image" />
+                    <img
+                      src={order.image_url ? `http://localhost:5000${order.image_url}` : 'default-image.jpg'}
+                      alt="Product"
+                      className="product-image"
+                      style={{ width: '70px', height: '70px', borderRadius: '5px', objectFit: 'cover' }}
+                    />
                     <div className="product-details">
                       <p><strong>Product Name:</strong> {order.subcategory}</p>
                       <p><strong>Quantity:</strong> {order.qty}</p>
@@ -65,7 +70,7 @@ const ViewOrders = () => {
                   </div>
                   <div className="order-tracker">
                     {orderStatusSteps.map((step, idx) => (
-                      <div key={idx} className={`tracker-step ${step === order.order_status ? 'statusactive' : ''}`}>                
+                      <div key={idx} className={`tracker-step ${step === order.order_status ? 'statusactive' : ''}`}>
                         <p> {step.replace('_', ' ')}</p>
                         <div className="circle"></div>
                       </div>

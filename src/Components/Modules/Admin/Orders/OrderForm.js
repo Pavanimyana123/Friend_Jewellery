@@ -319,6 +319,8 @@ function Order() {
   
       localStorage.removeItem("orders");
       setOrders([]);
+
+      navigate("/a-view-orders");
   
     } catch (error) {
       console.error("Error submitting orders:", error.response?.data || error.message);

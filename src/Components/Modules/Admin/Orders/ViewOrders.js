@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import DataTable from '../../../Pages/InputField/TableLayout';
 import { Button, Row, Col } from 'react-bootstrap';
 import './ViewOrders.css';
+import axios from "axios";
 import baseURL from '../../../../Url/NodeBaseURL';
 import Navbar from '../../../Pages/Navbar/Navbar';
 
@@ -61,7 +62,7 @@ const ViewOrders = () => {
   // Function to update assigned worker in backend
   const updateOrderWithWorker = async (orderId, workerId, workerName) => {
     try {
-      const response = await fetch(`${baseURL}/api/orders/${orderId}`, {
+      const response = await fetch(`${baseURL}/api/orders/assign/${orderId}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -70,6 +71,7 @@ const ViewOrders = () => {
           assigned_status: workerId ? 'Assigned' : 'Not Assigned',
           worker_id: workerId,  // Store worker ID in the database
           worker_name: workerName,  // Store worker Name in the database
+          work_status:'Pending',
         }),
       });
 
@@ -134,9 +136,44 @@ const ViewOrders = () => {
         accessor: 'total_price',
       },
       {
-        Header: 'Order Status',
-        accessor: 'order_status',
+        Header: "Order Status",
+        accessor: "order_status", // Make sure this matches your backend column name
+        Cell: ({ row }) => {
+          const [status, setStatus] = useState(row.original.order_status || "Placed");
+
+          const handleStatusChange = async (event) => {
+            const newStatus = event.target.value;
+            setStatus(newStatus);
+
+            try {
+              const response = await axios.put(`http://localhost:5000/api/orders/status/${row.original.id}`, {
+                order_status: newStatus, // Update order_status
+                worker_id: row.original.worker_id, // Keep worker_id same
+                worker_name: row.original.worker_name, // Keep worker_name same
+              });
+
+              console.log("Status updated:", response.data);
+              alert("Order status updated successfully!");
+            } catch (error) {
+              console.error("Error updating status:", error);
+              alert("Failed to update status.");
+            }
+          };
+
+          return (
+            <select value={status} onChange={handleStatusChange}>
+              <option value="Placed">Placed</option>
+              <option value="Processing">Processing</option>
+              <option value="Dispatched">Dispatched</option>
+              <option value="Shipped">Shipped</option>
+              <option value="Out for Delivery">Out for Delivery</option>
+              <option value="Delivered">Delivered</option>
+              <option value="Cancel">Cancel</option>
+            </select>
+          );
+        }
       },
+      
       {
         Header: 'Image',
         accessor: 'image_url', // Keep accessor as is
@@ -184,6 +221,13 @@ const ViewOrders = () => {
         accessor: 'worker_name',
         Cell: ({ row }) => row.original.worker_name || 'N/A',
       },
+
+      {
+        Header: 'Work Status',
+        accessor: 'work_status',
+        Cell: ({ row }) => row.original.work_status || 'N/A',
+      },
+
     ],
     [workers, assignedWorkers]
   );
