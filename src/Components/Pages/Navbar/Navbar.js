@@ -96,6 +96,9 @@ function Navbar() {
                 >
                     Logout</Link>
             </nav>
+            <div className='username'>
+                Admin
+            </div>
             <div className="navbar-logout" onClick={handleLogout}>
                 <FaSignOutAlt className="logout-icon" />
             </div>
