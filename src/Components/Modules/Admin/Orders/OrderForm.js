@@ -11,6 +11,7 @@ import { DropdownButton, Dropdown } from "react-bootstrap";
 import { FaUpload, FaCamera, FaTrash } from "react-icons/fa";
 import Webcam from "react-webcam";
 import axios from "axios";
+import baseURL from '../../../../Url/NodeBaseURL';
 
 function Order() {
   const [customers, setCustomers] = useState([]);
@@ -325,6 +326,19 @@ function Order() {
       alert(`Failed to submit orders: ${error.response?.data?.error || "Unknown error"}`);
     }
   };
+
+  useEffect(() => {
+    const fetchLastOrderNumber = async () => {
+      try {
+        const response = await axios.get(`http://localhost:5000/api/lastOrderNumber`);
+        setFormData(prev => ({ ...prev, order_number: response.data.lastOrderNumber }));
+      } catch (error) {
+        console.error("Error fetching invoice number:", error);
+      }
+    };
+
+    fetchLastOrderNumber();
+  }, []);
   
   return (
     <>
@@ -421,7 +435,7 @@ function Order() {
                     />
                   </Row>
                   <Row>
-                    <InputField label="Order No" name="order_number" value={formData.order_number} onChange={handleChange} />
+                    <InputField label="Order No" name="order_number" value={formData.order_number} onChange={handleChange} readOnly/>
                   </Row>
                 </div>
               </div>

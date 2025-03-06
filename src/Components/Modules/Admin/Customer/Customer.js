@@ -207,7 +207,7 @@ function Customer_Master() {
       return false;
     }
     if (formData.ifsc_code?.trim() && formData.ifsc_code.length !== 11) {
-      alert("IFSC Code must be exactly 11 characters.");
+      alert("IFSC Code must be exactly 11 characters.");  
       return false;
     }
   
