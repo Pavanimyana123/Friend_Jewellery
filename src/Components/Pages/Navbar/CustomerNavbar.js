@@ -30,6 +30,7 @@ function VendorNavbar() {
 
     const handleLogout = () => {
         navigate("/");
+        localStorage.removeItem("user");
     };
 
 

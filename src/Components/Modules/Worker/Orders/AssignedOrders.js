@@ -73,7 +73,7 @@ const AssignedOrders = () => {
         const result = await response.json();
   
         // Filter orders based on account_id matching user.id
-        const filteredData = result.filter(order => order.account_id === user?.id);
+        const filteredData = result.filter(order => order.worker_id === user?.id);
   
         setData(filteredData); // Set the filtered data
         console.log("Filtered Orders =", filteredData);
