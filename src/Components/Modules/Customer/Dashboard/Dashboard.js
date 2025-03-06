@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 // import React from 'react'
 // import CustomerNavbar from '../../../Pages/Navbar/CustomerNavbar'
 // import './Dashboard.css'
@@ -27,17 +26,13 @@
 
 
 
-import React, { useContext } from 'react';
-=======
 import React, { useContext, useEffect, useState } from 'react';
->>>>>>> 969a46f1a8e35746cedfe2fe0f490b02f43419e5
 import CustomerNavbar from '../../../Pages/Navbar/CustomerNavbar';
 import './Dashboard.css';
 import { AuthContext } from "../../../AuthContext/ContextApi";
 
 const Dashboard = () => {
   const { user } = useContext(AuthContext);
-<<<<<<< HEAD
 
   // Function to generate a random number for the count (between min and max)
   const getRandomCount = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
@@ -50,7 +45,6 @@ const Dashboard = () => {
     { title: "Support & Help", link: "/c-support", count: getRandomCount(2, 20) },
     { title: "Profile & Settings", link: "/c-profile", count: getRandomCount(1, 5) },
   ];
-=======
   const [currentUser, setCurrentUser] = useState(user);
 
   // Update state whenever `user` changes
@@ -61,14 +55,12 @@ const Dashboard = () => {
   if (!currentUser) {
     return <p>Loading...</p>; // Show loading message until user data is available
   }
->>>>>>> 969a46f1a8e35746cedfe2fe0f490b02f43419e5
 
   return (
     <>
       <CustomerNavbar />
       <div className="customer-dashboard-container">
         <h1>Dashboard</h1>
-<<<<<<< HEAD
         <h2>Welcome, {user?.account_name}</h2>
         <p>Email: {user?.email}</p>
         <p>Mobile: {user?.mobile}</p>
@@ -81,11 +73,9 @@ const Dashboard = () => {
             </a>
           ))}
         </div>
-=======
         <h1>Welcome, {currentUser.account_name}</h1>
         <p>Email: {currentUser.email}</p>
         <p>Mobile: {currentUser.mobile}</p>
->>>>>>> 969a46f1a8e35746cedfe2fe0f490b02f43419e5
       </div>
     </>
   );
