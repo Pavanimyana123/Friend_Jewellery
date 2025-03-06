@@ -293,67 +293,39 @@ function Order() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-
-    // Retrieve all stored orders from localStorage
+  
     const storedOrders = JSON.parse(localStorage.getItem("orders")) || [];
-
     if (storedOrders.length === 0) {
       alert("No orders to submit.");
       return;
     }
-
-    console.log("Submitting orders:", storedOrders); // Debugging: Check what is being sent
-
+  
+    const formData = new FormData();
+  
+    storedOrders.forEach((order, index) => {
+      formData.append(`order`, JSON.stringify(order)); // Send order data as JSON
+      if (order.image_url) {
+        formData.append("image", order.image_url); // Attach image file
+      }
+    });
+  
     try {
-      const response = await axios.post("http://localhost:5000/api/orders",
-        { orders: storedOrders }, // Wrap orders inside an object
-        {
-          headers: { "Content-Type": "application/json" },
-        }
-      );
-
+      const response = await axios.post("http://localhost:5000/api/orders", formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+  
       console.log("Orders added successfully", response.data);
       alert("Orders submitted successfully!");
-
-      // Clear local storage after successful submission
+  
       localStorage.removeItem("orders");
-      setOrders([]); // Clear state
-
-      // Reset form fields
-      setFormData({
-        imagePreview: null,
-        metal: "Gold",
-        category: "",
-        subcategory: "",
-        product_design_name: "",
-        purity: "24KT",
-        gross_weight: "",
-        stone_weight: "",
-        stone_price: "",
-        weight_bw: "",
-        wastage_on: "Gross Weight",
-        wastage_percentage: "",
-        wastage_weight: "",
-        total_weight_aw: "",
-        rate: "8662.00",
-        amount: "",
-        mc_on: "MC %",
-        mc_percentage: "",
-        total_mc: "",
-        tax_percentage: "3 %",
-        tax_amount: "",
-        total_price: "",
-        remarks: "",
-        image_url: null,
-        order_status: "Placed",
-      });
-
+      setOrders([]);
+  
     } catch (error) {
       console.error("Error submitting orders:", error.response?.data || error.message);
       alert(`Failed to submit orders: ${error.response?.data?.error || "Unknown error"}`);
     }
   };
-
+  
   return (
     <>
       <Navbar />

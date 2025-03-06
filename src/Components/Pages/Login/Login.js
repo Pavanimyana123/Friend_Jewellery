@@ -1,16 +1,18 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
-import logo from "../Images/logo.jpeg"; // Logo Image
-import jewelleryImage from "../Images/login_banner.jpg"; // Jewellery Image
+import logo from "../Images/logo.jpeg";
+import jewelleryImage from "../Images/login_banner.jpg";
 import './Login.css';
 import axios from "axios";
-import { FaEye, FaEyeSlash } from "react-icons/fa"; // Import eye icons
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 import baseURL from '../../../Url/NodeBaseURL';
+import { AuthContext } from "../../AuthContext/ContextApi"; // Import context
 
 function Login() {
+  const { login } = useContext(AuthContext); // Use login function from context
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [showPassword, setShowPassword] = useState(false); // State for password visibility
+  const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
@@ -18,6 +20,7 @@ function Login() {
 
     // Static Admin Login
     if (email === "admin@gmail.com" && password === "admin@123") {
+      login({ email, account_group: "ADMIN", account_name: "Admin" });
       navigate("/a-dashboard");
       return;
     }
@@ -27,8 +30,8 @@ function Login() {
       const response = await axios.post(`${baseURL}/login`, { email, password });
 
       if (response.status === 200) {
-        const userData = response.data.user; // Extract user details
-        localStorage.setItem("user", JSON.stringify(userData)); // Store in local storage
+        const userData = response.data.user;
+        login(userData); // Update user state immediately
 
         if (userData.account_group === "CUSTOMERS") {
           navigate("/c-dashboard");
