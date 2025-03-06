@@ -83,7 +83,18 @@ function VendorNavbar() {
                         textDecoration: 'none',
                     }}
                 >
-                    Completed Orders</Link>    
+                    Completed Orders</Link>   
+                     <Link
+                                        to="/"
+                                        onClick={handleItemClick}
+                                        className='logout-desktop'
+                                        style={{
+                                            color: window.location.pathname === '/' ? '#a36e29' : 'black',
+                                            backgroundColor: 'transparent',
+                                            textDecoration: 'none',
+                                        }}
+                                    >
+                                        Logout</Link> 
 
             </nav>
             <div className="navbar-logout" onClick={handleLogout}>
