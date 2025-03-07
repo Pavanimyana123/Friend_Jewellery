@@ -64,7 +64,7 @@ const ViewOrders = () => {
         Cell: ({ value }) => (
           value ? (
             <img
-              src={`http://localhost:5000${value}`} // Construct full image URL
+              src={`${baseURL}${value}`} // Construct full image URL
               alt="Order Image"
               style={{ width: '50px', height: '50px', borderRadius: '5px', objectFit: 'cover' }}
             />

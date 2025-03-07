@@ -72,7 +72,7 @@ const AssignedOrders = () => {
             setStatus(newStatus);
 
             try {
-              const response = await axios.put(`http://localhost:5000/api/orders/work-status/${row.original.id}`, {
+              const response = await axios.put(`${baseURL}/api/orders/work-status/${row.original.id}`, {
                 work_status: newStatus, // Updating work_status in DB
                 worker_id: row.original.worker_id, // Keep worker_id same
                 worker_name: row.original.worker_name, // Keep worker_name same

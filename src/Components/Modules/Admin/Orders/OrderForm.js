@@ -78,7 +78,7 @@ function Order() {
 
   useEffect(() => {
     // Fetch customer data from API when component loads
-    axios.get("http://localhost:5000/accounts")
+    axios.get(`${baseURL}/accounts`)
       .then((response) => {
         const filteredCustomers = response.data.filter(
           (item) => item.account_group === "CUSTOMERS"
@@ -331,7 +331,7 @@ function Order() {
     });
 
     try {
-        const response = await axios.post("http://localhost:5000/api/orders", formData, {
+        const response = await axios.post(`${baseURL}/api/orders`, formData, {
             headers: { "Content-Type": "multipart/form-data" },
         });
 
@@ -352,7 +352,7 @@ function Order() {
   useEffect(() => {
     const fetchLastOrderNumber = async () => {
       try {
-        const response = await axios.get(`http://localhost:5000/api/lastOrderNumber`);
+        const response = await axios.get(`${baseURL}/api/lastOrderNumber`);
         setFormData(prev => ({ ...prev, order_number: response.data.lastOrderNumber }));
       } catch (error) {
         console.error("Error fetching invoice number:", error);

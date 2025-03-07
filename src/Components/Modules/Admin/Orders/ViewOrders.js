@@ -146,7 +146,7 @@ const ViewOrders = () => {
             setStatus(newStatus);
 
             try {
-              const response = await axios.put(`http://localhost:5000/api/orders/status/${row.original.id}`, {
+              const response = await axios.put(`${baseURL}/api/orders/status/${row.original.id}`, {
                 order_status: newStatus, // Update order_status
                 worker_id: row.original.worker_id, // Keep worker_id same
                 worker_name: row.original.worker_name, // Keep worker_name same
@@ -180,7 +180,7 @@ const ViewOrders = () => {
         Cell: ({ value }) => (
           value ? (
             <img
-              src={`http://localhost:5000${value}`} // Construct full image URL
+              src={`${baseURL}${value}`} // Construct full image URL
               alt="Order Image"
               style={{ width: '50px', height: '50px', borderRadius: '5px', objectFit: 'cover' }}
             />

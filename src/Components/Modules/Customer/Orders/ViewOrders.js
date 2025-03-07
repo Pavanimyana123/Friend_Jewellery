@@ -88,10 +88,10 @@ const ViewOrders = () => {
                   </span>
                 </div>
                 <hr />
-                <div className="order-body">
+                <div className="order-body"> 
                   <div className="order-content">
                     <img
-                      src={order.image_url ? `http://localhost:5000${order.image_url}` : 'default-image.jpg'}
+                      src={order.image_url ? `${baseURL}${order.image_url}` : 'default-image.jpg'}
                       alt="Product"
                       className="product-image"
                       style={{ width: '70px', height: '70px', borderRadius: '5px', objectFit: 'cover' }}
