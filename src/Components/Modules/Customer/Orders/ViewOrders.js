@@ -64,6 +64,7 @@ const ViewOrders = () => {
                     />
                     <div className="product-details">
                       <p><strong>Product Name:</strong> {order.subcategory}</p>
+                      <p><strong>Design Name:</strong> {order.product_design_name}</p>
                       <p><strong>Quantity:</strong> {order.qty}</p>
                       <p><strong>Price:</strong> ${order.total_price}</p>
                     </div>

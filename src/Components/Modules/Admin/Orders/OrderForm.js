@@ -65,6 +65,7 @@ function Order() {
     remarks: "",
     image_url: null, // Image URL after upload
     order_status: "Placed",
+    qty:1,
   });
 
   const handleChange = (e) => {
@@ -288,6 +289,7 @@ function Order() {
       remarks: "",
       image_url: null, // Image URL after upload
       order_status: "Placed",
+      qty:1,
     });
   };
 
@@ -437,7 +439,7 @@ function Order() {
                     />
                   </Row>
                   <Row>
-                    <InputField label="Order No" name="order_number" value={formData.order_number} onChange={handleChange} readOnly/>
+                    <InputField label="Order No" name="order_number" value={formData.order_number} onChange={handleChange} />
                   </Row>
                 </div>
               </div>

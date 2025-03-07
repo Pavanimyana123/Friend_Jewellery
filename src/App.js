@@ -21,6 +21,7 @@ import WorkerDashboard from "./Components/Modules/Worker/Dashboard/Dashboard"
 import AssignedOrders from "./Components/Modules/Worker/Orders/AssignedOrders";
 import InprogressOrders from "./Components/Modules/Worker/Orders/InprogressOrders";
 import CompletedOrders from "./Components/Modules/Worker/Orders/CompletedOrders";
+import Rates from "./Components/Modules/Admin/Rates/Rates";
 
 export default function MainApp() {
   return (
@@ -37,14 +38,15 @@ export default function MainApp() {
       <Route path="/a-orders" exact element={<AdminOrder />} />  
       <Route path="/a-view-orders" exact element={<AdminViewOrders />} /> 
       <Route path="/a-cancel-orders" exact element={<AdminCancelOrders />} />
-
-
       <Route path="/a-customertable" exact element={<AdminCustomerTable />} /> 
       <Route path="/a-workertable" exact element={<AdminWorkerTable />} /> 
+      <Route path="/rates" exact element={<Rates />} /> 
 
       <Route path="/c-dashboard" exact element={<CustomerDashboard />} />
       <Route path="/c-vieworders" exact element={<ViewOrders />} /> 
       <Route path="/c-cancelorders" exact element={<CancelOrders />} /> 
+
+      
 
       <Route path="/w-dashboard" exact element={<WorkerDashboard />} />
       <Route path="/w-assigned-orders" exact element={<AssignedOrders />} />

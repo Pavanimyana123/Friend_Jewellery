@@ -53,6 +53,16 @@ function Navbar() {
                     }}
                 >
                     Dashboard</Link>
+                    <Link
+                    to="/rates"
+                    onClick={handleItemClick}
+                    style={{
+                        color: window.location.pathname === '/rates' ? '#a36e29' : 'black',
+                        backgroundColor: 'transparent',
+                        textDecoration: 'none',
+                    }}
+                >
+                    Rates</Link>
                 <Link
                     to="/a-customertable"
                     onClick={handleItemClick}
