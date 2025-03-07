@@ -193,6 +193,8 @@ const ViewOrders = () => {
         Header: 'Assign Worker',
         Cell: ({ row }) => {
           const assignedWorkerName = row.original.worker_name; // Get assigned worker name from row data
+          const isDisabled = row.original.assigned_status === 'Accepted'; // Check if status is 'Accepted'
+      
           return (
             <select
               value={assignedWorkerName || ''} // Set selected value if worker_name matches
@@ -200,6 +202,7 @@ const ViewOrders = () => {
                 const selectedWorker = workers.find(worker => worker.account_name === e.target.value);
                 updateOrderWithWorker(row.original.id, selectedWorker?.id, selectedWorker?.account_name);
               }}
+              disabled={isDisabled} // Disable select if status is 'Accepted'
             >
               <option value="">Select Worker</option>
               {workers.map((worker) => (
@@ -208,8 +211,8 @@ const ViewOrders = () => {
                 </option>
               ))}
             </select>
-          );
-        },
+         );
+       },
       },
       {
         Header: 'Assigned Status',
