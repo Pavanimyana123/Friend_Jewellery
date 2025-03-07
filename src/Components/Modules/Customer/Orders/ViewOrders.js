@@ -4,6 +4,7 @@ import CustomerNavbar from '../../../Pages/Navbar/CustomerNavbar';
 import { AuthContext } from "../../../AuthContext/ContextApi";
 import baseURL from '../../../../Url/NodeBaseURL';
 import './ViewOrders.css';
+import axios from 'axios';
 
 const ViewOrders = () => {
   const { user } = useContext(AuthContext);
@@ -36,6 +37,30 @@ const ViewOrders = () => {
     }
   }, [baseURL, user]);
 
+
+
+  const handleCancelOrder = async (orderId) => {
+    if (!window.confirm("Are you sure you want to cancel this order?")) return;
+
+    try {
+      const response = await axios.put(`${baseURL}/api/orders/cancel/${orderId}`);
+
+      if (response.status === 200) {
+        alert("Order has been canceled successfully.");
+        // Update UI by setting the order status to "Canceled"
+        setData((prevOrders) =>
+          prevOrders.map(order =>
+            order.order_number === orderId ? { ...order, order_status: "Canceled" } : order
+          )
+        );
+      }
+    } catch (error) {
+      console.error("Error canceling order:", error);
+      alert("Failed to cancel the order. Please try again.");
+    }
+  };
+
+
   return (
     <>
       <CustomerNavbar />
@@ -52,6 +77,15 @@ const ViewOrders = () => {
                   <span><strong>Total Amount:</strong> ${order.total_price}</span>
                   <span><strong>Status:</strong> {order.order_status}</span>
                   <span><strong>Order Date:</strong> {new Date(order.date).toLocaleDateString()}</span>
+                  <span>
+                    <button
+                      onClick={() => handleCancelOrder(order.order_number)}
+                      className="cancel-button"
+                      disabled={order.order_status === "Canceled"}
+                    >
+                      {order.order_status === "Canceled" ? "Canceled" : "Cancel Order"}
+                    </button>
+                  </span>
                 </div>
                 <hr />
                 <div className="order-body">

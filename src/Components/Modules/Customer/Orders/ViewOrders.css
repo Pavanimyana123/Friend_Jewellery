@@ -228,3 +228,17 @@ h2 {
   font-size: 10px;
 }
 }
+
+.cancel-button {
+  background-color: red;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.cancel-button:disabled {
+  background-color: gray;
+  cursor: not-allowed;
+}

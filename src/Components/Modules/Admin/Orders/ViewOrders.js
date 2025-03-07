@@ -168,7 +168,7 @@ const ViewOrders = () => {
               <option value="Shipped">Shipped</option>
               <option value="Out for Delivery">Out for Delivery</option>
               <option value="Delivered">Delivered</option>
-              <option value="Cancel">Cancel</option>
+              <option value="Canceled">Cancel</option>
             </select>
           );
         }
