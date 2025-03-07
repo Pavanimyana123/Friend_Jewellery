@@ -73,7 +73,7 @@ const ViewOrders = () => {
         const result = await response.json();
   
         // Filter orders where order_status is "Cancelled"
-        const cancelledOrders = result.filter(order => order.order_status === "Cancelled");
+        const cancelledOrders = result.filter(order => order.order_status === "Canceled");
   
         setData(cancelledOrders); // Set only cancelled orders
         console.log("Cancelled Orders:", cancelledOrders);

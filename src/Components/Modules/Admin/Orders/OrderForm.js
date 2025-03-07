@@ -251,85 +251,103 @@ function Order() {
   };
 
   const handleAddItem = () => {
+    // Ensure order_number is properly incremented or retained
+    const newOrderNumber = formData.order_number || `ORD-${Date.now()}`;
+
     const updatedFormData = {
-      ...formData,
-      ...selectedCustomer,
-      date: selectedDate,
-      account_id: selectedCustomer?.id,
+        ...formData,
+        ...selectedCustomer,
+        date: selectedDate,
+        account_id: selectedCustomer?.id,
+        order_number: newOrderNumber, // Ensure order_number is added correctly
     };
 
     const updatedOrders = [...orders, updatedFormData];
     setOrders(updatedOrders);
     localStorage.setItem("orders", JSON.stringify(updatedOrders)); // Save to local storage
 
-    // Reset form fields
+    // Reset form fields but retain the order_number
     setFormData({
-      imagePreview: null,
-      metal: "Gold",
-      category: "",
-      subcategory: "",
-      product_design_name: "",
-      purity: "24KT",
-      gross_weight: "",
-      stone_weight: "",
-      stone_price: "",
-      weight_bw: "",
-      wastage_on: "Gross Weight",
-      wastage_percentage: "",
-      wastage_weight: "",
-      total_weight_aw: "",
-      rate: "8662.00",
-      amount: "",
-      mc_on: "MC %",
-      mc_percentage: "",
-      total_mc: "",
-      tax_percentage: "3 %",
-      tax_amount: "",
-      total_price: "",
-      remarks: "",
-      image_url: null, // Image URL after upload
-      order_status: "Placed",
-      qty:1,
+        imagePreview: null,
+        metal: "Gold",
+        category: "",
+        subcategory: "",
+        product_design_name: "",
+        purity: "24KT",
+        gross_weight: "",
+        stone_weight: "",
+        stone_price: "",
+        weight_bw: "",
+        wastage_on: "Gross Weight",
+        wastage_percentage: "",
+        wastage_weight: "",
+        total_weight_aw: "",
+        rate: "8662.00",
+        amount: "",
+        mc_on: "MC %",
+        mc_percentage: "",
+        total_mc: "",
+        tax_percentage: "3 %",
+        tax_amount: "",
+        total_price: "",
+        remarks: "",
+        image_url: null,
+        order_status: "Placed",
+        qty: 1,
+        order_number: newOrderNumber, // Keep order_number consistent
     });
-  };
+};
+
 
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-  
+
     const storedOrders = JSON.parse(localStorage.getItem("orders")) || [];
     if (storedOrders.length === 0) {
-      alert("No orders to submit.");
-      return;
+        alert("No orders to submit.");
+        return;
     }
-  
-    const formData = new FormData();
-  
-    storedOrders.forEach((order, index) => {
-      formData.append(`order`, JSON.stringify(order)); // Send order data as JSON
-      if (order.image_url) {
-        formData.append("image", order.image_url); // Attach image file
-      }
-    });
-  
-    try {
-      const response = await axios.post("http://localhost:5000/api/orders", formData, {
-        headers: { "Content-Type": "multipart/form-data" },
-      });
-  
-      console.log("Orders added successfully", response.data);
-      alert("Orders submitted successfully!");
-  
-      localStorage.removeItem("orders");
-      setOrders([]);
 
-      navigate("/a-view-orders");
-  
+     // Validate customer selection (either mobile or account_name must be present)
+     if (!selectedCustomer?.mobile && !selectedCustomer?.account_name) {
+      alert("Please select a customer with a mobile number or name before submitting.");
+      return;
+  }
+
+    // Ensure all orders have the latest customer details before submitting
+    const updatedOrders = storedOrders.map(order => ({
+        ...order,
+        ...selectedCustomer,  // Update customer details
+        account_id: selectedCustomer?.id, // Ensure correct account_id
+    }));
+
+    const formData = new FormData();
+    updatedOrders.forEach((order, index) => {
+        formData.append(`order`, JSON.stringify(order));
+        if (order.image_url) {
+            formData.append("image", order.image_url);
+        }
+    });
+
+    try {
+        const response = await axios.post("http://localhost:5000/api/orders", formData, {
+            headers: { "Content-Type": "multipart/form-data" },
+        });
+
+        console.log("Orders added successfully", response.data);
+        alert("Orders submitted successfully!");
+
+        localStorage.removeItem("orders");
+        setOrders([]);
+        navigate("/a-view-orders");
+
     } catch (error) {
-      console.error("Error submitting orders:", error.response?.data || error.message);
-      alert(`Failed to submit orders: ${error.response?.data?.error || "Unknown error"}`);
+        console.error("Error submitting orders:", error.response?.data || error.message);
+        alert(`Failed to submit orders: ${error.response?.data?.error || "Unknown error"}`);
     }
-  };
+};
+
 
   useEffect(() => {
     const fetchLastOrderNumber = async () => {
