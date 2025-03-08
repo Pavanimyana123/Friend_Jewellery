@@ -25,7 +25,22 @@ const CompletedOrders = () => {
       { Header: 'Sub Category', accessor: 'subcategory' },
       { Header: 'Total Amt ', accessor: 'total_price' },
       { Header: 'Order Status', accessor: 'order_status', Cell: ({ row }) => row.original.order_status || 'N/A' },
-      { Header: 'Work Status', accessor: 'work_status' }
+      { Header: 'Work Status', accessor: 'work_status' },
+      {
+        Header: 'Image',
+        accessor: 'image_url', // Keep accessor as is
+        Cell: ({ value }) => (
+          value ? (
+            <img
+              src={`${baseURL}${value}`} // Construct full image URL
+              alt="Order Image"
+              style={{ width: '50px', height: '50px', borderRadius: '5px', objectFit: 'cover' }}
+            />
+          ) : (
+            'No Image' // Display text if image is missing
+          )
+        ),
+      },
     ],
     []
   );

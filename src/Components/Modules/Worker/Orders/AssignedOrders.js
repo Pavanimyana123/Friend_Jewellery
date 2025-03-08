@@ -63,21 +63,21 @@ const AssignedOrders = () => {
       },
       {
         Header: "Assigned Status",
-        accessor: "assigned_status", // Ensure this matches your backend column name
+        accessor: "assigned_status",
         Cell: ({ row }) => {
           const [status, setStatus] = useState(row.original.assigned_status || "Assigned");
-
+      
           const handleAssignStatusChange = async (event) => {
             const newStatus = event.target.value;
             setStatus(newStatus);
-
+      
             try {
               const response = await axios.put(`${baseURL}/api/orders/assign-status/${row.original.id}`, {
                 assigned_status: newStatus, // Updating work_status in DB
                 worker_id: row.original.worker_id, // Keep worker_id same
                 worker_name: row.original.worker_name, // Keep worker_name same
               });
-
+      
               console.log("Work status updated:", response.data);
               alert("Work status updated successfully!");
             } catch (error) {
@@ -85,16 +85,18 @@ const AssignedOrders = () => {
               alert("Failed to update work status.");
             }
           };
-
+      
           return (
             <select value={status} onChange={handleAssignStatusChange}>
-              <option value="Assigned">Assigned</option>
+              <option value="Assigned" disabled={status === "Accepted"}>Assigned</option>
               <option value="Accepted">Accepted</option>
-              <option value="Rejected">Rejected</option>
+              <option value="Rejected" disabled={status === "Accepted"}>
+                Rejected
+              </option>
             </select>
           );
         },
-      },
+      }, 
       {
         Header: "Work Status",
         accessor: "work_status", // Ensure this matches your backend column name

@@ -137,21 +137,23 @@ const ViewOrders = () => {
       },
       {
         Header: "Order Status",
-        accessor: "order_status", // Make sure this matches your backend column name
+        accessor: "order_status",
         Cell: ({ row }) => {
           const [status, setStatus] = useState(row.original.order_status || "Placed");
-
+          const isPending = row.original.work_status === "Pending"; // Check if work_status is Pending
+          const isDisabled = row.original.order_status === 'Canceled';
+      
           const handleStatusChange = async (event) => {
             const newStatus = event.target.value;
             setStatus(newStatus);
-
+      
             try {
               const response = await axios.put(`${baseURL}/api/orders/status/${row.original.id}`, {
                 order_status: newStatus, // Update order_status
                 worker_id: row.original.worker_id, // Keep worker_id same
                 worker_name: row.original.worker_name, // Keep worker_name same
               });
-
+      
               console.log("Status updated:", response.data);
               alert("Order status updated successfully!");
             } catch (error) {
@@ -159,21 +161,22 @@ const ViewOrders = () => {
               alert("Failed to update status.");
             }
           };
-
+      
           return (
-            <select value={status} onChange={handleStatusChange}>
+            <select value={status} onChange={handleStatusChange} disabled={isDisabled}>
               <option value="Placed">Placed</option>
-              <option value="Processing">Processing</option>
-              <option value="Ready for Delivery">Ready for Delivery</option>
-              <option value="Dispatched">Dispatched</option>
-              <option value="Shipped">Shipped</option>
-              <option value="Out for Delivery">Out for Delivery</option>
-              <option value="Delivered">Delivered</option>
-              <option value="Canceled">Cancel</option>
+              <option value="Processing" disabled={isPending}>Processing</option>
+              <option value="Ready for Delivery" disabled={isPending}>Ready for Delivery</option>
+              <option value="Dispatched" disabled={isPending}>Dispatched</option>
+              <option value="Shipped" disabled={isPending}>Shipped</option>
+              <option value="Out for Delivery" disabled={isPending}>Out for Delivery</option>
+              <option value="Delivered" disabled={isPending}>Delivered</option>
+              <option value="Canceled" disabled={isPending}>Cancel</option>
             </select>
           );
-        }
+        },
       },
+      
       
       {
         Header: 'Image',

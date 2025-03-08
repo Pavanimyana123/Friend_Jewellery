@@ -59,6 +59,21 @@ const ViewOrders = () => {
         Header: 'Order Status',
         accessor: 'order_status',
       },
+      {
+        Header: 'Image',
+        accessor: 'image_url', // Keep accessor as is
+        Cell: ({ value }) => (
+          value ? (
+            <img
+              src={`${baseURL}${value}`} // Construct full image URL
+              alt="Order Image"
+              style={{ width: '50px', height: '50px', borderRadius: '5px', objectFit: 'cover' }}
+            />
+          ) : (
+            'No Image' // Display text if image is missing
+          )
+        ),
+      },
     ],
     []
   );

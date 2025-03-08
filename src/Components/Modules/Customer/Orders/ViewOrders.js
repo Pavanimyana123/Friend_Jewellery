@@ -12,7 +12,14 @@ const ViewOrders = () => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  const orderStatusSteps = ["Placed", "Processing", "Dispatched", "Shipped", "Out for Delivery", "Delivered"];
+  const orderStatusSteps = ["Placed",
+     "Processing", 
+     "Ready for Delivery", 
+    //  "Dispatched", 
+     "Shipped", 
+    //  "Out for Delivery", 
+     "Delivered"
+    ];
 
   useEffect(() => {
     const fetchData = async () => {
