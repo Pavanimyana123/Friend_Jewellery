@@ -73,7 +73,7 @@ const AssignedOrders = () => {
       
             try {
               const response = await axios.put(`${baseURL}/api/orders/assign-status/${row.original.id}`, {
-                assigned_status: newStatus, // Updating work_status in DB
+                assigned_status: newStatus, // Updating assigned_status in DB
                 worker_id: row.original.worker_id, // Keep worker_id same
                 worker_name: row.original.worker_name, // Keep worker_name same
               });
@@ -87,16 +87,19 @@ const AssignedOrders = () => {
           };
       
           return (
-            <select value={status} onChange={handleAssignStatusChange}>
-              <option value="Assigned" disabled={status === "Accepted"}>Assigned</option>
+            <select 
+              value={status} 
+              onChange={handleAssignStatusChange} 
+              disabled={status === "Accepted"} // Completely disable dropdown if status is "Accepted"
+            >
+              <option value="Assigned">Assigned</option>
               <option value="Accepted">Accepted</option>
-              <option value="Rejected" disabled={status === "Accepted"}>
-                Rejected
-              </option>
+              <option value="Rejected">Rejected</option>
             </select>
           );
         },
-      }, 
+      },
+      
       {
         Header: "Work Status",
         accessor: "work_status", // Ensure this matches your backend column name
