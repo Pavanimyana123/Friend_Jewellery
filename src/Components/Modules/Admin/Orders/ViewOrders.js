@@ -112,7 +112,7 @@ const ViewOrders = () => {
         accessor: 'mobile',
       },
       {
-        Header: 'Customer Name',
+        Header: 'Customer',
         accessor: 'account_name',
       },
       {
@@ -164,6 +164,7 @@ const ViewOrders = () => {
             <select value={status} onChange={handleStatusChange}>
               <option value="Placed">Placed</option>
               <option value="Processing">Processing</option>
+              <option value="Ready for Delivery">Ready for Delivery</option>
               <option value="Dispatched">Dispatched</option>
               <option value="Shipped">Shipped</option>
               <option value="Out for Delivery">Out for Delivery</option>

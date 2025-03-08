@@ -457,7 +457,7 @@ function Order() {
                     />
                   </Row>
                   <Row>
-                    <InputField label="Order No" name="order_number" value={formData.order_number} onChange={handleChange} />
+                    <InputField label="Order No" name="order_number" value={formData.order_number} onChange={handleChange} readOnly/>
                   </Row>
                 </div>
               </div>
