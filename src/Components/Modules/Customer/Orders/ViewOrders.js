@@ -81,7 +81,7 @@ const ViewOrders = () => {
               <div className="order-card" key={index}>
                 <div className="order-header">
                   <span><strong>Order ID:</strong> {order.order_number}</span>
-                  <span><strong>Total Amount:</strong> ${order.total_price}</span>
+                  <span><strong>Total Amount:</strong> ₹{order.total_price}</span>
                   <span><strong>Status:</strong> {order.order_status}</span>
                   <span><strong>Order Date:</strong> {new Date(order.date).toLocaleDateString()}</span>
                   <span>
@@ -109,7 +109,7 @@ const ViewOrders = () => {
                       <p><strong>Gross Wt:</strong> {order.gross_weight}</p>
                       <p><strong>Purity:</strong> {order.purity}</p>
                       <p><strong>Quantity:</strong> {order.qty}</p>
-                      <p><strong>Price:</strong> ${order.total_price}</p>
+                      <p><strong>Price:</strong> ₹{order.total_price}</p>
                     </div>
                   </div>
                   <div className="order-tracker">
