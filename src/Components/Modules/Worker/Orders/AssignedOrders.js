@@ -27,14 +27,14 @@ const AssignedOrders = () => {
           return date.toLocaleDateString('en-GB'); // Formats as dd/mm/yyyy
         },
       },
-      {
-        Header: 'Mobile',
-        accessor: 'mobile',
-      },
-      {
-        Header: 'Customer Name',
-        accessor: 'account_name',
-      },
+      // {
+      //   Header: 'Mobile',
+      //   accessor: 'mobile',
+      // },
+      // {
+      //   Header: 'Customer Name',
+      //   accessor: 'account_name',
+      // },
       {
         Header: 'Order Number',
         accessor: 'order_number',

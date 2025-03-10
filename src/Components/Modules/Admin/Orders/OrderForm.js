@@ -8,13 +8,14 @@ import InputField from "../../../Pages/InputField/InputField";
 import { AiOutlinePlus } from "react-icons/ai";
 import { useState, useRef, useEffect } from "react";
 import { DropdownButton, Dropdown } from "react-bootstrap";
-import { FaUpload, FaCamera, FaTrash } from "react-icons/fa";
+import { FaUpload, FaCamera, FaTrash, FaEdit } from "react-icons/fa";
 import Webcam from "react-webcam";
 import axios from "axios";
 import baseURL from '../../../../Url/NodeBaseURL';
 
 function Order() {
   const [customers, setCustomers] = useState([]);
+  const [editingIndex, setEditingIndex] = useState(null);
   const [selectedCustomer, setSelectedCustomer] = useState(null);
   const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split("T")[0]);
   const [orders, setOrders] = useState([]); // New state for orders
@@ -41,6 +42,7 @@ function Order() {
     pan_card: "",
     date: "",
     order_number: "",
+    estimated_delivery_date: "",
     metal: "Gold",
     category: "",
     subcategory: "",
@@ -63,6 +65,7 @@ function Order() {
     tax_amount: "",
     total_price: "",
     remarks: "",
+    delivery_date: "",
     image_url: null, // Image URL after upload
     order_status: "Placed",
     qty: 1,
@@ -272,8 +275,14 @@ function Order() {
     navigate(from);
   };
 
+  const handleEdit = (index) => {
+    const orderToEdit = orders[index];
+    setFormData(orderToEdit); // Load order details into form fields
+    setEditingIndex(index);  // Track the index being edited
+  };
+
+
   const handleAddItem = () => {
-    // Ensure order_number is properly incremented or retained
     const newOrderNumber = formData.order_number || `ORD-${Date.now()}`;
 
     const updatedFormData = {
@@ -281,14 +290,24 @@ function Order() {
       ...selectedCustomer,
       date: selectedDate,
       account_id: selectedCustomer?.id,
+
       order_number: newOrderNumber, // Ensure order_number is added correctly
+
     };
 
-    const updatedOrders = [...orders, updatedFormData];
-    setOrders(updatedOrders);
-    localStorage.setItem("orders", JSON.stringify(updatedOrders)); // Save to local storage
+    let updatedOrders;
+    if (editingIndex !== null) {
+      updatedOrders = orders.map((order, index) =>
+        index === editingIndex ? updatedFormData : order
+      );
+      setEditingIndex(null); // Reset editing index after update
+    } else {
+      updatedOrders = [...orders, updatedFormData];
+    }
 
-    // Reset form fields but retain the order_number
+    setOrders(updatedOrders);
+    localStorage.setItem("orders", JSON.stringify(updatedOrders));
+
     setFormData({
       imagePreview: null,
       metal: "Gold",
@@ -313,12 +332,14 @@ function Order() {
       tax_amount: "",
       total_price: "",
       remarks: "",
+      delivery_date: "",
       image_url: null,
       order_status: "Placed",
       qty: 1,
-      order_number: newOrderNumber, // Keep order_number consistent
+      order_number: newOrderNumber,
     });
   };
+
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -471,7 +492,7 @@ function Order() {
               {/* Right Section */}
               <div className="order-form-right">
                 <div className="order-form-section">
-                  <Row className="mt-5">
+                  <Row className="">
                     <InputField
                       label="Date"
                       type="date"
@@ -482,6 +503,11 @@ function Order() {
                   </Row>
                   <Row>
                     <InputField label="Order No" name="order_number" value={formData.order_number} onChange={handleChange} readOnly />
+
+                  </Row>
+                  <Row style={{ marginBottom: "-12px" }}>
+                    <InputField label="Estimated Delivery Date" name="estimated_delivery_date" type="date" value={formData.estimated_delivery_date} onChange={handleChange} />
+
                   </Row>
                 </div>
               </div>
@@ -630,14 +656,17 @@ function Order() {
                     ]}
                   />
                 </Col>
-                <Col xs={12} md={2}>
-                  <InputField label="Tax Amount" name="tax_amount" value={formData.tax_amount} type="text" onChange={handleChange} readOnly />
+                <Col xs={12} md={1}>
+                  <InputField label="Tax Amt" name="tax_amount" value={formData.tax_amount} type="text" onChange={handleChange} readOnly />
                 </Col>
                 <Col xs={12} md={2}>
                   <InputField label="Total Price" name="total_price" value={formData.total_price} type="text" onChange={handleChange} readOnly />
                 </Col>
                 <Col xs={12} md={2}>
                   <InputField label="Remarks" name="remarks" value={formData.remarks} type="text" onChange={handleChange} />
+                </Col>
+                <Col xs={12} md={2}>
+                  <InputField label="Delivery Date" name="delivery_date" value={formData.delivery_date} type="date" onChange={handleChange} />
                 </Col>
                 <Col xs={12} md={2}>
                   <DropdownButton
@@ -718,7 +747,7 @@ function Order() {
                     style={{ backgroundColor: "#a36e29", borderColor: "#a36e29" }}
                     onClick={handleAddItem}
                   >
-                    Add
+                    {editingIndex !== null ? "Update" : "Add"}
                   </Button>
                 </Col>
               </Row>
@@ -731,11 +760,18 @@ function Order() {
               <thead>
                 <tr>
                   <th>Mobile</th>
-                  <th>Customer Name</th>
+                  <th>Customer</th>
                   <th>Date</th>
                   <th>Metal</th>
+                  <th>Category</th>
+                  <th>Subcategory</th>
                   <th>Purity</th>
-                  <th>Amount</th>
+                  <th>Gross Wt</th>
+                  <th>Stone Wt</th>
+                  <th>Total Weight</th>
+                  <th>Rate</th>
+                  <th>Total Price</th>
+                  <th>Image</th>
                   <th>Actions</th>
                 </tr>
               </thead>
@@ -746,16 +782,38 @@ function Order() {
                     <td>{order.account_name}</td>
                     <td>{order.date}</td>
                     <td>{order.metal}</td>
+                    <td>{order.category}</td>
+                    <td>{order.subcategory}</td>
                     <td>{order.purity}</td>
-                    <td>{order.amount}</td>
+                    <td>{order.gross_weight}</td>
+                    <td>{order.stone_weight}</td>
+                    <td>{order.total_weight_aw}</td>
+                    <td>{order.rate}</td>
+                    <td>{order.total_price}</td>
                     <td>
-                      <Button variant="danger" onClick={() => {
-                        const updatedOrders = orders.filter((_, i) => i !== index);
-                        setOrders(updatedOrders);
-                        localStorage.setItem("orders", JSON.stringify(updatedOrders));
-                      }}>
-                        Delete
-                      </Button>
+                      {order.imagePreview ? (
+                        <img
+                          src={order.imagePreview}
+                          alt="Preview"
+                          style={{ width: "50px", height: "50px", objectFit: "cover", borderRadius: "5px" }}
+                        />
+                      ) : (
+                        "No Image"
+                      )}
+                    </td>
+                    <td>
+                      <FaEdit
+                        style={{ cursor: 'pointer', marginLeft: '10px', color: 'blue', }}
+                        onClick={() => handleEdit(index)}
+                      />
+                      <FaTrash
+                        style={{ cursor: 'pointer', marginLeft: '10px', color: 'red', }}
+                        onClick={() => {
+                          const updatedOrders = orders.filter((_, i) => i !== index);
+                          setOrders(updatedOrders);
+                          localStorage.setItem("orders", JSON.stringify(updatedOrders));
+                        }}
+                      />
                     </td>
                   </tr>
                 ))}

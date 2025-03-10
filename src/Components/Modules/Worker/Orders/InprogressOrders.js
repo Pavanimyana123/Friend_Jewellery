@@ -17,8 +17,8 @@ const InprogressOrders = () => {
     () => [
       { Header: 'Sr. No.', Cell: ({ row }) => row.index + 1 },
       { Header: 'Date', accessor: row => new Date(row.date).toLocaleDateString('en-GB') },
-      { Header: 'Mobile', accessor: 'mobile' },
-      { Header: 'Customer Name', accessor: 'account_name' },
+      // { Header: 'Mobile', accessor: 'mobile' },
+      // { Header: 'Customer Name', accessor: 'account_name' },
       { Header: 'Order Number', accessor: 'order_number' },
       { Header: 'Metal', accessor: 'metal' },
       { Header: 'Category', accessor: 'category' },
