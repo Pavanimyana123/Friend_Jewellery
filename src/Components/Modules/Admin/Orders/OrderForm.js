@@ -65,16 +65,38 @@ function Order() {
     remarks: "",
     image_url: null, // Image URL after upload
     order_status: "Placed",
-    qty:1,
+    qty: 1,
   });
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+  
+    setFormData((prev) => {
+      if (name === "mc_on") {
+        // Reset mc_percentage and total_mc when mc_on is changed
+        return {
+          ...prev,
+          [name]: value,
+          mc_percentage: "",
+          total_mc: "",
+        };
+      }
+  
+      if (name === "total_mc" && formData.mc_on === "MC / Piece" && value === "") {
+        return {
+          ...prev,
+          total_mc: "",
+          mc_percentage: "", // Clear mc_percentage when total_mc is cleared
+        };
+      }
+  
+      return {
+        ...prev,
+        [name]: value,
+      };
+    });
   };
+  
 
   useEffect(() => {
     // Fetch customer data from API when component loads
@@ -255,11 +277,11 @@ function Order() {
     const newOrderNumber = formData.order_number || `ORD-${Date.now()}`;
 
     const updatedFormData = {
-        ...formData,
-        ...selectedCustomer,
-        date: selectedDate,
-        account_id: selectedCustomer?.id,
-        order_number: newOrderNumber, // Ensure order_number is added correctly
+      ...formData,
+      ...selectedCustomer,
+      date: selectedDate,
+      account_id: selectedCustomer?.id,
+      order_number: newOrderNumber, // Ensure order_number is added correctly
     };
 
     const updatedOrders = [...orders, updatedFormData];
@@ -268,83 +290,83 @@ function Order() {
 
     // Reset form fields but retain the order_number
     setFormData({
-        imagePreview: null,
-        metal: "Gold",
-        category: "",
-        subcategory: "",
-        product_design_name: "",
-        purity: "24KT",
-        gross_weight: "",
-        stone_weight: "",
-        stone_price: "",
-        weight_bw: "",
-        wastage_on: "Gross Weight",
-        wastage_percentage: "",
-        wastage_weight: "",
-        total_weight_aw: "",
-        rate: "8662.00",
-        amount: "",
-        mc_on: "MC %",
-        mc_percentage: "",
-        total_mc: "",
-        tax_percentage: "3 %",
-        tax_amount: "",
-        total_price: "",
-        remarks: "",
-        image_url: null,
-        order_status: "Placed",
-        qty: 1,
-        order_number: newOrderNumber, // Keep order_number consistent
+      imagePreview: null,
+      metal: "Gold",
+      category: "",
+      subcategory: "",
+      product_design_name: "",
+      purity: "24KT",
+      gross_weight: "",
+      stone_weight: "",
+      stone_price: "",
+      weight_bw: "",
+      wastage_on: "Gross Weight",
+      wastage_percentage: "",
+      wastage_weight: "",
+      total_weight_aw: "",
+      rate: "8662.00",
+      amount: "",
+      mc_on: "MC %",
+      mc_percentage: "",
+      total_mc: "",
+      tax_percentage: "3 %",
+      tax_amount: "",
+      total_price: "",
+      remarks: "",
+      image_url: null,
+      order_status: "Placed",
+      qty: 1,
+      order_number: newOrderNumber, // Keep order_number consistent
     });
-};
+  };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
 
     const storedOrders = JSON.parse(localStorage.getItem("orders")) || [];
     if (storedOrders.length === 0) {
-        alert("No orders to submit.");
-        return;
+      alert("No orders to submit.");
+      return;
     }
 
-     // Validate customer selection (either mobile or account_name must be present)
-     if (!selectedCustomer?.mobile && !selectedCustomer?.account_name) {
+    // Validate customer selection (either mobile or account_name must be present)
+    if (!selectedCustomer?.mobile && !selectedCustomer?.account_name) {
       alert("Please select a customer with a mobile number or name before submitting.");
       return;
-  }
+    }
 
     // Ensure all orders have the latest customer details before submitting
     const updatedOrders = storedOrders.map(order => ({
-        ...order,
-        ...selectedCustomer,  // Update customer details
-        account_id: selectedCustomer?.id, // Ensure correct account_id
+      ...order,
+      ...selectedCustomer,  // Update customer details
+      account_id: selectedCustomer?.id, // Ensure correct account_id
     }));
 
     const formData = new FormData();
     updatedOrders.forEach((order, index) => {
-        formData.append(`order`, JSON.stringify(order));
-        if (order.image_url) {
-            formData.append("image", order.image_url);
-        }
+      formData.append(`order`, JSON.stringify(order));
+      if (order.image_url) {
+        formData.append("image", order.image_url);
+      }
     });
 
     try {
-        const response = await axios.post(`${baseURL}/api/orders`, formData, {
-            headers: { "Content-Type": "multipart/form-data" },
-        });
+      const response = await axios.post(`${baseURL}/api/orders`, formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
 
-        console.log("Orders added successfully", response.data);
-        alert("Orders submitted successfully!");
+      console.log("Orders added successfully", response.data);
+      alert("Orders submitted successfully!");
 
-        localStorage.removeItem("orders");
-        setOrders([]);
-        navigate("/a-view-orders");
+      localStorage.removeItem("orders");
+      setOrders([]);
+      navigate("/a-view-orders");
 
     } catch (error) {
-        console.error("Error submitting orders:", error.response?.data || error.message);
-        alert(`Failed to submit orders: ${error.response?.data?.error || "Unknown error"}`);
+      console.error("Error submitting orders:", error.response?.data || error.message);
+      alert(`Failed to submit orders: ${error.response?.data?.error || "Unknown error"}`);
     }
-};
+  };
 
   useEffect(() => {
     const fetchLastOrderNumber = async () => {
@@ -362,7 +384,7 @@ function Order() {
   const handleAddCustomer = () => {
     navigate("/a-customers", { state: { from: "/a-orders" } });
   };
-  
+
   return (
     <>
       <Navbar />
@@ -459,7 +481,7 @@ function Order() {
                     />
                   </Row>
                   <Row>
-                    <InputField label="Order No" name="order_number" value={formData.order_number} onChange={handleChange} readOnly/>
+                    <InputField label="Order No" name="order_number" value={formData.order_number} onChange={handleChange} readOnly />
                   </Row>
                 </div>
               </div>
@@ -573,19 +595,26 @@ function Order() {
                     label="MC On"
                     name="mc_on"
                     type="select"
-                    value={formData.mc_on}  // Ensure this is part of the state
+                    value={formData.mc_on} // Ensure this is part of the state
                     onChange={handleChange}
                     options={[
                       { value: "MC %", label: "MC %" },
-                      { value: "MC/GRAM", label: "MC/GRAM" },
-                      { value: "MC/PIECE", label: "MC/PIECE" },
+                      { value: "MC / Gram", label: "MC / Gram" },
+                      { value: "MC / Piece", label: "MC / Piece" },
                     ]}
                   />
                 </Col>
 
                 <Col xs={12} md={2}>
-                  <InputField label="MC %" name="mc_percentage" value={formData.mc_percentage} type="text" onChange={handleChange} />
+                  <InputField
+                    label={formData.mc_on || "MC %"}  // Dynamically change label
+                    name="mc_percentage"
+                    value={formData.mc_percentage}
+                    type="text"
+                    onChange={handleChange}
+                  />
                 </Col>
+
                 <Col xs={12} md={2}>
                   <InputField label="Total MC" name="total_mc" value={formData.total_mc} type="text" onChange={handleChange} />
                 </Col>
