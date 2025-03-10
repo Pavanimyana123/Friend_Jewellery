@@ -254,7 +254,8 @@ function Customer_Master() {
 
       if (saveResponse.ok) {
         alert(`Customer ${id ? "updated" : "created"} successfully!`);
-        navigate("/a-customertable");
+        const from = location.state?.from || "/a-customertable";
+        navigate(from);
       } else {
         alert("Failed to save customer.");
       }

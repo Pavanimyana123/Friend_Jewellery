@@ -298,8 +298,6 @@ function Order() {
     });
 };
 
-
-
   const handleSubmit = async (event) => {
     event.preventDefault();
 
@@ -348,7 +346,6 @@ function Order() {
     }
 };
 
-
   useEffect(() => {
     const fetchLastOrderNumber = async () => {
       try {
@@ -361,6 +358,10 @@ function Order() {
 
     fetchLastOrderNumber();
   }, []);
+
+  const handleAddCustomer = () => {
+    navigate("/a-customers", { state: { from: "/a-orders" } });
+  };
   
   return (
     <>
@@ -392,6 +393,7 @@ function Order() {
                       <AiOutlinePlus
                         size={20}
                         color="black"
+                        onClick={handleAddCustomer}
                         style={{ marginLeft: "10px", cursor: "pointer", marginBottom: "20px" }}
                       />
                     </Col>
