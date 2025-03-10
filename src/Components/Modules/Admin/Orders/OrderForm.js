@@ -47,7 +47,7 @@ function Order() {
     category: "",
     subcategory: "",
     product_design_name: "",
-    purity: "24KT",
+    purity: "22KT",
     gross_weight: "",
     stone_weight: "",
     stone_price: "",
@@ -70,6 +70,25 @@ function Order() {
     order_status: "Placed",
     qty: 1,
   });
+  const [rates, setRates] = useState({ rate_24crt: "", rate_22crt: "", rate_18crt: "", rate_16crt: "",silver_rate:""});
+
+  useEffect(() => {
+    const fetchCurrentRates = async () => {
+      try {
+        const response = await axios.get(`${baseURL}/get/current-rates`);
+        setRates({
+          rate_24crt: response.data.rate_24crt || "",
+          rate_22crt: response.data.rate_22crt || "",
+          rate_18crt: response.data.rate_18crt || "",
+          rate_16crt: response.data.rate_16crt || "",
+          silver_rate: response.data.silver_rate || "",
+        });
+      } catch (error) {
+        console.error('Error fetching current rates:', error);
+      }
+    };
+    fetchCurrentRates();
+  }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -99,8 +118,34 @@ function Order() {
       };
     });
   };
-  
 
+  useEffect(() => {
+    if (formData.metal && formData.purity) {
+      let updatedRate = "";
+  
+      if (["gold", "diamond"].includes(formData.metal.toLowerCase())) {
+        if (formData.purity.includes("22")) {
+          updatedRate = rates.rate_22crt;
+        } else if (formData.purity.includes("24")) {
+          updatedRate = rates.rate_24crt;
+        } else if (formData.purity.includes("18")) {
+          updatedRate = rates.rate_18crt;
+        } else if (formData.purity.includes("16")) {
+          updatedRate = rates.rate_16crt;
+        }
+      } else if (formData.metal.toLowerCase() === "silver") {
+        updatedRate = rates.silver_rate; 
+      }
+  
+      setFormData((prev) => ({
+        ...prev,
+        rate: updatedRate,
+      }));
+    }
+  }, [formData.metal, formData.purity, rates]);
+  
+  
+  
   useEffect(() => {
     // Fetch customer data from API when component loads
     axios.get(`${baseURL}/accounts`)
@@ -281,7 +326,6 @@ function Order() {
     setEditingIndex(index);  // Track the index being edited
   };
 
-
   const handleAddItem = () => {
     const newOrderNumber = formData.order_number || `ORD-${Date.now()}`;
 
@@ -314,7 +358,7 @@ function Order() {
       category: "",
       subcategory: "",
       product_design_name: "",
-      purity: "24KT",
+      purity: "22KT",
       gross_weight: "",
       stone_weight: "",
       stone_price: "",
@@ -339,7 +383,6 @@ function Order() {
       order_number: newOrderNumber,
     });
   };
-
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -526,7 +569,6 @@ function Order() {
                       { value: "Gold", label: "Gold" },
                       { value: "Silver", label: "Silver" },
                       { value: "Diamond", label: "Diamond" },
-                      { value: "Platinum", label: "Platinum" },
                     ]}
                   />
                 </Col>
@@ -562,10 +604,10 @@ function Order() {
                     value={formData.purity}
                     onChange={handleChange}
                     options={[
-                      { value: "22KT", label: "22KT" },
                       { value: "24KT", label: "24KT" },
-                      { value: "16KT", label: "16KT" },
+                      { value: "22KT", label: "22KT" }, 
                       { value: "18KT", label: "18KT" },
+                      { value: "16KT", label: "16KT" },                     
                     ]}
                   />
                 </Col>
