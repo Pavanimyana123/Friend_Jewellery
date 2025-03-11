@@ -13,13 +13,14 @@ const ViewOrders = () => {
   const [loading, setLoading] = useState(true);
 
   const orderStatusSteps = ["Placed",
-     "Processing", 
-     "Ready for Delivery", 
+    "Processing",
+    "Ready for Delivery",
     //  "Dispatched", 
-     "Shipped", 
+    "Shipped",
     //  "Out for Delivery", 
-     "Delivered"
-    ];
+    "Delivered",
+    // "Cancel Requested"
+  ];
 
   useEffect(() => {
     const fetchData = async () => {
@@ -47,25 +48,26 @@ const ViewOrders = () => {
 
 
   const handleCancelOrder = async (orderId) => {
-    if (!window.confirm("Are you sure you want to cancel this order?")) return;
+    if (!window.confirm("Are you sure you want to request cancellation for this order?")) return;
 
     try {
       const response = await axios.put(`${baseURL}/api/orders/cancel/${orderId}`);
 
       if (response.status === 200) {
-        alert("Order has been canceled successfully.");
-        // Update UI by setting the order status to "Canceled"
+        alert("Order cancel request sent successfully.");
+        // Update UI by setting cancel_req_status to "Pending"
         setData((prevOrders) =>
           prevOrders.map(order =>
-            order.order_number === orderId ? { ...order, order_status: "Canceled" } : order
+            order.id === orderId ? { ...order, cancel_req_status: "Pending" } : order
           )
         );
       }
     } catch (error) {
-      console.error("Error canceling order:", error);
-      alert("Failed to cancel the order. Please try again.");
+      console.error("Error requesting order cancellation:", error);
+      alert("Failed to request order cancellation. Please try again.");
     }
   };
+
 
 
   return (
@@ -82,20 +84,34 @@ const ViewOrders = () => {
                 <div className="order-header">
                   <span><strong>Order ID:</strong> {order.order_number}</span>
                   <span><strong>Total Amount:</strong> ₹{order.total_price}</span>
-                  <span><strong>Status:</strong> {order.order_status}</span>
+                  <span>
+                    <strong>Status:</strong>
+                    {order.cancel_req_status === "Pending"
+                      ? "Cancel Requested"
+                      : order.cancel_req_status === "Rejected"
+                        ? "Cancel Rejected"
+                        : order.order_status}
+                  </span>
+
                   <span><strong>Order Date:</strong> {new Date(order.date).toLocaleDateString()}</span>
                   <span>
                     <button
-                      onClick={() => handleCancelOrder(order.order_number)}
+                      onClick={() => handleCancelOrder(order.id)}
                       className="cancel-button"
-                      disabled={order.order_status === "Canceled"}
+                      disabled={order.cancel_req_status === "Pending" || order.cancel_req_status === "Rejected" || order.order_status === "Canceled"}
                     >
-                      {order.order_status === "Canceled" ? "Canceled" : "Cancel Order"}
+                      {order.cancel_req_status === "Pending"
+                        ? "Cancel Requested"
+                        : order.cancel_req_status === "Rejected"
+                          ? "Cancel Rejected"
+                          : order.order_status === "Canceled"
+                            ? "Order Canceled"
+                            : "Cancel Order"}
                     </button>
                   </span>
                 </div>
                 <hr />
-                <div className="order-body"> 
+                <div className="order-body">
                   <div className="order-content">
                     <img
                       src={order.image_url ? `${baseURL}${order.image_url}` : 'default-image.jpg'}
@@ -114,8 +130,15 @@ const ViewOrders = () => {
                   </div>
                   <div className="order-tracker">
                     {orderStatusSteps.map((step, idx) => (
-                      <div key={idx} className={`tracker-step ${step === order.order_status ? 'statusactive' : ''}`}>
-                        <p> {step.replace('_', ' ')}</p>
+                      <div
+                        key={idx}
+                        className={`tracker-step ${(order.cancel_req_status === "Pending" && step === "Cancel Requested") ||
+                          (order.cancel_req_status !== "Pending" && step === order.order_status)
+                          ? 'statusactive'
+                          : ''
+                          }`}
+                      >
+                        <p>{step.replace('_', ' ')}</p>
                         <div className="circle"></div>
                       </div>
                     ))}

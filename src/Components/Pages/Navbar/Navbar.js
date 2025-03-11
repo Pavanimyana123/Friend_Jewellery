@@ -95,6 +95,16 @@ function Navbar() {
                     )}
                 </div>
                 <Link
+                    to="/a-cancel-requests"
+                    onClick={handleItemClick}
+                    style={{
+                        color: window.location.pathname === '/a-cancel-requests' ? '#a36e29' : 'black',
+                        backgroundColor: 'transparent',
+                        textDecoration: 'none',
+                    }}
+                >
+                    Cancel Requests</Link>
+                <Link
                     to="/"
                     onClick={handleItemClick}
                     className='logout-desktop'

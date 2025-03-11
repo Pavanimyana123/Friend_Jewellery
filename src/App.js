@@ -22,6 +22,7 @@ import AssignedOrders from "./Components/Modules/Worker/Orders/AssignedOrders";
 import InprogressOrders from "./Components/Modules/Worker/Orders/InprogressOrders";
 import CompletedOrders from "./Components/Modules/Worker/Orders/CompletedOrders";
 import Rates from "./Components/Modules/Admin/Rates/Rates";
+import CancelReq from "./Components/Modules/Admin/Orders/CancelReq";
 
 export default function MainApp() {
   return (
@@ -51,8 +52,9 @@ export default function MainApp() {
       <Route path="/w-dashboard" exact element={<WorkerDashboard />} />
       <Route path="/w-assigned-orders" exact element={<AssignedOrders />} />
       <Route path="/w-inprogress-orders" exact element={<InprogressOrders />} /> 
-      <Route path="/w-completed-orders" exact element={<CompletedOrders />} /> 
-      
+      <Route path="/w-completed-orders" exact element={<CompletedOrders />} />
+
+      <Route path="/a-cancel-requests" exact element={<CancelReq />} />
 
       </Routes>
     </Router>

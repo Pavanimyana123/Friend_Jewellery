@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
-import DataTable from '../../../Pages/InputField/TableLayout';
+import DataTable from '../../../Pages/InputField/DataTable';
 import { Row, Col } from 'react-bootstrap';
 import './InprogressOrders.css';
 import axios from "axios";
