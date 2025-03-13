@@ -207,7 +207,7 @@ function Customer_Master() {
       return false;
     }
     if (formData.ifsc_code?.trim() && formData.ifsc_code.length !== 11) {
-      alert("IFSC Code must be exactly 11 characters.");
+      alert("IFSC Code must be exactly 11 characters.");  
       return false;
     }
   
@@ -254,7 +254,8 @@ function Customer_Master() {
 
       if (saveResponse.ok) {
         alert(`Customer ${id ? "updated" : "created"} successfully!`);
-        navigate("/a-customertable");
+        const from = location.state?.from || "/a-customertable";
+        navigate(from);
       } else {
         alert("Failed to save customer.");
       }

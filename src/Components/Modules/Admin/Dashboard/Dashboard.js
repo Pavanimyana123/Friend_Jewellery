@@ -7,9 +7,9 @@ function Dashboard() {
     { title: "Customers" },
     { title: "Workers" },
     { title: "Orders" },
-    { title: "View Orders" },
-    { title: "Cancel Orders" },
     { title: "Pending Orders" },
+    { title: "Completed Orders" },
+    { title: "Cancel Orders" },
   ];
 
   // Generate random counts for each card

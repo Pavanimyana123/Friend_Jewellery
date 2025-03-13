@@ -103,7 +103,7 @@ h2 {
   position: absolute;
   bottom: 7px;
   left: 9%;  
-  width: 83%;   
+  width: 82%;   
   height: 3px;
   background: #ddd;
   z-index: 0;
@@ -227,4 +227,18 @@ h2 {
   margin-left: -13px;
   font-size: 10px;
 }
+}
+
+.cancel-button {
+  background-color: red;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.cancel-button:disabled {
+  background-color: gray;
+  cursor: not-allowed;
 }

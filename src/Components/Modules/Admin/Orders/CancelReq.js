@@ -3,15 +3,34 @@ import { useNavigate } from 'react-router-dom';
 import DataTable from '../../../Pages/InputField/TableLayout'; // Import the reusable DataTable component
 import { FaEdit, FaTrash, FaEye } from 'react-icons/fa';
 import { Button, Row, Col, Modal } from 'react-bootstrap';
-import './ViewOrders.css';
-
+import './CancelReq.css';
 import baseURL from '../../../../Url/NodeBaseURL';
-import CustomerNavbar from '../../../Pages/Navbar/CustomerNavbar';
+import Navbar from '../../../Pages/Navbar/Navbar';
+import axios from 'axios';
 
-const CancelOrders = () => {
+const CancelReq = () => {
   const navigate = useNavigate();
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [orders, setOrders] = useState([]); // New state for orders
+
+  const handleCancelRequest = async (orderId, action) => {
+    if (!window.confirm(`Are you sure you want to ${action.toLowerCase()} this cancellation request?`)) return;
+
+    try {
+      const response = await axios.put(`${baseURL}/api/orders/cancel/handle/${orderId}`, { action });
+
+      if (response.status === 200) {
+        alert(`Order cancellation ${action.toLowerCase()} successfully.`);
+        // Update UI by removing the request from the list
+        setOrders((prevOrders) => prevOrders.filter(order => order.id !== orderId));
+      }
+    } catch (error) {
+      console.error(`Error updating order cancellation:`, error);
+      alert("Failed to process cancellation request. Please try again.");
+    }
+};
+
 
   const columns = React.useMemo(
     () => [
@@ -35,10 +54,10 @@ const CancelOrders = () => {
         accessor: 'account_name',
       },
       {
-        Header: 'Order Number',
+        Header: 'Order No.',
         accessor: 'order_number',
       },
-      
+
       {
         Header: 'Metal',
         accessor: 'metal',
@@ -74,6 +93,29 @@ const CancelOrders = () => {
           )
         ),
       },
+      {
+        Header: 'Cancel Request Status',
+        accessor: 'cancel_req_status',
+      },
+      { 
+        Header: 'Action', 
+        Cell: ({ row }) => (
+          <>
+            <button 
+              onClick={() => handleCancelRequest(row.original.id, "Approved")} 
+              className="cancel-req-approve-button"
+            >
+              Approve
+            </button>
+            <button 
+              onClick={() => handleCancelRequest(row.original.id, "Rejected")} 
+              className="cancel-req-reject-button"
+            >
+              Reject
+            </button>
+          </>
+        )
+      },
     ],
     []
   );
@@ -86,41 +128,42 @@ const CancelOrders = () => {
           throw new Error('Failed to fetch data');
         }
         const result = await response.json();
-  
+
         // Filter orders where order_status is "Cancelled"
-        const cancelledOrders = result.filter(order => order.order_status === "Canceled");
-  
-        setData(cancelledOrders); // Set only cancelled orders
-        console.log("Cancelled Orders:", cancelledOrders);
+        const cancelReqOrders = result.filter(order => order.cancel_req_status === "Pending");
+
+        setData(cancelReqOrders); // Set only cancelled orders
+        console.log("Cancel Req Orders:", cancelReqOrders);
       } catch (error) {
         console.error('Error fetching data:', error);
       } finally {
         setLoading(false);
       }
     };
-  
+
     fetchData();
   }, [baseURL]);
 
+
   return (
     <>
-    <CustomerNavbar />
-    <div className="main-container">
-      <div className="customers-table-container">
-        <Row className="mb-3">
-          <Col className="d-flex justify-content-between align-items-center">
-            <h3>Cancel Orders</h3>          
-          </Col>
-        </Row>
-        {loading ? (
-          <div>Loading...</div>
-        ) : (
-          <DataTable columns={columns} data={[...data].reverse()} />
-        )}
+      <Navbar />
+      <div className="main-container">
+        <div className="customers-table-container">
+          <Row className="mb-3">
+            <Col className="d-flex justify-content-between align-items-center">
+              <h3>Cancel Requested Orders</h3>
+            </Col>
+          </Row>
+          {loading ? (
+            <div>Loading...</div>
+          ) : (
+            <DataTable columns={columns} data={[...data].reverse()} />
+          )}
+        </div>
       </div>
-    </div>
     </>
   );
 };
 
-export default CancelOrders;
+export default CancelReq;

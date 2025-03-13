@@ -8,12 +8,14 @@ import InputField from "../../../Pages/InputField/InputField";
 import { AiOutlinePlus } from "react-icons/ai";
 import { useState, useRef, useEffect } from "react";
 import { DropdownButton, Dropdown } from "react-bootstrap";
-import { FaUpload, FaCamera, FaTrash } from "react-icons/fa";
+import { FaUpload, FaCamera, FaTrash, FaEdit } from "react-icons/fa";
 import Webcam from "react-webcam";
 import axios from "axios";
+import baseURL from '../../../../Url/NodeBaseURL';
 
 function Order() {
   const [customers, setCustomers] = useState([]);
+  const [editingIndex, setEditingIndex] = useState(null);
   const [selectedCustomer, setSelectedCustomer] = useState(null);
   const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split("T")[0]);
   const [orders, setOrders] = useState([]); // New state for orders
@@ -40,11 +42,12 @@ function Order() {
     pan_card: "",
     date: "",
     order_number: "",
+    estimated_delivery_date: "",
     metal: "Gold",
     category: "",
     subcategory: "",
     product_design_name: "",
-    purity: "24KT",
+    purity: "22KT",
     gross_weight: "",
     stone_weight: "",
     stone_price: "",
@@ -62,21 +65,90 @@ function Order() {
     tax_amount: "",
     total_price: "",
     remarks: "",
+    delivery_date: "",
     image_url: null, // Image URL after upload
     order_status: "Placed",
+    qty: 1,
   });
+  const [rates, setRates] = useState({ rate_24crt: "", rate_22crt: "", rate_18crt: "", rate_16crt: "",silver_rate:""});
+
+  useEffect(() => {
+    const fetchCurrentRates = async () => {
+      try {
+        const response = await axios.get(`${baseURL}/get/current-rates`);
+        setRates({
+          rate_24crt: response.data.rate_24crt || "",
+          rate_22crt: response.data.rate_22crt || "",
+          rate_18crt: response.data.rate_18crt || "",
+          rate_16crt: response.data.rate_16crt || "",
+          silver_rate: response.data.silver_rate || "",
+        });
+      } catch (error) {
+        console.error('Error fetching current rates:', error);
+      }
+    };
+    fetchCurrentRates();
+  }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+  
+    setFormData((prev) => {
+      if (name === "mc_on") {
+        // Reset mc_percentage and total_mc when mc_on is changed
+        return {
+          ...prev,
+          [name]: value,
+          mc_percentage: "",
+          total_mc: "",
+        };
+      }
+  
+      if (name === "total_mc" && formData.mc_on === "MC / Piece" && value === "") {
+        return {
+          ...prev,
+          total_mc: "",
+          mc_percentage: "", // Clear mc_percentage when total_mc is cleared
+        };
+      }
+  
+      return {
+        ...prev,
+        [name]: value,
+      };
+    });
   };
 
   useEffect(() => {
+    if (formData.metal && formData.purity) {
+      let updatedRate = "";
+  
+      if (["gold", "diamond"].includes(formData.metal.toLowerCase())) {
+        if (formData.purity.includes("22")) {
+          updatedRate = rates.rate_22crt;
+        } else if (formData.purity.includes("24")) {
+          updatedRate = rates.rate_24crt;
+        } else if (formData.purity.includes("18")) {
+          updatedRate = rates.rate_18crt;
+        } else if (formData.purity.includes("16")) {
+          updatedRate = rates.rate_16crt;
+        }
+      } else if (formData.metal.toLowerCase() === "silver") {
+        updatedRate = rates.silver_rate; 
+      }
+  
+      setFormData((prev) => ({
+        ...prev,
+        rate: updatedRate,
+      }));
+    }
+  }, [formData.metal, formData.purity, rates]);
+  
+  
+  
+  useEffect(() => {
     // Fetch customer data from API when component loads
-    axios.get("http://localhost:5000/accounts")
+    axios.get(`${baseURL}/accounts`)
       .then((response) => {
         const filteredCustomers = response.data.filter(
           (item) => item.account_group === "CUSTOMERS"
@@ -248,26 +320,45 @@ function Order() {
     navigate(from);
   };
 
+  const handleEdit = (index) => {
+    const orderToEdit = orders[index];
+    setFormData(orderToEdit); // Load order details into form fields
+    setEditingIndex(index);  // Track the index being edited
+  };
+
   const handleAddItem = () => {
+    const newOrderNumber = formData.order_number || `ORD-${Date.now()}`;
+
     const updatedFormData = {
       ...formData,
       ...selectedCustomer,
       date: selectedDate,
       account_id: selectedCustomer?.id,
+
+      order_number: newOrderNumber, // Ensure order_number is added correctly
+
     };
 
-    const updatedOrders = [...orders, updatedFormData];
-    setOrders(updatedOrders);
-    localStorage.setItem("orders", JSON.stringify(updatedOrders)); // Save to local storage
+    let updatedOrders;
+    if (editingIndex !== null) {
+      updatedOrders = orders.map((order, index) =>
+        index === editingIndex ? updatedFormData : order
+      );
+      setEditingIndex(null); // Reset editing index after update
+    } else {
+      updatedOrders = [...orders, updatedFormData];
+    }
 
-    // Reset form fields
+    setOrders(updatedOrders);
+    localStorage.setItem("orders", JSON.stringify(updatedOrders));
+
     setFormData({
       imagePreview: null,
       metal: "Gold",
       category: "",
       subcategory: "",
       product_design_name: "",
-      purity: "24KT",
+      purity: "22KT",
       gross_weight: "",
       stone_weight: "",
       stone_price: "",
@@ -285,47 +376,79 @@ function Order() {
       tax_amount: "",
       total_price: "",
       remarks: "",
-      image_url: null, // Image URL after upload
+      delivery_date: "",
+      image_url: null,
       order_status: "Placed",
+      qty: 1,
+      order_number: newOrderNumber,
     });
   };
 
-
   const handleSubmit = async (event) => {
     event.preventDefault();
-  
+
     const storedOrders = JSON.parse(localStorage.getItem("orders")) || [];
     if (storedOrders.length === 0) {
       alert("No orders to submit.");
       return;
     }
-  
+
+    // Validate customer selection (either mobile or account_name must be present)
+    if (!selectedCustomer?.mobile && !selectedCustomer?.account_name) {
+      alert("Please select a customer with a mobile number or name before submitting.");
+      return;
+    }
+
+    // Ensure all orders have the latest customer details before submitting
+    const updatedOrders = storedOrders.map(order => ({
+      ...order,
+      ...selectedCustomer,  // Update customer details
+      account_id: selectedCustomer?.id, // Ensure correct account_id
+    }));
+
     const formData = new FormData();
-  
-    storedOrders.forEach((order, index) => {
-      formData.append(`order`, JSON.stringify(order)); // Send order data as JSON
+    updatedOrders.forEach((order, index) => {
+      formData.append(`order`, JSON.stringify(order));
       if (order.image_url) {
-        formData.append("image", order.image_url); // Attach image file
+        formData.append("image", order.image_url);
       }
     });
-  
+
     try {
-      const response = await axios.post("http://localhost:5000/api/orders", formData, {
+      const response = await axios.post(`${baseURL}/api/orders`, formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
-  
+
       console.log("Orders added successfully", response.data);
       alert("Orders submitted successfully!");
-  
+
       localStorage.removeItem("orders");
       setOrders([]);
-  
+      navigate("/a-view-orders");
+
     } catch (error) {
       console.error("Error submitting orders:", error.response?.data || error.message);
       alert(`Failed to submit orders: ${error.response?.data?.error || "Unknown error"}`);
     }
   };
-  
+
+  useEffect(() => {
+    const fetchLastOrderNumber = async () => {
+      try {
+        const response = await axios.get(`${baseURL}/api/lastOrderNumber`);
+        setFormData(prev => ({ ...prev, order_number: response.data.lastOrderNumber }));
+      } catch (error) {
+        console.error("Error fetching invoice number:", error);
+      }
+    };
+
+    fetchLastOrderNumber();
+  }, []);
+
+  const handleAddCustomer = () => {
+    navigate("/a-customers", { state: { from: "/a-orders" } });
+  };
+
   return (
     <>
       <Navbar />
@@ -356,6 +479,7 @@ function Order() {
                       <AiOutlinePlus
                         size={20}
                         color="black"
+                        onClick={handleAddCustomer}
                         style={{ marginLeft: "10px", cursor: "pointer", marginBottom: "20px" }}
                       />
                     </Col>
@@ -411,7 +535,7 @@ function Order() {
               {/* Right Section */}
               <div className="order-form-right">
                 <div className="order-form-section">
-                  <Row className="mt-5">
+                  <Row className="">
                     <InputField
                       label="Date"
                       type="date"
@@ -421,7 +545,12 @@ function Order() {
                     />
                   </Row>
                   <Row>
-                    <InputField label="Order No" name="order_number" value={formData.order_number} onChange={handleChange} />
+                    <InputField label="Order No" name="order_number" value={formData.order_number} onChange={handleChange} readOnly />
+
+                  </Row>
+                  <Row style={{ marginBottom: "-12px" }}>
+                    <InputField label="Estimated Delivery Date" name="estimated_delivery_date" type="date" value={formData.estimated_delivery_date} onChange={handleChange} />
+
                   </Row>
                 </div>
               </div>
@@ -440,7 +569,6 @@ function Order() {
                       { value: "Gold", label: "Gold" },
                       { value: "Silver", label: "Silver" },
                       { value: "Diamond", label: "Diamond" },
-                      { value: "Platinum", label: "Platinum" },
                     ]}
                   />
                 </Col>
@@ -476,10 +604,10 @@ function Order() {
                     value={formData.purity}
                     onChange={handleChange}
                     options={[
-                      { value: "22KT", label: "22KT" },
                       { value: "24KT", label: "24KT" },
-                      { value: "16KT", label: "16KT" },
+                      { value: "22KT", label: "22KT" }, 
                       { value: "18KT", label: "18KT" },
+                      { value: "16KT", label: "16KT" },                     
                     ]}
                   />
                 </Col>
@@ -535,19 +663,26 @@ function Order() {
                     label="MC On"
                     name="mc_on"
                     type="select"
-                    value={formData.mc_on}  // Ensure this is part of the state
+                    value={formData.mc_on} // Ensure this is part of the state
                     onChange={handleChange}
                     options={[
                       { value: "MC %", label: "MC %" },
-                      { value: "MC/GRAM", label: "MC/GRAM" },
-                      { value: "MC/PIECE", label: "MC/PIECE" },
+                      { value: "MC / Gram", label: "MC / Gram" },
+                      { value: "MC / Piece", label: "MC / Piece" },
                     ]}
                   />
                 </Col>
 
                 <Col xs={12} md={2}>
-                  <InputField label="MC %" name="mc_percentage" value={formData.mc_percentage} type="text" onChange={handleChange} />
+                  <InputField
+                    label={formData.mc_on || "MC %"}  // Dynamically change label
+                    name="mc_percentage"
+                    value={formData.mc_percentage}
+                    type="text"
+                    onChange={handleChange}
+                  />
                 </Col>
+
                 <Col xs={12} md={2}>
                   <InputField label="Total MC" name="total_mc" value={formData.total_mc} type="text" onChange={handleChange} />
                 </Col>
@@ -563,14 +698,17 @@ function Order() {
                     ]}
                   />
                 </Col>
-                <Col xs={12} md={2}>
-                  <InputField label="Tax Amount" name="tax_amount" value={formData.tax_amount} type="text" onChange={handleChange} readOnly />
+                <Col xs={12} md={1}>
+                  <InputField label="Tax Amt" name="tax_amount" value={formData.tax_amount} type="text" onChange={handleChange} readOnly />
                 </Col>
                 <Col xs={12} md={2}>
                   <InputField label="Total Price" name="total_price" value={formData.total_price} type="text" onChange={handleChange} readOnly />
                 </Col>
                 <Col xs={12} md={2}>
                   <InputField label="Remarks" name="remarks" value={formData.remarks} type="text" onChange={handleChange} />
+                </Col>
+                <Col xs={12} md={2}>
+                  <InputField label="Delivery Date" name="delivery_date" value={formData.delivery_date} type="date" onChange={handleChange} />
                 </Col>
                 <Col xs={12} md={2}>
                   <DropdownButton
@@ -651,7 +789,7 @@ function Order() {
                     style={{ backgroundColor: "#a36e29", borderColor: "#a36e29" }}
                     onClick={handleAddItem}
                   >
-                    Add
+                    {editingIndex !== null ? "Update" : "Add"}
                   </Button>
                 </Col>
               </Row>
@@ -664,11 +802,18 @@ function Order() {
               <thead>
                 <tr>
                   <th>Mobile</th>
-                  <th>Customer Name</th>
+                  <th>Customer</th>
                   <th>Date</th>
                   <th>Metal</th>
+                  <th>Category</th>
+                  <th>Subcategory</th>
                   <th>Purity</th>
-                  <th>Amount</th>
+                  <th>Gross Wt</th>
+                  <th>Stone Wt</th>
+                  <th>Total Weight</th>
+                  <th>Rate</th>
+                  <th>Total Price</th>
+                  <th>Image</th>
                   <th>Actions</th>
                 </tr>
               </thead>
@@ -679,16 +824,38 @@ function Order() {
                     <td>{order.account_name}</td>
                     <td>{order.date}</td>
                     <td>{order.metal}</td>
+                    <td>{order.category}</td>
+                    <td>{order.subcategory}</td>
                     <td>{order.purity}</td>
-                    <td>{order.amount}</td>
+                    <td>{order.gross_weight}</td>
+                    <td>{order.stone_weight}</td>
+                    <td>{order.total_weight_aw}</td>
+                    <td>{order.rate}</td>
+                    <td>{order.total_price}</td>
                     <td>
-                      <Button variant="danger" onClick={() => {
-                        const updatedOrders = orders.filter((_, i) => i !== index);
-                        setOrders(updatedOrders);
-                        localStorage.setItem("orders", JSON.stringify(updatedOrders));
-                      }}>
-                        Delete
-                      </Button>
+                      {order.imagePreview ? (
+                        <img
+                          src={order.imagePreview}
+                          alt="Preview"
+                          style={{ width: "50px", height: "50px", objectFit: "cover", borderRadius: "5px" }}
+                        />
+                      ) : (
+                        "No Image"
+                      )}
+                    </td>
+                    <td>
+                      <FaEdit
+                        style={{ cursor: 'pointer', marginLeft: '10px', color: 'blue', }}
+                        onClick={() => handleEdit(index)}
+                      />
+                      <FaTrash
+                        style={{ cursor: 'pointer', marginLeft: '10px', color: 'red', }}
+                        onClick={() => {
+                          const updatedOrders = orders.filter((_, i) => i !== index);
+                          setOrders(updatedOrders);
+                          localStorage.setItem("orders", JSON.stringify(updatedOrders));
+                        }}
+                      />
                     </td>
                   </tr>
                 ))}

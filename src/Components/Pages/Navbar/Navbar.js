@@ -53,6 +53,16 @@ function Navbar() {
                     }}
                 >
                     Dashboard</Link>
+                    <Link
+                    to="/rates"
+                    onClick={handleItemClick}
+                    style={{
+                        color: window.location.pathname === '/rates' ? '#a36e29' : 'black',
+                        backgroundColor: 'transparent',
+                        textDecoration: 'none',
+                    }}
+                >
+                    Rates</Link>
                 <Link
                     to="/a-customertable"
                     onClick={handleItemClick}
@@ -85,6 +95,16 @@ function Navbar() {
                     )}
                 </div>
                 <Link
+                    to="/a-cancel-requests"
+                    onClick={handleItemClick}
+                    style={{
+                        color: window.location.pathname === '/a-cancel-requests' ? '#a36e29' : 'black',
+                        backgroundColor: 'transparent',
+                        textDecoration: 'none',
+                    }}
+                >
+                    Cancel Requests</Link>
+                <Link
                     to="/"
                     onClick={handleItemClick}
                     className='logout-desktop'
@@ -96,6 +116,9 @@ function Navbar() {
                 >
                     Logout</Link>
             </nav>
+            <div className='username'>
+                Admin
+            </div>
             <div className="navbar-logout" onClick={handleLogout}>
                 <FaSignOutAlt className="logout-icon" />
             </div>

@@ -4,14 +4,23 @@ import CustomerNavbar from '../../../Pages/Navbar/CustomerNavbar';
 import { AuthContext } from "../../../AuthContext/ContextApi";
 import baseURL from '../../../../Url/NodeBaseURL';
 import './ViewOrders.css';
+import axios from 'axios';
 
 const ViewOrders = () => {
   const { user } = useContext(AuthContext);
-  console.log("user=",user?.id)
+  console.log("user=", user?.id)
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  const orderStatusSteps = ["Placed", "Processing", "Dispatched", "Shipped", "Out for Delivery", "Delivered"];
+  const orderStatusSteps = ["Placed",
+    "Processing",
+    "Ready for Delivery",
+    //  "Dispatched", 
+    "Shipped",
+    //  "Out for Delivery", 
+    "Delivered",
+    // "Cancel Requested"
+  ];
 
   useEffect(() => {
     const fetchData = async () => {
@@ -36,6 +45,31 @@ const ViewOrders = () => {
     }
   }, [baseURL, user]);
 
+
+
+  const handleCancelOrder = async (orderId) => {
+    if (!window.confirm("Are you sure you want to request cancellation for this order?")) return;
+
+    try {
+      const response = await axios.put(`${baseURL}/api/orders/cancel/${orderId}`);
+
+      if (response.status === 200) {
+        alert("Order cancel request sent successfully.");
+        // Update UI by setting cancel_req_status to "Pending"
+        setData((prevOrders) =>
+          prevOrders.map(order =>
+            order.id === orderId ? { ...order, cancel_req_status: "Pending" } : order
+          )
+        );
+      }
+    } catch (error) {
+      console.error("Error requesting order cancellation:", error);
+      alert("Failed to request order cancellation. Please try again.");
+    }
+  };
+
+
+
   return (
     <>
       <CustomerNavbar />
@@ -49,24 +83,62 @@ const ViewOrders = () => {
               <div className="order-card" key={index}>
                 <div className="order-header">
                   <span><strong>Order ID:</strong> {order.order_number}</span>
-                  <span><strong>Total Amount:</strong> ${order.total_price}</span>
-                  <span><strong>Status:</strong> {order.order_status}</span>
+                  <span><strong>Total Amount:</strong> ₹{order.total_price}</span>
+                  <span>
+                    <strong>Status:</strong>
+                    {order.cancel_req_status === "Pending"
+                      ? "Cancel Requested"
+                      : order.cancel_req_status === "Rejected"
+                        ? "Cancel Rejected"
+                        : order.order_status}
+                  </span>
+
                   <span><strong>Order Date:</strong> {new Date(order.date).toLocaleDateString()}</span>
+                  <span>
+                    <button
+                      onClick={() => handleCancelOrder(order.id)}
+                      className="cancel-button"
+                      disabled={order.cancel_req_status === "Pending" || order.cancel_req_status === "Rejected" || order.order_status === "Canceled"}
+                    >
+                      {order.cancel_req_status === "Pending"
+                        ? "Cancel Requested"
+                        : order.cancel_req_status === "Rejected"
+                          ? "Cancel Rejected"
+                          : order.order_status === "Canceled"
+                            ? "Order Canceled"
+                            : "Cancel Order"}
+                    </button>
+                  </span>
                 </div>
                 <hr />
                 <div className="order-body">
                   <div className="order-content">
-                    <img src={order.imageUrl} alt="Product" className="product-image" />
+                    <img
+                      src={order.image_url ? `${baseURL}${order.image_url}` : 'default-image.jpg'}
+                      alt="Product"
+                      className="product-image"
+                      style={{ width: '70px', height: '70px', borderRadius: '5px', objectFit: 'cover' }}
+                    />
                     <div className="product-details">
                       <p><strong>Product Name:</strong> {order.subcategory}</p>
+                      <p><strong>Design Name:</strong> {order.product_design_name}</p>
+                      <p><strong>Gross Wt:</strong> {order.gross_weight}</p>
+                      <p><strong>Purity:</strong> {order.purity}</p>
                       <p><strong>Quantity:</strong> {order.qty}</p>
-                      <p><strong>Price:</strong> ${order.total_price}</p>
+                      <p><strong>Price:</strong> ₹{order.total_price}</p>
                     </div>
                   </div>
                   <div className="order-tracker">
                     {orderStatusSteps.map((step, idx) => (
-                      <div key={idx} className={`tracker-step ${step === order.order_status ? 'statusactive' : ''}`}>                
-                        <p> {step.replace('_', ' ')}</p>
+                      <div
+                        key={idx}
+                        className={`tracker-step ${(order.cancel_req_status === "Pending" && step === "Cancel Requested") ||
+                          (order.cancel_req_status !== "Pending" && step === order.order_status)
+                          ? 'statusactive'
+                          : ''
+                          }`}
+                      >
+                        <p>{step.replace('_', ' ')}</p>
                         <div className="circle"></div>
                       </div>
                     ))}

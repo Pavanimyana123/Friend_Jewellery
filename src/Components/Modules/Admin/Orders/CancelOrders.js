@@ -9,9 +9,9 @@ import Navbar from '../../../Pages/Navbar/Navbar';
 
 const ViewOrders = () => {
   const navigate = useNavigate();
-  const [data, setData] = useState([]); 
+  const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
- 
+
   const columns = React.useMemo(
     () => [
       {
@@ -34,10 +34,10 @@ const ViewOrders = () => {
         accessor: 'account_name',
       },
       {
-        Header: 'Order Number',
+        Header: 'Order No.',
         accessor: 'order_number',
       },
-      
+
       {
         Header: 'Metal',
         accessor: 'metal',
@@ -58,6 +58,21 @@ const ViewOrders = () => {
         Header: 'Order Status',
         accessor: 'order_status',
       },
+      {
+        Header: 'Image',
+        accessor: 'image_url', // Keep accessor as is
+        Cell: ({ value }) => (
+          value ? (
+            <img
+              src={`${baseURL}${value}`} // Construct full image URL
+              alt="Order Image"
+              style={{ width: '50px', height: '50px', borderRadius: '5px', objectFit: 'cover' }}
+            />
+          ) : (
+            'No Image' // Display text if image is missing
+          )
+        ),
+      },
     ],
     []
   );
@@ -70,10 +85,10 @@ const ViewOrders = () => {
           throw new Error('Failed to fetch data');
         }
         const result = await response.json();
-  
+
         // Filter orders where order_status is "Cancelled"
-        const cancelledOrders = result.filter(order => order.order_status === "Cancelled");
-  
+        const cancelledOrders = result.filter(order => order.order_status === "Canceled");
+
         setData(cancelledOrders); // Set only cancelled orders
         console.log("Cancelled Orders:", cancelledOrders);
       } catch (error) {
@@ -82,28 +97,28 @@ const ViewOrders = () => {
         setLoading(false);
       }
     };
-  
+
     fetchData();
   }, [baseURL]);
-   
+
 
   return (
     <>
-    <Navbar />
-    <div className="main-container">
-      <div className="customers-table-container">
-        <Row className="mb-3">
-          <Col className="d-flex justify-content-between align-items-center">
-            <h3>Cancel Orders</h3>         
-          </Col>
-        </Row>
-        {loading ? (
-          <div>Loading...</div>
-        ) : (
-          <DataTable columns={columns} data={[...data].reverse()} />
-        )}
+      <Navbar />
+      <div className="main-container">
+        <div className="customers-table-container">
+          <Row className="mb-3">
+            <Col className="d-flex justify-content-between align-items-center">
+              <h3>Cancel Orders</h3>
+            </Col>
+          </Row>
+          {loading ? (
+            <div>Loading...</div>
+          ) : (
+            <DataTable columns={columns} data={[...data].reverse()} />
+          )}
+        </div>
       </div>
-    </div>
     </>
   );
 };
