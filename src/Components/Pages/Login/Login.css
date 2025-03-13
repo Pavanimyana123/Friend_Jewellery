@@ -119,8 +119,8 @@ h3 {
   
   .password-toggle {
     position: absolute;
-    right: 10px;
-    top: 50%;
+    right: 16%;
+    top: 54%;
     transform: translateY(-50%);
     cursor: pointer;
     color: #555;
@@ -147,4 +147,28 @@ h3 {
         width: 100%;
         padding: 20px;
     }
+
+    .password-toggle {
+        position: absolute;
+        right: 13%;
+        top: 53%;
+        transform: translateY(-50%);
+        cursor: pointer;
+        color: #555;
+      }
 }
+
+
+@media (max-width: 600px) {
+
+    .password-toggle {
+        position: absolute;
+        right: 21%;
+        top: 53%;
+        transform: translateY(-50%);
+        cursor: pointer;
+        color: #555;
+      }
+
+}
+

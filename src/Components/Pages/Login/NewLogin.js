@@ -93,7 +93,7 @@ function NewLogin() {
                     required
                   />
                 <span
-                  className="position-absolute top-50 end-0 translate-middle-y me-3 password-toggle"
+                  className=" password-toggle"
                   style={{ cursor: "pointer" }}
                   onClick={() => setShowPassword(!showPassword)}
                 >
@@ -103,7 +103,7 @@ function NewLogin() {
 
             <div className="mb-3 form-check">
               <input type="checkbox" className="form-check-input" id="rememberMe" />
-              <label className="form-check-label" htmlFor="rememberMe" style={{ color: "#05254d" }}>
+              <label className="form-check-label" htmlFor="rememberMe" style={{ color: "#05254d", marginLeft:'10px' }}>
                 Remember Me
               </label>
             </div>
@@ -117,7 +117,7 @@ function NewLogin() {
             </button>
 
              <div className="text-center">
-              <span>Don't have an account? </span>
+              {/* <span>Don't have an account? </span> */}
               {/* <Link to="/v-register" className="text-decoration-none fw-bold">
                 Register Here
               </Link> */}

@@ -1,19 +1,169 @@
-import React from 'react';
+// import React from 'react';
+// import Navbar from '../../../Pages/Navbar/Navbar';
+// import './Dashboard.css';
+
+// function Dashboard() {
+//   const cards = [
+//     { title: "Customers" },
+//     { title: "Workers" },
+//     { title: "Orders" },
+//     { title: "Pending Orders" },
+//     { title: "Completed Orders" },
+//     { title: "Cancel Orders" },
+//   ];
+
+//   const getRandomCount = () => Math.floor(Math.random() * 500) + 1; 
+
+//   return (
+//     <>
+//       <Navbar />
+//       <div className="dashboard-container">
+//         <h1 className="dashboard-title">Dashboard</h1>
+//         <div className="dashboard-cards">
+//           {cards.map((card, index) => (
+//             <div className="dashboard-card" key={index}>
+//               <h3>{card.title}</h3>
+//               <p className="dashboard-count">{getRandomCount()}</p>
+//             </div>
+//           ))}
+//         </div>
+//       </div>
+//     </>
+//   );
+// }
+
+// export default Dashboard;
+
+
+
+
+
+import React, { useState, useEffect } from 'react';
 import Navbar from '../../../Pages/Navbar/Navbar';
 import './Dashboard.css';
+import baseURL from '../../../../Url/NodeBaseURL';
+
+const formatDate = (dateString) => {
+  const date = new Date(dateString);
+  return date.toLocaleDateString();
+};
 
 function Dashboard() {
+  const [customerCount, setCustomerCount] = useState(0);
+  const [workerCount, setWorkerCount] = useState(0);
+  const [orderCount, setOrderCount] = useState(0);
+  const [pendingOrderCount, setPendingOrderCount] = useState(0);
+  const [inProgressOrderCount, setInProgressOrderCount] = useState(0);
+  const [cancelOrderCount, setCancelOrderCount] = useState(0);
+  const [loading, setLoading] = useState(true);
+
+  // Fetch accounts data (for customers and workers)
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch(`${baseURL}/accounts`);
+        if (!response.ok) {
+          throw new Error('Failed to fetch data');
+        }
+        const result = await response.json();
+
+        // Filter customers and format dates if needed
+        const customers = result.filter(
+          (item) => item.account_group === 'CUSTOMERS'
+        ).map((item) => ({
+          ...item,
+          birthday: formatDate(item.birthday),
+          anniversary: formatDate(item.anniversary),
+        }));
+
+        // Filter workers and format dates if needed
+        const workers = result.filter(
+          (item) => item.account_group === 'WORKER'
+        ).map((item) => ({
+          ...item,
+          birthday: formatDate(item.birthday),
+          anniversary: formatDate(item.anniversary),
+        }));
+
+        // Set counts dynamically
+        setCustomerCount(customers.length);
+        setWorkerCount(workers.length);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+
+    fetchData();
+  }, [baseURL]);
+
+  // Fetch orders data for Orders, Pending, and In progress Orders counts
+  useEffect(() => {
+    const fetchOrders = async () => {
+      try {
+        const response = await fetch(`${baseURL}/api/orders`);
+        if (!response.ok) {
+          throw new Error('Failed to fetch orders');
+        }
+        const result = await response.json();
+        // Assuming result is an array
+        setOrderCount(result.length);
+        // Calculate dynamic counts based on work_status
+        const pending = result.filter(
+          (order) => order.work_status && order.work_status.toLowerCase() === 'pending'
+        ).length;
+        const inProgress = result.filter(
+          (order) => order.work_status && order.work_status.toLowerCase() === 'in progress'
+        ).length;
+        setPendingOrderCount(pending);
+        setInProgressOrderCount(inProgress);
+      } catch (error) {
+        console.error('Error fetching orders:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchOrders();
+  }, [baseURL]);
+
+  // Fetch orders data to dynamically set the Cancel Orders count
+  useEffect(() => {
+    const fetchCancelOrders = async () => {
+      try {
+        const response = await fetch(`${baseURL}/api/orders`);
+        if (!response.ok) {
+          throw new Error('Failed to fetch data');
+        }
+        const result = await response.json();
+
+        // Filter orders where order_status is "Canceled"
+        const cancelledOrders = result.filter(
+          (order) => order.order_status === "Canceled"
+        );
+
+        setCancelOrderCount(cancelledOrders.length); // Set cancel orders count dynamically
+        console.log("Cancelled Orders:", cancelledOrders);
+      } catch (error) {
+        console.error('Error fetching cancel orders:', error);
+      }
+    };
+
+    fetchCancelOrders();
+  }, [baseURL]);
+
+  // Define cards with dynamic counts for all types.
   const cards = [
-    { title: "Customers" },
-    { title: "Workers" },
-    { title: "Orders" },
-    { title: "Pending Orders" },
-    { title: "Completed Orders" },
-    { title: "Cancel Orders" },
+    { title: "Customers", count: customerCount },
+    { title: "Workers", count: workerCount },
+    { title: "Orders", count: orderCount },
+    { title: "Pending Orders", count: pendingOrderCount },
+    { title: "In progress Orders", count: inProgressOrderCount },
+    { title: "Cancel Orders", count: cancelOrderCount },
   ];
 
-  // Generate random counts for each card
-  const getRandomCount = () => Math.floor(Math.random() * 500) + 1; // Random number between 1 and 500
+  if (loading) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <>
@@ -24,7 +174,7 @@ function Dashboard() {
           {cards.map((card, index) => (
             <div className="dashboard-card" key={index}>
               <h3>{card.title}</h3>
-              <p className="dashboard-count">{getRandomCount()}</p>
+              <p className="dashboard-count">{card.count}</p>
             </div>
           ))}
         </div>
@@ -34,3 +184,7 @@ function Dashboard() {
 }
 
 export default Dashboard;
+
+
+
+
