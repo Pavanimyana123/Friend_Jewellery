@@ -10,7 +10,7 @@ import AuthProvider from "./Components/AuthContext/ContextApi";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import Login from "./Components/Pages/Login/Login";
-// import NewLogin from "./Components/Pages/Login/NewLogin"
+import NewLogin from "./Components/Pages/Login/NewLogin"
 import SignUp from "./Components/Pages/SignUp/SignUp";
 import AdminCustomer from "./Components/Modules/Admin/Customer/Customer";
 import AdminWorker from "./Components/Modules/Admin/Worker/Worker";
@@ -35,8 +35,8 @@ export default function MainApp() {
     <AuthProvider>
       <Router>
         <Routes>
-          <Route path="/" exact element={<Login />} />
-          {/* <Route path ="/" exact element={<NewLogin />} /> */}
+          {/* <Route path="/" exact element={<Login />} /> */}
+          <Route path ="/" exact element={<NewLogin />} />
           <Route path="/signup" exact element={<SignUp />} />
           <Route path="/a-customers" exact element={<AdminCustomer />} />
           <Route path="/a-customers/:id" exact element={<AdminCustomer />} />
