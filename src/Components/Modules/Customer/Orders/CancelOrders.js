@@ -8,7 +8,7 @@ import './ViewOrders.css';
 import baseURL from '../../../../Url/NodeBaseURL';
 import CustomerNavbar from '../../../Pages/Navbar/CustomerNavbar';
 
-const ViewOrders = () => {
+const CancelOrders = () => {
   const navigate = useNavigate();
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -123,4 +123,4 @@ const ViewOrders = () => {
   );
 };
 
-export default ViewOrders;
+export default CancelOrders;
