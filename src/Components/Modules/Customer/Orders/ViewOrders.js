@@ -5,12 +5,29 @@ import { AuthContext } from "../../../AuthContext/ContextApi";
 import baseURL from '../../../../Url/NodeBaseURL';
 import './ViewOrders.css';
 import axios from 'axios';
+import ModalPopup from '../Design/Modalpopup';
 
 const ViewOrders = () => {
   const { user } = useContext(AuthContext);
   console.log("user=", user?.id)
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [designRequests, setDesignRequests] = useState();
+
+  const [showModal, setShowModal] = useState(false);
+  const [selectedOrder, setSelectedOrder] = useState(null);
+
+  const handleShowModal = (order) => {
+    setSelectedOrder(order);
+    setShowModal(true);
+  };
+
+  const handleCloseModal = () => {
+    setShowModal(false);
+  };
+
+
+
 
   const orderStatusSteps = ["Placed",
     "Processing",
@@ -45,7 +62,19 @@ const ViewOrders = () => {
     }
   }, [baseURL, user]);
 
+  useEffect(() => {
+    const fetchDesignRequests = async () => {
+      try {
+        const response = await axios.get("http://localhost:5000/api/designs");
+        setDesignRequests(response.data);
+        console.log("designs", response.data)
+      } catch (error) {
+        console.error("Error fetching design requests:", error);
+      }
+    };
 
+    fetchDesignRequests();
+  });
 
   const handleCancelOrder = async (orderId) => {
     if (!window.confirm("Are you sure you want to request cancellation for this order?")) return;
@@ -67,8 +96,6 @@ const ViewOrders = () => {
       alert("Failed to request order cancellation. Please try again.");
     }
   };
-
-
 
   return (
     <>
@@ -109,6 +136,22 @@ const ViewOrders = () => {
                             : "Cancel Order"}
                     </button>
                   </span>
+                  <span>
+                    <button
+                      className="change-design-button"
+                      onClick={() => handleShowModal(order)}
+                      disabled={designRequests.some(
+                        (design) => design.order_id === order.id && design.approve_status === "Requested"
+                      )}
+                    >
+                      {designRequests.some(
+                        (design) => design.order_id === order.id && design.approve_status === "Requested"
+                      )
+                        ? "Design Requested"
+                        : "Change Design Request"}
+                    </button>
+                  </span>
+
                 </div>
                 <hr />
                 <div className="order-body">
@@ -149,6 +192,11 @@ const ViewOrders = () => {
             ))}
           </div>
         )}
+        <ModalPopup
+          show={showModal}
+          handleClose={handleCloseModal}
+          order={selectedOrder}
+        />
       </div>
     </>
   );
