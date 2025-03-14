@@ -1,36 +1,91 @@
-import React from 'react';
+
+
+
+
+import React, { useContext, useEffect, useState } from 'react';
 import './Dashboard.css';
 import WorkerNavbar from '../../../Pages/Navbar/WorkerNavbar';
+import { AuthContext } from "../../../AuthContext/ContextApi";
+import baseURL from '../../../../Url/NodeBaseURL';
 
 const Dashboard = () => {
-  // Function to generate a random number for count display
-  const getRandomCount = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
+    const { user } = useContext(AuthContext);
 
-  const workerCards = [
-    { title: "Assigned Orders", link: "/w-assignedorders", count: getRandomCount(5, 50) },
-    { title: "Completed Orders", link: "/w-completedorders", count: getRandomCount(10, 100) },
-    { title: "Pending Orders", link: "/w-pendingorders", count: getRandomCount(1, 20) },
-    { title: "Work Schedule", link: "/w-workschedule", count: getRandomCount(3, 10) },
-    { title: "Earnings", link: "/w-earnings", count: getRandomCount(1000, 5000) },
-    { title: "Support & Help", link: "/w-support", count: getRandomCount(1, 5) },
-  ];
+    const [data, setData] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [inProgressCount, setInProgressCount] = useState(0);
+    const [completedCount, setCompletedCount] = useState(0);
+    const [holdCount, setHoldCount] = useState(0);
+    const [pendingCount, setPendingCount] = useState(0);
 
-  return (
-    <>
-      <WorkerNavbar />
-      <div className="worker-dashboard-container">
-      <h1 className="dashboard-title">Dashboard</h1>        
-        <div className="dashboard-cards">
-          {workerCards.map((card, index) => (
-            <a href={card.link} key={index} className="dashboard-card">
-              <h3>{card.title}</h3>
-              <span className="card-count">{card.count}</span>
-            </a>
-          ))}
-        </div>
-      </div>
-    </>
-  );
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const response = await fetch(`${baseURL}/api/orders`);
+                if (!response.ok) {
+                    throw new Error('Failed to fetch data');
+                }
+                const result = await response.json();
+
+                // Filter orders by worker_id
+                const filteredData = result.filter(order => order.worker_id === user?.id);
+                setData(filteredData);
+                console.log("Filtered Orders =", filteredData);
+
+                // Count orders based on work_status
+                const inProgress = filteredData.filter(order => order.work_status.toLowerCase() === "in progress").length;
+                const completed = filteredData.filter(order => order.work_status.toLowerCase() === "completed").length;
+                const hold = filteredData.filter(order => order.work_status.toLowerCase() === "hold").length;
+                const pending = filteredData.filter(order => order.work_status.toLowerCase() === "pending").length;
+
+                setInProgressCount(inProgress);
+                setCompletedCount(completed);
+                setHoldCount(hold);
+                setPendingCount(pending);
+
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        if (user) {
+            fetchData();
+        }
+    }, [baseURL, user]);
+
+    const workerCards = [
+        { title: "Assigned Orders", link: "/w-assignedorders", count: data.length }, // Total assigned orders
+        { title: "In Progress Orders", link: "/w-inprogressorders", count: inProgressCount }, // In Progress count
+        { title: "Completed Orders", link: "/w-completedorders", count: completedCount }, // Completed count
+        { title: "On Hold Orders", link: "/w-holdorders", count: holdCount }, // On Hold count
+        { title: "Pending Orders", link: "/w-pendingorders", count: pendingCount }, // Pending count
+      
+    ];
+
+    return (
+        <>
+            <WorkerNavbar />
+            <div className="worker-dashboard-container">
+                <h1 className="dashboard-title">Dashboard</h1>
+                {loading ? (
+                    <p>Loading orders...</p>
+                ) : (
+                    <div className="dashboard-cards">
+                        {workerCards.map((card, index) => (
+                            <a href={card.link} key={index} className="dashboard-card">
+                                <h3>{card.title}</h3>
+                                <span className="card-count">{card.count}</span>
+                            </a>
+                        ))}
+                    </div>
+                )}
+            </div>
+        </>
+    );
 };
 
 export default Dashboard;
+
+
