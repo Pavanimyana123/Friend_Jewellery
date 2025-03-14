@@ -55,6 +55,8 @@ function Dashboard() {
   const [pendingOrderCount, setPendingOrderCount] = useState(0);
   const [inProgressOrderCount, setInProgressOrderCount] = useState(0);
   const [cancelOrderCount, setCancelOrderCount] = useState(0);
+  const [completedOrderCount, setCompletedOrderCount] = useState(0);
+
   const [loading, setLoading] = useState(true);
 
   // Fetch accounts data (for customers and workers)
@@ -114,8 +116,13 @@ function Dashboard() {
         const inProgress = result.filter(
           (order) => order.work_status && order.work_status.toLowerCase() === 'in progress'
         ).length;
+        const completed = result.filter(
+          (order) => order.work_status && order.work_status.toLowerCase() === 'completed'
+        ).length;
         setPendingOrderCount(pending);
         setInProgressOrderCount(inProgress);
+        setCompletedOrderCount(completed);
+
       } catch (error) {
         console.error('Error fetching orders:', error);
       } finally {
@@ -159,6 +166,8 @@ function Dashboard() {
     { title: "Pending Orders", count: pendingOrderCount },
     { title: "In progress Orders", count: inProgressOrderCount },
     { title: "Cancel Orders", count: cancelOrderCount },
+    { title: "Completed Orders", count: completedOrderCount },
+
   ];
 
   if (loading) {
