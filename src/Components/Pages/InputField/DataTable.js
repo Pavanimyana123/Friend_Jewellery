@@ -6,7 +6,7 @@ import {
   useSortBy,
 } from "react-table";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { FaTimes } from "react-icons/fa"; // Removed FaCheck
+import { FaTimes } from "react-icons/fa"; 
 
 // Global Search & Date Filter Component
 function GlobalFilter({
@@ -63,7 +63,7 @@ function GlobalFilter({
         style={{ maxWidth: "150px" }}
       />
 
-      {/* Clear Filters Icon */}
+      {/* Clear Filters Icon (Only when fromDate and toDate are set) */}
       {allFiltersSet && (
         <FaTimes
           onClick={clearFilters}
@@ -123,7 +123,7 @@ export default function DataTable({ columns, data }) {
     setFilteredData(data);
   };
 
-  const allFiltersSet = searchTerm || (fromDate && toDate);
+  const allFiltersSet = fromDate && toDate;
 
   const {
     getTableProps,
@@ -142,7 +142,7 @@ export default function DataTable({ columns, data }) {
     {
       columns,
       data: filteredData,
-      initialState: { pageIndex: 0, pageSize: 5  },
+      initialState: { pageIndex: 0, pageSize: 5 },
     },
     useGlobalFilter,
     useSortBy,
