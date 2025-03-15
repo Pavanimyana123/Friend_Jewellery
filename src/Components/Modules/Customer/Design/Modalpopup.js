@@ -21,6 +21,7 @@ const ModalPopup = ({ show, handleClose, order }) => {
     try {
       const response = await axios.post('http://localhost:5000/api/designs', requestData);
       alert(response.data.message);
+      setNewDesign('');
       handleClose();
     } catch (error) {
       console.error("Error submitting design change request:", error);

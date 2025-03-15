@@ -83,6 +83,7 @@ h2 {
   align-items: center;
   flex: 1;
   font-size: 13px;
+  white-space: nowrap;
 }
 
 .tracker-step .circle {
@@ -253,8 +254,8 @@ h2 {
   content: "";
   position: absolute;
   bottom: 7px;
-  left: -3%;
-  width: 107%;
+  left: 2%;
+  width: 94%;
   height: 3px;
   background: #ddd;
   z-index: 0;
