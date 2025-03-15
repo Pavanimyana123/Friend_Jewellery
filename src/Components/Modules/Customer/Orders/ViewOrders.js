@@ -151,8 +151,6 @@ const ViewOrders = () => {
                         : "Change Design Request"}
                     </button>
                   </span>
-
-
                 </div>
                 <hr />
                 <div className="order-body">
