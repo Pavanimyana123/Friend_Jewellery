@@ -65,7 +65,7 @@ const ViewOrders = () => {
   useEffect(() => {
     const fetchDesignRequests = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/api/designs");
+        const response = await axios.get(`${baseURL}/api/designs`);
         setDesignRequests(response.data);
         console.log("designs", response.data)
       } catch (error) {

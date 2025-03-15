@@ -4,7 +4,6 @@ import DataTable from '../../../Pages/InputField/TableLayout'; // Import the reu
 import { FaEdit, FaTrash, FaEye } from 'react-icons/fa';
 import { Button, Row, Col, Modal } from 'react-bootstrap';
 import './ViewOrders.css';
-
 import baseURL from '../../../../Url/NodeBaseURL';
 import CustomerNavbar from '../../../Pages/Navbar/CustomerNavbar';
 

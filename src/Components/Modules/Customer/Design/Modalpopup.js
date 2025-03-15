@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Modal, Button, Form } from 'react-bootstrap';
 import axios from 'axios';
+import baseURL from '../../../../Url/NodeBaseURL';
 
 const ModalPopup = ({ show, handleClose, order }) => {
   const [newDesign, setNewDesign] = useState(order?.product_design_name || '');
@@ -19,7 +20,7 @@ const ModalPopup = ({ show, handleClose, order }) => {
     };
 
     try {
-      const response = await axios.post('http://localhost:5000/api/designs', requestData);
+      const response = await axios.post(`${baseURL}/api/designs`, requestData);
       alert(response.data.message);
       setNewDesign('');
       handleClose();
