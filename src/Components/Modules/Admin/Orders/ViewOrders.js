@@ -133,6 +133,26 @@ const ViewOrders = () => {
         accessor: 'subcategory',
       },
       {
+        Header: 'Purity',
+        accessor: 'purity',
+      },
+      {
+        Header: 'Design Name',
+        accessor: 'product_design_name',
+      },
+      {
+        Header: 'Gross Wt',
+        accessor: 'gross_weight',
+      },
+      {
+        Header: 'Stone Wt',
+        accessor: 'stone_weight',
+      },
+      {
+        Header: 'Total Wt',
+        accessor: 'total_weight_aw',
+      },
+      {
         Header: 'Total Amt',
         accessor: 'total_price',
       },
