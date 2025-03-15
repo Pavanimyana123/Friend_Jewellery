@@ -16,31 +16,90 @@ const InprogressOrders = () => {
   const columns = React.useMemo(
     () => [
       { Header: 'Sr. No.', Cell: ({ row }) => row.index + 1 },
-      { Header: 'Date', accessor: row => new Date(row.date).toLocaleDateString('en-GB') },
-      // { Header: 'Mobile', accessor: 'mobile' },
-      // { Header: 'Customer Name', accessor: 'account_name' },
-      { Header: 'Order Number', accessor: 'order_number' },
-      { Header: 'Metal', accessor: 'metal' },
-      { Header: 'Category', accessor: 'category' },
-      { Header: 'Sub Category', accessor: 'subcategory' },
-      { Header: 'Total Amt ', accessor: 'total_price' },
+      {
+        Header: 'Order Date',
+        accessor: row => {
+          const date = new Date(row.date);
+          return date.toLocaleDateString('en-GB'); // Formats as dd/mm/yyyy
+        },
+      },
+      {
+        Header: 'Delivery Date',
+        accessor: row => {
+          const date = new Date(row.delivery_date);
+          return date.toLocaleDateString('en-GB'); // Formats as dd/mm/yyyy
+        },
+      },
+      {
+        Header: 'Order Number',
+        accessor: 'order_number',
+      },
+      {
+        Header: 'Metal',
+        accessor: 'metal',
+      },
+      {
+        Header: 'Category',
+        accessor: 'category',
+      },
+      {
+        Header: 'Sub Category',
+        accessor: 'subcategory',
+      },
+      {
+        Header: 'Purity',
+        accessor: 'purity',
+      },
+      {
+        Header: 'Gross Wt',
+        accessor: 'gross_weight',
+      },
+      {
+        Header: 'Stone Wt',
+        accessor: 'stone_weight',
+      },
+      {
+        Header: 'Total Wt',
+        accessor: 'total_weight_aw',
+      },
       { Header: 'Order Status', accessor: 'order_status', Cell: ({ row }) => row.original.order_status || 'N/A' },
       { Header: 'Work Status', accessor: 'work_status' },
       {
         Header: 'Image',
-        accessor: 'image_url', // Keep accessor as is
-        Cell: ({ value }) => (
-          value ? (
+        accessor: 'image_url',
+        Cell: ({ value }) => {
+          const handleImageClick = () => {
+            if (value) {
+              const newWindow = window.open();
+              if (newWindow) {
+                newWindow.document.write(`
+                  <html>
+                    <head>
+                      <title>Order Image</title>
+                    </head>
+                    <body style="margin:0; display:flex; justify-content:center; align-items:center; height:100vh;">
+                      <img src="${baseURL}${value}" alt="Order Image" style="width: auto; height: auto; max-width: 90vw; max-height: 90vh;" />
+                    </body>
+                  </html>
+                `);
+                newWindow.document.close(); // Close document stream to fully load content
+              }
+            }
+          };
+      
+          return value ? (
             <img
-              src={`${baseURL}${value}`} // Construct full image URL
+              src={`${baseURL}${value}`}
               alt="Order Image"
-              style={{ width: '50px', height: '50px', borderRadius: '5px', objectFit: 'cover' }}
+              style={{ width: '50px', height: '50px', borderRadius: '5px', objectFit: 'cover', cursor: 'pointer' }}
+              onClick={handleImageClick}
+              onError={(e) => (e.target.src = "/placeholder.png")}
             />
           ) : (
-            'No Image' // Display text if image is missing
-          )
-        ),
-      },
+            'No Image'
+          );
+        }
+      }  
     ],
     []
   );

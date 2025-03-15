@@ -1,42 +1,77 @@
-import React, { useState, useEffect } from 'react';
-import { useTable, usePagination, useGlobalFilter, useSortBy } from 'react-table';
-import 'bootstrap/dist/css/bootstrap.min.css';
+import React, { useState, useEffect } from "react";
+import {
+  useTable,
+  usePagination,
+  useGlobalFilter,
+  useSortBy,
+} from "react-table";
+import "bootstrap/dist/css/bootstrap.min.css";
+import { FaTimes } from "react-icons/fa"; // Removed FaCheck
 
-// Global Search Filter Component
-function GlobalFilter({ globalFilter, setGlobalFilter, handleDateFilter }) {
-  const [fromDate, setFromDate] = useState('');
-  const [toDate, setToDate] = useState('');
-
-  const applyDateFilter = () => {
-    handleDateFilter(fromDate, toDate);
-  };
-
+// Global Search & Date Filter Component
+function GlobalFilter({
+  searchTerm,
+  setSearchTerm,
+  fromDate,
+  toDate,
+  setFromDate,
+  setToDate,
+  clearFilters,
+  allFiltersSet,
+}) {
   return (
     <div className="dataTable_search mb-3 d-flex align-items-center gap-2">
-      <input
-        value={globalFilter || ''}
-        onChange={(e) => setGlobalFilter(e.target.value)}
-        className="form-control"
-        placeholder="Search..."
-        style={{ maxWidth: '200px' }}
-      />
+      {/* Search Input with Clear Icon */}
+      <div style={{ position: "relative", maxWidth: "200px" }}>
+        <input
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          className="form-control"
+          placeholder="🔍 Search..."
+          style={{ paddingRight: "30px" }}
+        />
+        {searchTerm && (
+          <FaTimes
+            onClick={() => setSearchTerm("")}
+            className="text-danger"
+            title="Clear Search"
+            style={{
+              position: "absolute",
+              right: "8px",
+              top: "50%",
+              transform: "translateY(-50%)",
+              cursor: "pointer",
+            }}
+          />
+        )}
+      </div>
+
+      {/* From Date Input */}
       <input
         type="date"
         value={fromDate}
         onChange={(e) => setFromDate(e.target.value)}
         className="form-control"
-        style={{ maxWidth: '150px' }}
+        style={{ maxWidth: "150px" }}
       />
+      {/* To Date Input */}
       <input
         type="date"
         value={toDate}
         onChange={(e) => setToDate(e.target.value)}
         className="form-control"
-        style={{ maxWidth: '150px' }}
+        style={{ maxWidth: "150px" }}
       />
-      <button onClick={applyDateFilter} className="btn btn-primary">
-        OK
-      </button>
+
+      {/* Clear Filters Icon */}
+      {allFiltersSet && (
+        <FaTimes
+          onClick={clearFilters}
+          className="text-danger fs-4 cursor-pointer"
+          title="Clear Filters"
+          style={{ cursor: "pointer" }}
+        />
+      )}
     </div>
   );
 }
@@ -44,25 +79,51 @@ function GlobalFilter({ globalFilter, setGlobalFilter, handleDateFilter }) {
 // Reusable DataTable Component
 export default function DataTable({ columns, data }) {
   const [filteredData, setFilteredData] = useState(data);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [fromDate, setFromDate] = useState("");
+  const [toDate, setToDate] = useState("");
 
+  // Auto-filter on searchTerm, fromDate, or toDate change
   useEffect(() => {
-    setFilteredData(data); // Sync filteredData with data whenever data changes
-  }, [data]);
+    applyFilters(searchTerm, fromDate, toDate);
+  }, [searchTerm, fromDate, toDate, data]);
 
-  const handleDateFilter = (fromDate, toDate) => {
-    if (fromDate || toDate) {
-      const filtered = data.filter((item) => {
-        const itemDate = new Date(item.date).setHours(0, 0, 0, 0); // Normalize to midnight for accurate comparison
-        const from = fromDate ? new Date(fromDate).setHours(0, 0, 0, 0) : null;
-        const to = toDate ? new Date(toDate).setHours(0, 0, 0, 0) : null;
+  const applyFilters = (searchTerm, fromDate, toDate) => {
+    let filtered = data;
 
-        return (!from || itemDate >= from) && (!to || itemDate <= to);
-      });
-      setFilteredData(filtered);
-    } else {
-      setFilteredData(data); // Reset to original data if no date filters
+    // Apply Search Filter
+    if (searchTerm) {
+      filtered = filtered.filter((item) =>
+        Object.values(item).some(
+          (val) =>
+            typeof val === "string" &&
+            val.toLowerCase().includes(searchTerm.toLowerCase())
+        )
+      );
     }
+
+    // Apply Date Filter Automatically when both dates are entered
+    if (fromDate && toDate) {
+      filtered = filtered.filter((item) => {
+        const itemDate = new Date(item.date).setHours(0, 0, 0, 0);
+        const from = new Date(fromDate).setHours(0, 0, 0, 0);
+        const to = new Date(toDate).setHours(0, 0, 0, 0);
+        return itemDate >= from && itemDate <= to;
+      });
+    }
+
+    // Update the table data
+    setFilteredData(filtered);
   };
+
+  const clearFilters = () => {
+    setSearchTerm("");
+    setFromDate("");
+    setToDate("");
+    setFilteredData(data);
+  };
+
+  const allFiltersSet = searchTerm || (fromDate && toDate);
 
   const {
     getTableProps,
@@ -76,13 +137,12 @@ export default function DataTable({ columns, data }) {
     nextPage,
     previousPage,
     setPageSize,
-    setGlobalFilter,
-    state: { pageIndex, pageSize, globalFilter },
+    state: { pageIndex, pageSize },
   } = useTable(
     {
       columns,
       data: filteredData,
-      initialState: { pageIndex: 0 },
+      initialState: { pageIndex: 0, pageSize: 5  },
     },
     useGlobalFilter,
     useSortBy,
@@ -91,7 +151,17 @@ export default function DataTable({ columns, data }) {
 
   return (
     <div className="dataTable_wrapper container-fluid">
-      <GlobalFilter globalFilter={globalFilter} setGlobalFilter={setGlobalFilter} handleDateFilter={handleDateFilter} />
+      {/* Filters */}
+      <GlobalFilter
+        searchTerm={searchTerm}
+        setSearchTerm={setSearchTerm}
+        fromDate={fromDate}
+        toDate={toDate}
+        setFromDate={setFromDate}
+        setToDate={setToDate}
+        clearFilters={clearFilters}
+        allFiltersSet={allFiltersSet}
+      />
 
       <div className="table-responsive">
         <table {...getTableProps()} className="table table-striped">
@@ -99,13 +169,10 @@ export default function DataTable({ columns, data }) {
             {headerGroups.map((headerGroup) => (
               <tr {...headerGroup.getHeaderGroupProps()} className="dataTable_headerRow">
                 {headerGroup.headers.map((column) => (
-                  <th
-                    {...column.getHeaderProps(column.getSortByToggleProps())}
-                    className="dataTable_headerCell"
-                  >
-                    {column.render('Header')}
+                  <th {...column.getHeaderProps(column.getSortByToggleProps())} className="dataTable_headerCell">
+                    {column.render("Header")}
                     <span>
-                      {column.isSorted ? (column.isSortedDesc ? ' 🔽' : ' 🔼') : ''}
+                      {column.isSorted ? (column.isSortedDesc ? " 🔽" : " 🔼") : ""}
                     </span>
                   </th>
                 ))}
@@ -119,7 +186,7 @@ export default function DataTable({ columns, data }) {
                 <tr {...row.getRowProps()} className="dataTable_row">
                   {row.cells.map((cell) => (
                     <td {...cell.getCellProps()} className="dataTable_cell">
-                      {cell.render('Cell')}
+                      {cell.render("Cell")}
                     </td>
                   ))}
                 </tr>
@@ -131,7 +198,7 @@ export default function DataTable({ columns, data }) {
 
       <div className="d-flex align-items-center justify-content-between mt-3">
         <div className="dataTable_pageInfo">
-          Page{' '}
+          Page{" "}
           <strong>
             {pageIndex + 1} of {pageOptions.length}
           </strong>

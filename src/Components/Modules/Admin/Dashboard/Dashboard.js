@@ -1,43 +1,3 @@
-// import React from 'react';
-// import Navbar from '../../../Pages/Navbar/Navbar';
-// import './Dashboard.css';
-
-// function Dashboard() {
-//   const cards = [
-//     { title: "Customers" },
-//     { title: "Workers" },
-//     { title: "Orders" },
-//     { title: "Pending Orders" },
-//     { title: "Completed Orders" },
-//     { title: "Cancel Orders" },
-//   ];
-
-//   const getRandomCount = () => Math.floor(Math.random() * 500) + 1; 
-
-//   return (
-//     <>
-//       <Navbar />
-//       <div className="dashboard-container">
-//         <h1 className="dashboard-title">Dashboard</h1>
-//         <div className="dashboard-cards">
-//           {cards.map((card, index) => (
-//             <div className="dashboard-card" key={index}>
-//               <h3>{card.title}</h3>
-//               <p className="dashboard-count">{getRandomCount()}</p>
-//             </div>
-//           ))}
-//         </div>
-//       </div>
-//     </>
-//   );
-// }
-
-// export default Dashboard;
-
-
-
-
-
 import React, { useState, useEffect } from 'react';
 import Navbar from '../../../Pages/Navbar/Navbar';
 import './Dashboard.css';
@@ -177,7 +137,7 @@ function Dashboard() {
   return (
     <>
       <Navbar />
-      <div className="dashboard-container">
+      <div className="worker-dashboard-container">
         <h1 className="dashboard-title">Dashboard</h1>
         <div className="dashboard-cards">
           {cards.map((card, index) => (

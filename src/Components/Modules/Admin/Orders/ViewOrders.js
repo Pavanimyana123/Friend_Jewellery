@@ -81,13 +81,13 @@ const ViewOrders = () => {
       }
 
       // Update UI state after successful update
-      setData((prevData) =>
-        prevData.map((order) =>
-          order.order_number === orderId
-            ? { ...order, assigned_status: 'Assigned', worker_id: workerId, worker_name: workerName }
-            : order
-        )
-      );
+      // setData((prevData) =>
+      //   prevData.map((order) =>
+      //     order.order_number === orderId
+      //       ? { ...order, assigned_status: 'Assigned', worker_id: workerId, worker_name: workerName }
+      //       : order
+      //   )
+      // );
 
       setAssignedWorkers((prev) => ({ ...prev, [orderId]: workerName })); // Store worker name for display
       fetchData();

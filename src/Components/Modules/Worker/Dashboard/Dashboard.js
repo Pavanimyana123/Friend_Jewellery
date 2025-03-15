@@ -57,11 +57,10 @@ const Dashboard = () => {
 
     const workerCards = [
         { title: "Assigned Orders", link: "/w-assignedorders", count: data.length }, // Total assigned orders
+        { title: "Pending Orders", link: "/w-pendingorders", count: pendingCount }, // Pending count
         { title: "In Progress Orders", link: "/w-inprogressorders", count: inProgressCount }, // In Progress count
         { title: "Completed Orders", link: "/w-completedorders", count: completedCount }, // Completed count
-        { title: "On Hold Orders", link: "/w-holdorders", count: holdCount }, // On Hold count
-        { title: "Pending Orders", link: "/w-pendingorders", count: pendingCount }, // Pending count
-      
+        { title: "On Hold Orders", link: "/w-holdorders", count: holdCount }, // On Hold count   
     ];
 
     return (
@@ -69,9 +68,6 @@ const Dashboard = () => {
             <WorkerNavbar />
             <div className="worker-dashboard-container">
                 <h1 className="dashboard-title">Dashboard</h1>
-                {loading ? (
-                    <p>Loading orders...</p>
-                ) : (
                     <div className="dashboard-cards">
                         {workerCards.map((card, index) => (
                             <a href={card.link} key={index} className="dashboard-card">
@@ -80,7 +76,6 @@ const Dashboard = () => {
                             </a>
                         ))}
                     </div>
-                )}
             </div>
         </>
     );
