@@ -112,6 +112,26 @@ const ViewOrders = () => {
     );
   });
 
+  
+  const handleImageClick = (order) => {
+    if (order.image_url) {
+      const newWindow = window.open();
+      if (newWindow) {
+        newWindow.document.write(`
+          <html>
+            <head>
+              <title>Order Image</title>
+            </head>
+            <body style="margin:0; display:flex; justify-content:center; align-items:center; height:100vh;">
+              <img src="${baseURL}${order.image_url}" alt="Order Image" style="width: auto; height: auto; max-width: 90vw; max-height: 90vh;" />
+            </body>
+          </html>
+        `);
+        newWindow.document.close();
+      }
+    }
+  };
+
   return (
     <>
       <CustomerNavbar />
@@ -182,12 +202,13 @@ const ViewOrders = () => {
                   <hr />
                   <div className="order-body">
                     <div className="order-content">
-                      <img
-                        src={order.image_url ? `${baseURL}${order.image_url}` : 'default-image.jpg'}
-                        alt="Product"
-                        className="product-image"
-                        style={{ width: '70px', height: '70px', borderRadius: '5px', objectFit: 'cover' }}
-                      />
+                    <img
+                      src={order.image_url ? `${baseURL}${order.image_url}` : 'default-image.jpg'}
+                      alt="Product"
+                      className="product-image"
+                      style={{ width: '70px', height: '70px', borderRadius: '5px', objectFit: 'cover', cursor:'pointer' }}
+                      onClick={() => handleImageClick(order)}
+                    />
                       <div className="product-details">
                         <p><strong>Product Name:</strong> {order.subcategory}</p>
                         <p><strong>Design Name:</strong> {order.product_design_name}</p>
