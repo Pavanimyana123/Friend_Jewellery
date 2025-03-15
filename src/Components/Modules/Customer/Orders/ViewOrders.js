@@ -13,6 +13,7 @@ const ViewOrders = () => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [designRequests, setDesignRequests] = useState();
+  const [searchTerm, setSearchTerm] = useState("");
 
   const [showModal, setShowModal] = useState(false);
   const [selectedOrder, setSelectedOrder] = useState(null);
@@ -97,16 +98,42 @@ const ViewOrders = () => {
     }
   };
 
-  return (
-    <>
-      <CustomerNavbar />
-      <div className="main-container">
-        <h2 className="order-title">My Orders</h2>
-        {loading ? (
-          <div>Loading...</div>
-        ) : (
-          <div className="orders-container">
-            {data.map((order, index) => (
+    // Extend the search filtering to include status, order date, gross weight, and purity.
+    const filteredOrders = data.filter(order => {
+      const lowerSearchTerm = searchTerm.toLowerCase();
+      const formattedDate = new Date(order.date).toLocaleDateString();
+      return (
+        order.order_number?.toString().toLowerCase().includes(lowerSearchTerm) ||
+        order.product_design_name?.toLowerCase().includes(lowerSearchTerm) ||
+        order.subcategory?.toLowerCase().includes(lowerSearchTerm) ||
+        order.order_status?.toLowerCase().includes(lowerSearchTerm) ||
+        formattedDate.toLowerCase().includes(lowerSearchTerm) ||
+        order.gross_weight?.toString().toLowerCase().includes(lowerSearchTerm) ||
+        order.purity?.toLowerCase().includes(lowerSearchTerm)
+      );
+    });
+
+  
+    return (
+      <>
+        <CustomerNavbar />
+        <div className="main-container">
+          <h2 className="order-title">My Orders</h2>
+          <div className="search-bar-container">
+            <input
+              type="text"
+              placeholder="Search Orders..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="search-bar"
+            />
+          </div>
+          {loading ? (
+            <div>Loading...</div>
+          ) : (
+            <div className="orders-container">
+              {filteredOrders.length > 0 ? (
+                filteredOrders.map((order, index) => (
               <div className="order-card" key={index}>
                 <div className="order-header">
                   <span><strong>Order ID:</strong> {order.order_number}</span>
@@ -190,17 +217,20 @@ const ViewOrders = () => {
                 </div>
 
               </div>
-            ))}
-          </div>
-        )}
-        <ModalPopup
-          show={showModal}
-          handleClose={handleCloseModal}
-          order={selectedOrder}
-        />
-      </div>
-    </>
-  );
-};
-
-export default ViewOrders;
+          ))
+                    ) : (
+                      <div>No orders found.</div>
+                    )}
+                  </div>
+                )}
+                <ModalPopup
+                  show={showModal}
+                  handleClose={handleCloseModal}
+                  order={selectedOrder}
+                />
+              </div>
+            </>
+          );
+        };
+        
+        export default ViewOrders;
