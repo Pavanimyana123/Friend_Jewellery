@@ -83,7 +83,7 @@ function Navbar() {
                     }}
                 >
                     Workers</Link>
-                <div className="navbar-dropdown" onMouseEnter={toggleDropdown} onMouseLeave={toggleDropdown}>
+                {/* <div className="navbar-dropdown" onMouseEnter={toggleDropdown} onMouseLeave={toggleDropdown}>
                     <span className="navbar-dropdown-title">
                         Orders <FontAwesomeIcon icon={ordersDropdownOpen ? faChevronUp : faChevronDown} className="dropdown-arrow-icon" />
                     </span>
@@ -93,7 +93,27 @@ function Navbar() {
                             <Link to="/a-cancel-orders" onClick={handleItemClick} className={isActive('/a-cancel-orders')}>Cancel Order</Link>
                         </div>
                     )}
-                </div>
+                </div> */}
+                <Link
+                    to="/a-view-orders"
+                    onClick={handleItemClick}
+                    style={{
+                        color: window.location.pathname === '/a-view-orders' ? '#a36e29' : 'black',
+                        backgroundColor: 'transparent',
+                        textDecoration: 'none',
+                    }}
+                >
+                    Orders</Link>
+                <Link
+                    to="/a-cancel-orders"
+                    onClick={handleItemClick}
+                    style={{
+                        color: window.location.pathname === '/a-cancel-orders' ? '#a36e29' : 'black',
+                        backgroundColor: 'transparent',
+                        textDecoration: 'none',
+                    }}
+                >
+                    Cancel Orders</Link>
                 <Link
                     to="/a-cancel-requests"
                     onClick={handleItemClick}

@@ -142,15 +142,16 @@ const DesignReq = () => {
         accessor: "approve_status",
         Cell: ({ row }) => (
           <select
-            value={row.original.approve_status} // Shows actual DB value first
+            value={row.original.approve_status}
             onChange={(e) => handleApproveStatusChange(row.original.design_id, e.target.value)}
+            disabled={row.original.approve_status === "Approved"} // Disable if already approved
           >
             <option value={row.original.approve_status}>{row.original.approve_status}</option>
             {row.original.approve_status !== "Approved" && <option value="Approved">Approved</option>}
             {row.original.approve_status !== "Rejected" && <option value="Rejected">Rejected</option>}
           </select>
         ),
-      },
+      }      
     ],
     []
   );

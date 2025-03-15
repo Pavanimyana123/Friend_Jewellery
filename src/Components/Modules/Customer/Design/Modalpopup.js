@@ -35,8 +35,8 @@ const ModalPopup = ({ show, handleClose, order }) => {
       </Modal.Header>
       <Modal.Body>
         <p><strong>Current Design:</strong> {order?.product_design_name}</p>
-        <p><strong>Order Id:</strong> {order?.id}</p>
-        <p><strong>Customer Name:</strong> {order?.account_name}</p>
+        {/* <p><strong>Order Id:</strong> {order?.id}</p>
+        <p><strong>Customer Name:</strong> {order?.account_name}</p> */}
         <Form>
           <Form.Group>
             <Form.Label>New Design Name</Form.Label>
