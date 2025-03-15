@@ -141,17 +141,20 @@ const ViewOrders = () => {
                       className="change-design-button"
                       onClick={() => handleShowModal(order)}
                       disabled={(designRequests ?? []).some(
-                        (design) => design.order_id === order.id && design.approve_status === "Requested"
+                        (design) =>
+                          design.order_id === order.id &&
+                          ["Requested", "Approved", "Rejected"].includes(design.approve_status) // Disable for all these statuses
                       )}
                     >
-                      {(designRequests ?? []).some(
-                        (design) => design.order_id === order.id && design.approve_status === "Requested"
-                      )
-                        ? "Design Requested"
-                        : "Change Design Request"}
+                      {(designRequests ?? []).some((design) => design.order_id === order.id) ? (
+                        (designRequests.find((design) => design.order_id === order.id)?.approve_status === "Requested" && "Design Requested") ||
+                        (designRequests.find((design) => design.order_id === order.id)?.approve_status === "Approved" && "Approved") ||
+                        (designRequests.find((design) => design.order_id === order.id)?.approve_status === "Rejected" && "Rejected")
+                      ) : (
+                        "Change Design Request"
+                      )}
                     </button>
                   </span>
-
 
                 </div>
                 <hr />

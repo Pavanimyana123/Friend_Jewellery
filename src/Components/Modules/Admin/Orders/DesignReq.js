@@ -1,0 +1,179 @@
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import DataTable from "../../../Pages/InputField/TableLayout"; // Reusable table component
+import { Row, Col } from "react-bootstrap";
+import Navbar from "../../../Pages/Navbar/Navbar";
+import axios from "axios";
+import baseURL from "../../../../Url/NodeBaseURL";
+
+const DesignReq = () => {
+  const navigate = useNavigate();
+  const [designs, setDesigns] = useState([]);
+  const [orders, setOrders] = useState([]);
+  const [mergedData, setMergedData] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  // Fetch orders
+  const fetchOrders = async () => {
+    try {
+      const response = await axios.get(`${baseURL}/api/orders`);
+      if (response.status === 200) {
+        setOrders(response.data);
+      } else {
+        throw new Error("Failed to fetch orders");
+      }
+    } catch (error) {
+      console.error("Error fetching orders:", error);
+    }
+  };
+
+  // Fetch designs
+  const fetchDesigns = async () => {
+    try {
+      const response = await axios.get(`${baseURL}/api/designs`);
+      if (response.status === 200) {
+        setDesigns(response.data);
+      } else {
+        throw new Error("Failed to fetch designs");
+      }
+    } catch (error) {
+      console.error("Error fetching designs:", error);
+    }
+  };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      await fetchOrders();
+      await fetchDesigns();
+      setLoading(false);
+    };
+
+    fetchData();
+  }, []);
+
+  // Merge orders with designs
+  useEffect(() => {
+    if (orders.length > 0 && designs.length > 0) {
+      const merged = designs
+        .map((design) => {
+          const order = orders.find((order) => order.id === design.order_id);
+          return order
+            ? { ...order, 
+                approve_status: design.approve_status, 
+                requested_design_name: design.requested_design_name,
+                design_id: design.id // Store design_id for updating status
+              }
+            : null;
+        })
+        .filter((item) => item !== null); // Remove null values
+
+      setMergedData(merged);
+    }
+  }, [orders, designs]);
+
+  // Handle approve status change
+  const handleApproveStatusChange = async (designId, newStatus) => {
+    try {
+      const response = await axios.put(`${baseURL}/api/designs/${designId}/approve-status`, {
+        approve_status: newStatus,
+      });
+
+      if (response.status === 200) {
+        setMergedData((prevData) =>
+          prevData.map((item) =>
+            item.design_id === designId ? { ...item, approve_status: newStatus } : item
+          )
+        );
+        alert(`Design request status updated to ${newStatus}`);
+      } else {
+        throw new Error("Failed to update approve status");
+      }
+    } catch (error) {
+      console.error("Error updating approve status:", error);
+      alert("Failed to update status. Please try again.");
+    }
+  };
+
+  // Define table columns
+  const columns = React.useMemo(
+    () => [
+      {
+        Header: "Sr. No.",
+        Cell: ({ row }) => row.index + 1,
+      },
+      {
+        Header: "Date",
+        accessor: (row) => new Date(row.date).toLocaleDateString("en-GB"),
+      },
+      {
+        Header: "Customer Name",
+        accessor: "account_name",
+      },
+      {
+        Header: "Order No.",
+        accessor: "order_number",
+      },
+      {
+        Header: "Metal",
+        accessor: "metal",
+      },
+      {
+        Header: "Existing Design",
+        accessor: "product_design_name",
+      },
+      {
+        Header: "Requested Design",
+        accessor: "requested_design_name",
+      },
+      {
+        Header: "Category",
+        accessor: "category",
+      },
+      {
+        Header: "Total Amt",
+        accessor: "total_price",
+      },
+      {
+        Header: "Order Status",
+        accessor: "order_status",
+      },
+      {
+        Header: "Approve Status",
+        accessor: "approve_status",
+        Cell: ({ row }) => (
+          <select
+            value={row.original.approve_status} // Shows actual DB value first
+            onChange={(e) => handleApproveStatusChange(row.original.design_id, e.target.value)}
+          >
+            <option value={row.original.approve_status}>{row.original.approve_status}</option>
+            {row.original.approve_status !== "Approved" && <option value="Approved">Approved</option>}
+            {row.original.approve_status !== "Rejected" && <option value="Rejected">Rejected</option>}
+          </select>
+        ),
+      },
+    ],
+    []
+  );
+
+  return (
+    <>
+      <Navbar />
+      <div className="main-container">
+        <div className="customers-table-container">
+          <Row className="mb-3">
+            <Col className="d-flex justify-content-between align-items-center">
+              <h3>Design Requested Orders</h3>
+            </Col>
+          </Row>
+          {loading ? (
+            <div>Loading...</div>
+          ) : (
+            <DataTable columns={columns} data={mergedData} />
+          )}
+        </div>
+      </div>
+    </>
+  );
+};
+
+export default DesignReq;

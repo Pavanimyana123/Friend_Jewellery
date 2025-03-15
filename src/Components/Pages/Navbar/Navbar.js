@@ -33,7 +33,7 @@ function Navbar() {
     return (
         <header className="navbar-header">
             <div className="navbar-brand">
-                <img src={logo} alt="Logo"  />
+                <img src={logo} alt="Logo" />
             </div>
 
             <div className={`navbar-hamburger ${isOpen ? 'open' : ''}`} onClick={toggleMenu}>
@@ -53,7 +53,7 @@ function Navbar() {
                     }}
                 >
                     Dashboard</Link>
-                    <Link
+                <Link
                     to="/rates"
                     onClick={handleItemClick}
                     style={{
@@ -104,6 +104,16 @@ function Navbar() {
                     }}
                 >
                     Cancel Requests</Link>
+                <Link
+                    to="/a-design-requests"
+                    onClick={handleItemClick}
+                    style={{
+                        color: window.location.pathname === '/a-design-requests' ? '#a36e29' : 'black',
+                        backgroundColor: 'transparent',
+                        textDecoration: 'none',
+                    }}
+                >
+                    Design Requests</Link>
                 <Link
                     to="/"
                     onClick={handleItemClick}
