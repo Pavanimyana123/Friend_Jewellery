@@ -106,7 +106,7 @@ const DesignReq = () => {
         accessor: (row) => new Date(row.date).toLocaleDateString("en-GB"),
       },
       {
-        Header: "Customer Name",
+        Header: "Customer",
         accessor: "account_name",
       },
       {

@@ -30,7 +30,7 @@ const ViewOrders = () => {
         accessor: 'mobile',
       },
       {
-        Header: 'Customer Name',
+        Header: 'Customer',
         accessor: 'account_name',
       },
       {

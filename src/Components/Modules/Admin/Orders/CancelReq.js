@@ -50,7 +50,7 @@ const CancelReq = () => {
         accessor: 'mobile',
       },
       {
-        Header: 'Customer Name',
+        Header: 'Customer',
         accessor: 'account_name',
       },
       {

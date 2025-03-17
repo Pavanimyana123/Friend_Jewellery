@@ -117,7 +117,7 @@ const ViewOrders = () => {
         accessor: 'account_name',
       },
       {
-        Header: 'Order Number',
+        Header: 'Order No.',
         accessor: 'order_number',
       },
       {
