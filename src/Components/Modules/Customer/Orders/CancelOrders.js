@@ -30,11 +30,11 @@ const CancelOrders = () => {
         accessor: 'mobile',
       },
       {
-        Header: 'Customer Name',
+        Header: 'Customer',
         accessor: 'account_name',
       },
       {
-        Header: 'Order Number',
+        Header: 'Order No.',
         accessor: 'order_number',
       },
       

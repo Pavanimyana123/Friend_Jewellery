@@ -31,7 +31,7 @@ const CompletedOrders = () => {
         },
       },
       {
-        Header: 'Order Number',
+        Header: 'Order No.',
         accessor: 'order_number',
       },
       {

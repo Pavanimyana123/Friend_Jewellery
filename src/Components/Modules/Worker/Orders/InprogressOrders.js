@@ -31,7 +31,7 @@ const InprogressOrders = () => {
         },
       },
       {
-        Header: 'Order Number',
+        Header: 'Order No.',
         accessor: 'order_number',
       },
       {
