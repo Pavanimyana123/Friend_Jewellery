@@ -25,6 +25,7 @@ const CancelReq = () => {
         // Update UI by removing the request from the list
         setOrders((prevOrders) => prevOrders.filter(order => order.id !== orderId));
       }
+      fetchData();
     } catch (error) {
       console.error(`Error updating order cancellation:`, error);
       alert("Failed to process cancellation request. Please try again.");
@@ -120,7 +121,7 @@ const CancelReq = () => {
     []
   );
 
-  useEffect(() => {
+  
     const fetchData = async () => {
       try {
         const response = await fetch(`${baseURL}/api/orders`);
@@ -140,6 +141,7 @@ const CancelReq = () => {
         setLoading(false);
       }
     };
+    useEffect(() => {
 
     fetchData();
   }, [baseURL]);
