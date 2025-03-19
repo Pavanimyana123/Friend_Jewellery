@@ -10,6 +10,7 @@ import baseURL from '../../../../Url/NodeBaseURL';
 
 
 function Worker_Master() {
+  const [isSaving, setIsSaving] = useState(false);
   const location = useLocation();
   const [formData, setFormData] = useState({
     account_name: '',
@@ -36,7 +37,7 @@ function Worker_Master() {
   });
   const [existingMobiles, setExistingMobiles] = useState([]); // Track existing mobile numbers
 
-  
+
   const navigate = useNavigate();
   const { id } = useParams(); // Get ID from URL
   const [states, setStates] = useState([]);
@@ -180,14 +181,14 @@ function Worker_Master() {
       alert("Email is required.");
       return false;
     }
-  
+
     // Email validation using regex
     const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     if (!emailRegex.test(formData.email)) {
       alert("Invalid email format.");
       return false;
     }
-  
+
     if (formData.pincode?.trim() && formData.pincode.length !== 6) {
       alert("PinCode must be exactly 6 digits.");
       return false;
@@ -208,13 +209,14 @@ function Worker_Master() {
       alert("IFSC Code must be exactly 11 characters.");
       return false;
     }
-  
+
     return true;
   };
-  
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsSaving(true);
 
     if (!validateForm()) {
       return;
@@ -260,6 +262,9 @@ function Worker_Master() {
       console.error("Error:", error);
       alert("An error occurred while processing the request.");
     }
+    finally {
+      setIsSaving(false); // Re-enable button after submission
+    }
   };
 
 
@@ -296,7 +301,7 @@ function Worker_Master() {
 
   return (
     <>
-    <Navbar />
+      <Navbar />
       <div className="main-container">
         <div className="worker-master-container">
           <h2>{id ? 'Edit Worker' : 'Add Worker'}</h2>
@@ -509,10 +514,11 @@ function Worker_Master() {
               <Button
                 type="submit"
                 variant="success"
-                style={{ backgroundColor: '#a36e29', borderColor: '#a36e29' }}
+                style={{ backgroundColor: "#a36e29", borderColor: "#a36e29" }}
                 onClick={handleSubmit}
+                disabled={isSaving} // Disable button when saving
               >
-                 {id ? 'Update' : 'Save'}
+                {isSaving ? (id ? "Updating..." : "Saving...") : id ? "Update" : "Save"}
               </Button>
             </div>
           </form>

@@ -20,6 +20,7 @@ function Order() {
   const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split("T")[0]);
   const [orders, setOrders] = useState([]); // New state for orders
   const location = useLocation();
+  const [isSaving, setIsSaving] = useState(false);
   const navigate = useNavigate();
   const [showOptions, setShowOptions] = useState(false);
   const [showWebcam, setShowWebcam] = useState(false);
@@ -71,7 +72,7 @@ function Order() {
     order_status: "Placed",
     qty: 1,
   });
-  const [rates, setRates] = useState({ rate_24crt: "", rate_22crt: "", rate_18crt: "", rate_16crt: "",silver_rate:""});
+  const [rates, setRates] = useState({ rate_24crt: "", rate_22crt: "", rate_18crt: "", rate_16crt: "", silver_rate: "" });
 
   useEffect(() => {
     const fetchCurrentRates = async () => {
@@ -93,7 +94,7 @@ function Order() {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-  
+
     setFormData((prev) => {
       if (name === "mc_on") {
         // Reset mc_percentage and total_mc when mc_on is changed
@@ -104,7 +105,7 @@ function Order() {
           total_mc: "",
         };
       }
-  
+
       if (name === "total_mc" && formData.mc_on === "MC / Piece" && value === "") {
         return {
           ...prev,
@@ -112,7 +113,7 @@ function Order() {
           mc_percentage: "", // Clear mc_percentage when total_mc is cleared
         };
       }
-  
+
       return {
         ...prev,
         [name]: value,
@@ -123,7 +124,7 @@ function Order() {
   useEffect(() => {
     if (formData.metal && formData.purity) {
       let updatedRate = "";
-  
+
       if (["gold", "diamond"].includes(formData.metal.toLowerCase())) {
         if (formData.purity.includes("22")) {
           updatedRate = rates.rate_22crt;
@@ -135,18 +136,18 @@ function Order() {
           updatedRate = rates.rate_16crt;
         }
       } else if (formData.metal.toLowerCase() === "silver") {
-        updatedRate = rates.silver_rate; 
+        updatedRate = rates.silver_rate;
       }
-  
+
       setFormData((prev) => ({
         ...prev,
         rate: updatedRate,
       }));
     }
   }, [formData.metal, formData.purity, rates]);
-  
-  
-  
+
+
+
   useEffect(() => {
     // Fetch customer data from API when component loads
     axios.get(`${baseURL}/accounts`)
@@ -388,6 +389,7 @@ function Order() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    setIsSaving(true);
 
     const storedOrders = JSON.parse(localStorage.getItem("orders")) || [];
     if (storedOrders.length === 0) {
@@ -431,6 +433,9 @@ function Order() {
     } catch (error) {
       console.error("Error submitting orders:", error.response?.data || error.message);
       alert(`Failed to submit orders: ${error.response?.data?.error || "Unknown error"}`);
+    }
+    finally {
+      setIsSaving(false); // Re-enable button after submission
     }
   };
 
@@ -607,9 +612,9 @@ function Order() {
                     onChange={handleChange}
                     options={[
                       { value: "24KT", label: "24KT" },
-                      { value: "22KT", label: "22KT" }, 
+                      { value: "22KT", label: "22KT" },
                       { value: "18KT", label: "18KT" },
-                      { value: "16KT", label: "16KT" },                     
+                      { value: "16KT", label: "16KT" },
                     ]}
                   />
                 </Col>
@@ -876,8 +881,9 @@ function Order() {
               variant="success"
               style={{ backgroundColor: '#a36e29', borderColor: '#a36e29' }}
               onClick={handleSubmit}
+              disabled={isSaving} // Disable button when saving
             >
-              Save
+              {isSaving ? "Saving..." : "Save"}
             </Button>
           </div>
         </div>

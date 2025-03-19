@@ -11,6 +11,7 @@ import baseURL from '../../../../Url/NodeBaseURL';
 
 function Customer_Master() {
   const location = useLocation();
+  const [isSaving, setIsSaving] = useState(false);
   const [formData, setFormData] = useState({
     account_name: '',
     print_name: '',
@@ -36,7 +37,7 @@ function Customer_Master() {
   });
   const [existingMobiles, setExistingMobiles] = useState([]); // Track existing mobile numbers
 
-  
+
   const navigate = useNavigate();
   const { id } = useParams(); // Get ID from URL
   console.log(id)
@@ -167,7 +168,7 @@ function Customer_Master() {
     };
     fetchStates();
   }, []);
-  
+
 
   const validateForm = () => {
     if (!formData.account_name?.trim()) {
@@ -182,14 +183,14 @@ function Customer_Master() {
       alert("Email is required.");
       return false;
     }
-  
+
     // Email validation using regex
     const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     if (!emailRegex.test(formData.email)) {
       alert("Invalid email format.");
       return false;
     }
-  
+
     if (formData.pincode?.trim() && formData.pincode.length !== 6) {
       alert("PinCode must be exactly 6 digits.");
       return false;
@@ -207,16 +208,17 @@ function Customer_Master() {
       return false;
     }
     if (formData.ifsc_code?.trim() && formData.ifsc_code.length !== 11) {
-      alert("IFSC Code must be exactly 11 characters.");  
+      alert("IFSC Code must be exactly 11 characters.");
       return false;
     }
-  
+
     return true;
   };
-  
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsSaving(true); // Disable button and show "Saving..."
 
     if (!validateForm()) {
       return;
@@ -263,6 +265,9 @@ function Customer_Master() {
       console.error("Error:", error);
       alert("An error occurred while processing the request.");
     }
+    finally {
+      setIsSaving(false); // Re-enable button after submission
+    }
   };
 
   const handleBack = () => {
@@ -296,7 +301,7 @@ function Customer_Master() {
 
   return (
     <>
-    <Navbar />
+      <Navbar />
       <div className="main-container">
         <div className="customer-master-container">
           <h2>{id ? 'Edit Customer' : 'Add Customer'}</h2>
@@ -509,10 +514,11 @@ function Customer_Master() {
               <Button
                 type="submit"
                 variant="success"
-                style={{ backgroundColor: '#a36e29', borderColor: '#a36e29' }}
-                onClick={handleSubmit}  
+                style={{ backgroundColor: "#a36e29", borderColor: "#a36e29" }}
+                onClick={handleSubmit}
+                disabled={isSaving} // Disable button when saving
               >
-                {id ? 'Update' : 'Save'}
+                  {isSaving ? (id ? "Updating..." : "Saving...") : id ? "Update" : "Save"}
               </Button>
             </div>
           </form>

@@ -109,7 +109,7 @@ const ViewOrders = () => {
         <div className="customers-table-container">
           <Row className="mb-3">
             <Col className="d-flex justify-content-between align-items-center">
-              <h3>Cancel Orders</h3>
+              <h3>Cancelled Orders</h3>
             </Col>
           </Row>
           {loading ? (

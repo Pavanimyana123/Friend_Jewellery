@@ -113,7 +113,7 @@ function Navbar() {
                         textDecoration: 'none',
                     }}
                 >
-                    Cancel Orders</Link>
+                    Cancelled Orders</Link>
                 <Link
                     to="/a-cancel-requests"
                     onClick={handleItemClick}

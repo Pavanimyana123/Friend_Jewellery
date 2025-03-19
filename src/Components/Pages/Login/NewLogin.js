@@ -1,3 +1,4 @@
+import Swal from "sweetalert2";
 import React, { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../../AuthContext/ContextApi";
@@ -21,11 +22,26 @@ function NewLogin() {
 
     // Static Admin Login
     if (email === "admin@gmail.com" && password === "admin@123") {
-      login({ email, account_group: "ADMIN", account_name: "Admin" });
-      navigate("/a-dashboard");
-      return;
-    }
+        login({ email, account_group: "ADMIN", account_name: "Admin" });
 
+        // Show SweetAlert2 prompt
+        Swal.fire({
+            title: "Login Successful!",
+            text: "Do you want to go to the Rates page?",
+            icon: "success",
+            showCancelButton: true,
+            confirmButtonText: "Yes, go to Rates",
+            cancelButtonText: "No, go to Dashboard",
+        }).then((result) => {
+            if (result.isConfirmed) {
+                navigate("/rates"); // Redirect to Rates page
+            } else {
+                navigate("/a-dashboard"); // Redirect to Admin Dashboard
+            }
+        });
+
+        return;
+    }
     // Dynamic Customer/Worker Login via API
     try {
       const response = await axios.post(`${baseURL}/login`, { email, password });

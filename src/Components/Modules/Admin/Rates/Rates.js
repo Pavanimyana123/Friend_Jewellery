@@ -128,7 +128,7 @@ const Rates = () => {
             if (response.ok) {
                 alert('Rates updated successfully!');
                 console.log(result);
-                // navigate('/dashboard'); 
+                navigate('/a-dashboard'); 
             } else {
                 alert(`Error: ${result.error}`);
             }

@@ -4,6 +4,7 @@ import DataTable from '../../../Pages/InputField/DataTable';
 import { Button, Row, Col } from 'react-bootstrap';
 import './ViewOrders.css';
 import axios from "axios";
+import { FaEdit, FaTrash, FaEye } from 'react-icons/fa';
 import baseURL from '../../../../Url/NodeBaseURL';
 import Navbar from '../../../Pages/Navbar/Navbar';
 
@@ -14,6 +15,7 @@ const ViewOrders = () => {
   const [loading, setLoading] = useState(true);
   const [workers, setWorkers] = useState([]);
   const [assignedWorkers, setAssignedWorkers] = useState({});
+  const [orders, setOrders] = useState([]);
 
   // Fetch workers
   useEffect(() => {
@@ -72,7 +74,7 @@ const ViewOrders = () => {
           assigned_status: workerId ? 'Assigned' : 'Not Assigned',
           worker_id: workerId,  // Store worker ID in the database
           worker_name: workerName,  // Store worker Name in the database
-          work_status:'Pending',
+          work_status: 'Pending',
         }),
       });
 
@@ -95,6 +97,23 @@ const ViewOrders = () => {
     } catch (error) {
       console.error('Error updating order:', error);
     }
+  };
+
+    // Function to delete order
+    const handleDelete = async (id) => {
+      if (!window.confirm("Are you sure you want to delete this order?")) {
+          return;
+      }
+
+      try {
+          await axios.delete(`${baseURL}/api/delete-order/${id}`);
+          alert("Order deleted successfully");
+          setOrders(orders.filter(order => order.id !== id)); // Update state after deletion
+          fetchData();
+      } catch (error) {
+          console.error("Error deleting order:", error);
+          alert("Failed to delete order");
+      }
   };
 
 
@@ -162,19 +181,19 @@ const ViewOrders = () => {
         Cell: ({ row }) => {
           const [status, setStatus] = useState(row.original.order_status || "Placed");
           const isPending = row.original.work_status === "Pending"; // Check if work_status is Pending
-          const isDisabled = row.original.order_status === 'Canceled';
-      
+          const isDisabled = row.original.order_status === "Canceled" || row.original.assigned_status === "Not Assigned"; // Disable if Canceled or Not Assigned
+
           const handleStatusChange = async (event) => {
             const newStatus = event.target.value;
             setStatus(newStatus);
-      
+
             try {
               const response = await axios.put(`${baseURL}/api/orders/status/${row.original.id}`, {
                 order_status: newStatus, // Update order_status
                 worker_id: row.original.worker_id, // Keep worker_id same
                 worker_name: row.original.worker_name, // Keep worker_name same
               });
-      
+
               console.log("Status updated:", response.data);
               alert("Order status updated successfully!");
             } catch (error) {
@@ -182,7 +201,7 @@ const ViewOrders = () => {
               alert("Failed to update status.");
             }
           };
-      
+
           return (
             <select value={status} onChange={handleStatusChange} disabled={isDisabled}>
               <option value="Placed">Placed</option>
@@ -234,7 +253,7 @@ const ViewOrders = () => {
               }
             }
           };
-      
+
           return value ? (
             <img
               src={`${baseURL}${value}`}
@@ -253,7 +272,7 @@ const ViewOrders = () => {
         Cell: ({ row }) => {
           const assignedWorkerName = row.original.worker_name; // Get assigned worker name from row data
           const isDisabled = row.original.assigned_status === 'Accepted'; // Check if status is 'Accepted'
-      
+
           return (
             <select
               value={assignedWorkerName || ''} // Set selected value if worker_name matches
@@ -270,8 +289,8 @@ const ViewOrders = () => {
                 </option>
               ))}
             </select>
-         );
-       },
+          );
+        },
       },
       {
         Header: 'Assigned Status',
@@ -289,7 +308,25 @@ const ViewOrders = () => {
         accessor: 'work_status',
         Cell: ({ row }) => row.original.work_status || 'N/A',
       },
-
+      {
+        Header: 'Action',
+        Cell: ({ row }) => (
+          <div >
+            {/* <FaEye
+              style={{ cursor: 'pointer', marginLeft: '10px', color: 'green' }}
+              onClick={() => handleView(row.original)}
+            /> */}
+            {/* <FaEdit
+              style={{ cursor: 'pointer', marginLeft: '10px', color: 'blue', }}
+              onClick={() => handleEdit(row.original.id)}
+            /> */}
+            <FaTrash
+              style={{ cursor: 'pointer', marginLeft: '10px', color: 'red', }}
+              onClick={() => handleDelete(row.original.id)}
+            />
+          </div>
+        ),
+      },
     ],
     [workers, assignedWorkers]
   );
