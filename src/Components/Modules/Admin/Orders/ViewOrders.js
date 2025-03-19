@@ -116,6 +116,10 @@ const ViewOrders = () => {
       }
   };
 
+  const handleEdit = (id) => {
+    navigate(`/a-edit-order/${id}`);
+  };
+
 
   const columns = React.useMemo(
     () => [
@@ -312,14 +316,10 @@ const ViewOrders = () => {
         Header: 'Action',
         Cell: ({ row }) => (
           <div >
-            {/* <FaEye
-              style={{ cursor: 'pointer', marginLeft: '10px', color: 'green' }}
-              onClick={() => handleView(row.original)}
-            /> */}
-            {/* <FaEdit
+            <FaEdit
               style={{ cursor: 'pointer', marginLeft: '10px', color: 'blue', }}
               onClick={() => handleEdit(row.original.id)}
-            /> */}
+            />
             <FaTrash
               style={{ cursor: 'pointer', marginLeft: '10px', color: 'red', }}
               onClick={() => handleDelete(row.original.id)}

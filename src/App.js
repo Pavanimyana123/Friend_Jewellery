@@ -30,6 +30,7 @@ import CompletedOrders from "./Components/Modules/Worker/Orders/CompletedOrders"
 import Rates from "./Components/Modules/Admin/Rates/Rates";
 import CancelReq from "./Components/Modules/Admin/Orders/CancelReq";
 import DesignReq from "./Components/Modules/Admin/Orders/DesignReq";
+import EditOrdersForm from "./Components/Modules/Admin/Orders/EditOrdersForm";
 
 export default function MainApp() {
   return (
@@ -46,6 +47,7 @@ export default function MainApp() {
           <Route path="/a-dashboard" exact element={<AdminDashboard />} />
           <Route path="/a-orders" exact element={<AdminOrder />} />
           <Route path="/a-view-orders" exact element={<AdminViewOrders />} />
+          <Route path="/a-edit-order/:id" exact element={<EditOrdersForm />} />
           <Route
             path="/a-cancel-orders"
             exact
