@@ -7,7 +7,8 @@ import axios from "axios";
 import { FaEdit, FaTrash, FaEye } from 'react-icons/fa';
 import baseURL from '../../../../Url/NodeBaseURL';
 import Navbar from '../../../Pages/Navbar/Navbar';
-
+import 'jspdf-autotable';
+import * as XLSX from 'xlsx';
 
 const ViewOrders = () => {
   const navigate = useNavigate();
@@ -16,6 +17,7 @@ const ViewOrders = () => {
   const [workers, setWorkers] = useState([]);
   const [assignedWorkers, setAssignedWorkers] = useState({});
   const [orders, setOrders] = useState([]);
+  const [filteredData, setFilteredData] = useState([]); // New state for filtered data
 
   // Fetch workers
   useEffect(() => {
@@ -99,27 +101,68 @@ const ViewOrders = () => {
     }
   };
 
-    // Function to delete order
-    const handleDelete = async (id) => {
-      if (!window.confirm("Are you sure you want to delete this order?")) {
-          return;
-      }
+  // Function to delete order
+  const handleDelete = async (id) => {
+    if (!window.confirm("Are you sure you want to delete this order?")) {
+      return;
+    }
 
-      try {
-          await axios.delete(`${baseURL}/api/delete-order/${id}`);
-          alert("Order deleted successfully");
-          setOrders(orders.filter(order => order.id !== id)); // Update state after deletion
-          fetchData();
-      } catch (error) {
-          console.error("Error deleting order:", error);
-          alert("Failed to delete order");
-      }
+    try {
+      await axios.delete(`${baseURL}/api/delete-order/${id}`);
+      alert("Order deleted successfully");
+      setOrders(orders.filter(order => order.id !== id)); // Update state after deletion
+      fetchData();
+    } catch (error) {
+      console.error("Error deleting order:", error);
+      alert("Failed to delete order");
+    }
   };
 
   const handleEdit = (id) => {
     navigate(`/a-edit-order/${id}`);
   };
 
+
+  const exportToExcel = () => {
+    // Use filteredData if available, otherwise export all data
+    const exportData = filteredData.length > 0 ? filteredData : data;
+  
+    if (exportData.length === 0) {
+      alert("No data available for export.");
+      return;
+    }
+  
+    // Map data into a structured format for Excel
+    const worksheet = XLSX.utils.json_to_sheet(exportData.map(order => ({
+      'Order No.': order.order_number,
+      'Customer': order.account_name,
+      'Mobile': order.mobile,
+      'Date': new Date(order.date).toLocaleDateString('en-GB'),
+      'Metal': order.metal,
+      'Category': order.category,
+      'Sub Category': order.subcategory,
+      'Purity': order.purity,
+      'Design Name': order.product_design_name,
+      'Gross Wt': order.gross_weight,
+      'Stone Wt': order.stone_weight,
+      'Total Wt': order.total_weight_aw,
+      'Total Amt': order.total_price,
+      'Order Status': order.order_status,
+      'Assigned Status': order.assigned_status,
+      'Worker Name': order.worker_name,
+      'Work Status': order.work_status,
+    })));
+  
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'Orders');
+    
+    // Generate file name dynamically based on filter state
+    const fileName = filteredData.length > 0 ? 'filtered_orders.xlsx' : 'all_orders.xlsx';
+  
+    XLSX.writeFile(workbook, fileName);
+  };
+  
+  
 
   const columns = React.useMemo(
     () => [
@@ -336,9 +379,18 @@ const ViewOrders = () => {
       <Navbar />
       <div className="main-container">
         <div className="customers-table-container">
-          <Row className="mb-3">
-            <Col className="d-flex justify-content-between align-items-center">
+          <Row className="mb-3 d-flex justify-content-between align-items-center">
+            <Col>
               <h3>Orders</h3>
+            </Col>
+            <Col className="d-flex justify-content-end gap-2">
+              <Button
+                className="export_but"
+                onClick={exportToExcel}
+                style={{ backgroundColor: '#a36e29', borderColor: '#a36e29' }}
+              >
+                Export to Excel
+              </Button>
               <Button
                 className="create_but"
                 onClick={() => navigate('/a-orders')}
@@ -349,6 +401,8 @@ const ViewOrders = () => {
             </Col>
           </Row>
           {loading ? <div>Loading...</div> : <DataTable columns={columns} data={[...data].reverse()} />}
+          {/* {loading ? <div>Loading...</div> : <DataTable columns={columns} data={data} onFilterChange={handleFilterChange} />} */}
+
         </div>
       </div>
     </>
