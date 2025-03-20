@@ -129,7 +129,7 @@ export default function DataTable({ columns, data, initialSearchValue }) {
             onClick={() => nextPage()}
             disabled={!canNextPage}
           >
-            Nex
+            Next
           </button>
         </div>
         <div>
