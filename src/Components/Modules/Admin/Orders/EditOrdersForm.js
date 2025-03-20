@@ -82,14 +82,29 @@ function Order() {
     useEffect(() => {
         const fetchOrder = async () => {
             try {
-                const response = await axios.get(`${baseURL}/api/orders/${id}`);
+                const response = await axios.get(`${baseURL}/api/getorder/${id}`);
                 const orderData = response.data;
     
                 console.log("Fetched Order:", orderData);
     
+                // Convert dates properly
+                const convertToLocalDate = (utcDate) => {
+                    if (!utcDate) return "";
+                    const date = new Date(utcDate);
+                    date.setMinutes(date.getMinutes() - date.getTimezoneOffset());
+                    return date.toISOString().split("T")[0];
+                };
+    
+                const formattedOrderData = {
+                    ...orderData,
+                    estimated_delivery_date: convertToLocalDate(orderData.estimated_delivery_date),
+                    delivery_date: convertToLocalDate(orderData.delivery_date),
+                    imagePreview: orderData.image_url ? `${baseURL}${orderData.image_url}` : null, // Set image preview
+                };
+    
                 setFormData((prevState) => ({
                     ...prevState,
-                    ...orderData, // Merge order data into formData
+                    ...formattedOrderData,
                 }));
     
                 // Find the selected customer based on fetched mobile
@@ -111,7 +126,10 @@ function Order() {
         if (id) {
             fetchOrder();
         }
-    }, [id, customers]); 
+    }, [id, customers]);
+    
+    
+    
     
     
 
@@ -386,13 +404,14 @@ function Order() {
         try {
             setIsSaving(true);
     
-            const response = await axios.put(`${baseURL}/api/orders/${id}`, formData);
+            const response = await axios.put(`${baseURL}/api/updateorders/${id}`, formData);
     
             if (response.status === 200) {
                 alert("Order updated successfully!");
             } else {
                 alert("Failed to update order. Please try again.");
             }
+            navigate("/a-view-orders");
         } catch (error) {
             console.error("Error updating order:", error);
             alert("An error occurred while updating the order.");
