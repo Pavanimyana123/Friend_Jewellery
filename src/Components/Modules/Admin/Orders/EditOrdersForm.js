@@ -111,7 +111,7 @@ function Order() {
         if (id) {
             fetchOrder();
         }
-    }, [id, customers]); // Depend on customers array to update selection
+    }, [id, customers]); 
     
     
 
@@ -376,37 +376,38 @@ function Order() {
         navigate(from);
     };
 
-    const handleUpdate = async (id) => {
-        try {
-            console.log("Updating Order ID:", id);
-            console.log("Form Data Before Sending:", formData);
-    
-            const response = await axios.put(`${baseURL}/api/orders/${id}`, formData, {
-                headers: { "Content-Type": "application/json" },
-            });
-    
-            console.log("Update Response:", response.data);
-            alert("Order updated successfully!");
-    
-        } catch (error) {
-            console.error("Error updating order:", error);
-            alert("Failed to update order.");
-        }
-    };
-    
-    
-    
-    
     const handleAddCustomer = () => {
         navigate("/a-customers", { state: { from: "/a-orders" } });
     };
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        
+        try {
+            setIsSaving(true);
+    
+            const response = await axios.put(`${baseURL}/api/orders/${id}`, formData);
+    
+            if (response.status === 200) {
+                alert("Order updated successfully!");
+            } else {
+                alert("Failed to update order. Please try again.");
+            }
+        } catch (error) {
+            console.error("Error updating order:", error);
+            alert("An error occurred while updating the order.");
+        } finally {
+            setIsSaving(false);
+        }
+    };
+    
 
     return (
         <>
             <Navbar />
             <div className="main-container">
                 <div className="order-form-container">
-                    <Form>
+                    <Form onSubmit={handleSubmit}>
                         <div className="order-form">
                             {/* Left Section */}
                             <div className="order-form-left">
@@ -737,9 +738,7 @@ function Order() {
                                 </Col>
                             </Row>
                         </div>
-                    </Form>
-
-                    <div className="form-buttons">
+                        <div className="form-buttons">
                         <Button
                             variant="secondary"
                             onClick={handleBack} style={{ backgroundColor: 'gray', }}
@@ -749,13 +748,15 @@ function Order() {
                         <Button
                             type="submit"
                             variant="success"
-                            style={{ backgroundColor: '#a36e29', borderColor: '#a36e29' }}
-                            onClick={handleUpdate}
-                            disabled={isSaving} // Disable button when saving
+                            style={{ backgroundColor: '#a36e29', borderColor: '#a36e29' }} 
+                            disabled={isSaving}
                         >
                             {isSaving ? "Updating..." : "Update"}
                         </Button>
                     </div>
+                    </Form>
+
+                    
                 </div>
             </div>
         </>
