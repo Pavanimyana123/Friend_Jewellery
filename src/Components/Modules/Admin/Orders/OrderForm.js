@@ -456,6 +456,36 @@ function Order() {
     navigate("/a-customers", { state: { from: "/a-orders" } });
   };
 
+
+  const today = new Date().toISOString().split("T")[0]; // Get today's date in YYYY-MM-DD format
+
+
+
+  const handleDateChange = (event) => {
+    const selectedDate = event.target.value;
+    const today = new Date().toISOString().split("T")[0]; // Get today's date in YYYY-MM-DD format
+
+    if (selectedDate < today) {
+      alert("You cannot select a past date!");
+      return; // Prevent state update
+    }
+
+    handleChange(event); // Proceed with updating the state
+  };
+
+
+  const handleEstimatedDateChange = (event) => {
+    const selectedDate = event.target.value;
+    const today = new Date().toISOString().split("T")[0]; // Get today's date in YYYY-MM-DD format
+
+    if (selectedDate < today) {
+      alert("Estimated Delivery Date cannot be in the past!");
+      return; // Stop further execution
+    }
+
+    handleChange(event); // Update state if the date is valid
+  };
+
   return (
     <>
       <Navbar />
@@ -555,10 +585,23 @@ function Order() {
                     <InputField label="Order No" name="order_number" value={formData.order_number} onChange={handleChange} readOnly />
 
                   </Row>
-                  <Row style={{ marginBottom: "-12px" }}>
+                  {/* <Row style={{ marginBottom: "-12px" }}>
                     <InputField label="Estimated Delivery Date" name="estimated_delivery_date" type="date" value={formData.estimated_delivery_date} onChange={handleChange} />
+                  </Row> */}
 
+
+                  <Row style={{ marginBottom: "-12px" }}>
+                    <InputField
+                      label="Estimated Delivery Date"
+                      name="estimated_delivery_date"
+                      type="date"
+                      value={formData.estimated_delivery_date}
+                      onChange={handleEstimatedDateChange} // Use the custom function
+                    />
                   </Row>
+
+
+
                 </div>
               </div>
             </div>
@@ -714,8 +757,17 @@ function Order() {
                 <Col xs={12} md={2}>
                   <InputField label="Remarks" name="remarks" value={formData.remarks} type="text" onChange={handleChange} />
                 </Col>
-                <Col xs={12} md={2}>
+                {/* <Col xs={12} md={2}>
                   <InputField label="Delivery Date" name="delivery_date" value={formData.delivery_date} type="date" onChange={handleChange} />
+                </Col> */}
+                <Col xs={12} md={2}>
+                  <InputField
+                    label="Delivery Date"
+                    name="delivery_date"
+                    value={formData.delivery_date}
+                    type="date"
+                    onChange={handleDateChange} // Use the new function
+                  />
                 </Col>
                 <Col xs={12} md={2}>
                   <DropdownButton

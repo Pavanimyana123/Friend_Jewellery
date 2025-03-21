@@ -112,7 +112,7 @@ const ViewOrders = () => {
     );
   });
 
-  
+
   const handleImageClick = (order) => {
     if (order.image_url) {
       const newWindow = window.open();
@@ -181,7 +181,7 @@ const ViewOrders = () => {
                               : "Cancel Order"}
                       </button>
                     </span>
-                    <span>
+                    {/* <span>
                       <button
                         className="change-design-button"
                         onClick={() => handleShowModal(order)}
@@ -197,18 +197,43 @@ const ViewOrders = () => {
                           "Change Design Request"
                         )}
                       </button>
+                    </span> */}
+                    <span>
+                      <button
+                        className="change-design-button"
+                        onClick={() => handleShowModal(order)}
+                        disabled={(designRequests ?? []).some(
+                          (design) => design.order_id === order.id && ["Requested", "Approved", "Rejected"].includes(design.approve_status)
+                        )}
+                        style={{
+                          backgroundColor: (designRequests ?? []).some((design) => design.order_id === order.id)
+                            ? (designRequests.find((design) => design.order_id === order.id)?.approve_status === "Requested" && "orange") ||
+                            (designRequests.find((design) => design.order_id === order.id)?.approve_status === "Approved" && "green") ||
+                            (designRequests.find((design) => design.order_id === order.id)?.approve_status === "Rejected" && "red")
+                            : "rgb(62, 115, 247)",
+                        }}
+                      >
+                        {(designRequests ?? []).some((design) => design.order_id === order.id) ? (
+                          (designRequests.find((design) => design.order_id === order.id)?.approve_status === "Requested" && "Design Requested") ||
+                          (designRequests.find((design) => design.order_id === order.id)?.approve_status === "Approved" && "Approved") ||
+                          (designRequests.find((design) => design.order_id === order.id)?.approve_status === "Rejected" && "Rejected")
+                        ) : (
+                          "Change Design Request"
+                        )}
+                      </button>
                     </span>
+
                   </div>
                   <hr />
                   <div className="order-body">
                     <div className="order-content">
-                    <img
-                      src={order.image_url ? `${baseURL}${order.image_url}` : 'default-image.jpg'}
-                      alt="Product"
-                      className="product-image"
-                      style={{ width: '70px', height: '70px', borderRadius: '5px', objectFit: 'cover', cursor:'pointer' }}
-                      onClick={() => handleImageClick(order)}
-                    />
+                      <img
+                        src={order.image_url ? `${baseURL}${order.image_url}` : 'default-image.jpg'}
+                        alt="Product"
+                        className="product-image"
+                        style={{ width: '70px', height: '70px', borderRadius: '5px', objectFit: 'cover', cursor: 'pointer' }}
+                        onClick={() => handleImageClick(order)}
+                      />
                       <div className="product-details">
                         <p><strong>Product Name:</strong> {order.subcategory}</p>
                         <p><strong>Design Name:</strong> {order.product_design_name}</p>
@@ -223,9 +248,9 @@ const ViewOrders = () => {
                         <div
                           key={idx}
                           className={`tracker-step ${(order.cancel_req_status === "Pending" && step === "Cancel Requested") ||
-                              (order.cancel_req_status !== "Pending" && step === order.order_status)
-                              ? 'statusactive'
-                              : ''
+                            (order.cancel_req_status !== "Pending" && step === order.order_status)
+                            ? 'statusactive'
+                            : ''
                             }`}
                         >
                           <p>{step.replace('_', ' ')}</p>
