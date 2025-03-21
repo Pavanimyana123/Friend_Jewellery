@@ -109,6 +109,39 @@ const AssignedOrders = () => {
           );
         },
       },
+      // {
+      //   Header: "Work Status",
+      //   accessor: "work_status",
+      //   Cell: ({ row }) => {
+      //     const [status, setStatus] = useState(row.original.work_status || "Pending");
+
+      //     const handleStatusChange = (event) => {
+      //       const newStatus = event.target.value;
+      //       setNewWorkStatus(newStatus); // Set the new work status
+      //       setCurrentRow(row.original); // Set the current row for modal
+      //       setIsModalOpen(true); // Open the modal
+      //     };
+
+      //     return (
+      //       <div>
+      //         <select
+      //           value={status}
+      //           onChange={handleStatusChange}
+      //           disabled={row.original.assigned_status !== "Accepted"}
+      //           style={{
+      //             opacity: row.original.assigned_status !== "Accepted" ? 0.6 : 1,
+      //             cursor: row.original.assigned_status !== "Accepted" ? "not-allowed" : "pointer"
+      //           }}
+      //         >
+      //           <option value="Pending">Pending</option>
+      //           <option value="In Progress">In Progress</option>
+      //           <option value="Completed">Completed</option>
+      //           <option value="Hold">Hold</option>
+      //         </select>
+      //       </div>
+      //     );
+      //   },
+      // },
       {
         Header: "Work Status",
         accessor: "work_status",
@@ -122,6 +155,21 @@ const AssignedOrders = () => {
             setIsModalOpen(true); // Open the modal
           };
 
+          // Function to determine the text color based on status
+          const getStatusColor = (status) => {
+            switch (status) {
+              case "Pending":
+                return "red";
+              case "Completed":
+                return "green";
+              case "In Progress":
+              case "Hold":
+                return "orange"; // Warning color
+              default:
+                return "black";
+            }
+          };
+
           return (
             <div>
               <select
@@ -129,14 +177,16 @@ const AssignedOrders = () => {
                 onChange={handleStatusChange}
                 disabled={row.original.assigned_status !== "Accepted"}
                 style={{
+                  color: getStatusColor(status), // Apply dynamic color
                   opacity: row.original.assigned_status !== "Accepted" ? 0.6 : 1,
-                  cursor: row.original.assigned_status !== "Accepted" ? "not-allowed" : "pointer"
+                  cursor: row.original.assigned_status !== "Accepted" ? "not-allowed" : "pointer",
+                  fontWeight: "bold",
                 }}
               >
-                <option value="Pending">Pending</option>
-                <option value="In Progress">In Progress</option>
-                <option value="Completed">Completed</option>
-                <option value="Hold">Hold</option>
+                <option value="Pending" style={{ color: "red" }}>Pending</option>
+                <option value="In Progress" style={{ color: "orange" }}>In Progress</option>
+                <option value="Completed" style={{ color: "green" }}>Completed</option>
+                <option value="Hold" style={{ color: "orange" }}>Hold</option>
               </select>
             </div>
           );
@@ -164,7 +214,7 @@ const AssignedOrders = () => {
               }
             }
           };
-      
+
           return value ? (
             <img
               src={`${baseURL}${value}`}
@@ -177,7 +227,7 @@ const AssignedOrders = () => {
             'No Image'
           );
         }
-      }  
+      }
     ],
     []
   );
@@ -219,7 +269,7 @@ const AssignedOrders = () => {
       window.location.reload();
       fetchData();
       alert("Work status updated successfully!");
-      
+
 
     } catch (error) {
       console.error("Error updating work status:", error);

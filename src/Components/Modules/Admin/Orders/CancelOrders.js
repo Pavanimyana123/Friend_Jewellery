@@ -1,106 +1,114 @@
-import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import DataTable from '../../../Pages/InputField/TableLayout'; // Import the reusable DataTable component
-import { FaEdit, FaTrash, FaEye } from 'react-icons/fa';
-import { Button, Row, Col, Modal } from 'react-bootstrap';
-import './ViewOrders.css';
-import baseURL from '../../../../Url/NodeBaseURL';
-import Navbar from '../../../Pages/Navbar/Navbar';
+import React, { useEffect, useState, useCallback } from "react";
+import { useNavigate } from "react-router-dom";
+import DataTable from "../../../Pages/InputField/TableLayout"; // Import DataTable component
+import { Row, Col, Modal } from "react-bootstrap";
+import "./ViewOrders.css";
+import baseURL from "../../../../Url/NodeBaseURL";
+import Navbar from "../../../Pages/Navbar/Navbar";
 
 const ViewOrders = () => {
   const navigate = useNavigate();
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalImage, setModalImage] = useState("");
 
+  // Function to open image in modal
+  const handleImageClick = (imageSrc) => {
+    setModalImage(imageSrc);
+    setIsModalOpen(true);
+  };
+
+  // Table Columns Definition
   const columns = React.useMemo(
     () => [
       {
-        Header: 'Sr. No.',
-        Cell: ({ row }) => row.index + 1, // Generate a sequential number based on the row index
+        Header: "Sr. No.",
+        Cell: ({ row }) => row.index + 1, // Auto-numbering
       },
       {
-        Header: 'Date',
-        accessor: row => {
-          const date = new Date(row.date);
-          return date.toLocaleDateString('en-GB'); // Formats as dd/mm/yyyy
-        },
+        Header: "Date",
+        accessor: (row) => new Date(row.date).toLocaleDateString("en-GB"), // Format as dd/mm/yyyy
       },
       {
-        Header: 'Mobile',
-        accessor: 'mobile',
+        Header: "Mobile",
+        accessor: "mobile",
       },
       {
-        Header: 'Customer',
-        accessor: 'account_name',
+        Header: "Customer",
+        accessor: "account_name",
       },
       {
-        Header: 'Order No.',
-        accessor: 'order_number',
-      },
-
-      {
-        Header: 'Metal',
-        accessor: 'metal',
+        Header: "Order No.",
+        accessor: "order_number",
       },
       {
-        Header: 'Category',
-        accessor: 'category',
+        Header: "Metal",
+        accessor: "metal",
       },
       {
-        Header: 'Sub Category',
-        accessor: 'subcategory',
+        Header: "Category",
+        accessor: "category",
       },
       {
-        Header: 'Total Amt ',
-        accessor: 'total_price',
+        Header: "Sub Category",
+        accessor: "subcategory",
       },
       {
-        Header: 'Order Status',
-        accessor: 'order_status',
+        Header: "Total Amt",
+        accessor: "total_price",
       },
       {
-        Header: 'Image',
-        accessor: 'image_url', // Keep accessor as is
-        Cell: ({ value }) => (
+        Header: "Order Status",
+        accessor: "order_status",
+      },
+      {
+        Header: "Image",
+        accessor: "image_url",
+        Cell: ({ value }) =>
           value ? (
             <img
-              src={`${baseURL}${value}`} // Construct full image URL
+              src={`${baseURL}${value}`}
               alt="Order Image"
-              style={{ width: '50px', height: '50px', borderRadius: '5px', objectFit: 'cover' }}
+              style={{
+                width: "50px",
+                height: "50px",
+                borderRadius: "5px",
+                objectFit: "cover",
+                cursor: "pointer",
+              }}
+              onClick={() => handleImageClick(`${baseURL}${value}`)}
             />
           ) : (
-            'No Image' // Display text if image is missing
-          )
-        ),
+            "No Image"
+          ),
       },
     ],
     []
   );
 
+  // Fetch Data (Only Cancelled Orders)
+  const fetchData = useCallback(async () => {
+    try {
+      const response = await fetch(`${baseURL}/api/orders`);
+      if (!response.ok) throw new Error("Failed to fetch data");
+
+      const result = await response.json();
+      const cancelledOrders = result.filter((order) => order.order_status === "Canceled");
+
+      setData(cancelledOrders.reverse()); // Reverse to show latest orders first
+      console.log("Cancelled Orders:", cancelledOrders);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  // Fetch data on mount
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await fetch(`${baseURL}/api/orders`);
-        if (!response.ok) {
-          throw new Error('Failed to fetch data');
-        }
-        const result = await response.json();
-
-        // Filter orders where order_status is "Cancelled"
-        const cancelledOrders = result.filter(order => order.order_status === "Canceled");
-
-        setData(cancelledOrders); // Set only cancelled orders
-        console.log("Cancelled Orders:", cancelledOrders);
-      } catch (error) {
-        console.error('Error fetching data:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
     fetchData();
-  }, [baseURL]);
-
+  }, [fetchData]);
 
   return (
     <>
@@ -112,13 +120,25 @@ const ViewOrders = () => {
               <h3>Cancelled Orders</h3>
             </Col>
           </Row>
+
           {loading ? (
             <div>Loading...</div>
           ) : (
-            <DataTable columns={columns} data={[...data].reverse()} />
+            <DataTable columns={columns} data={data} />
           )}
         </div>
       </div>
+
+      {/* Image Preview Modal */}
+      <Modal show={isModalOpen} onHide={() => setIsModalOpen(false)} centered>
+        <Modal.Body className="d-flex justify-content-center">
+          <img
+            src={modalImage}
+            alt="Enlarged Order"
+            style={{ maxWidth: "100%", maxHeight: "80vh", borderRadius: "10px" }}
+          />
+        </Modal.Body>
+      </Modal>
     </>
   );
 };

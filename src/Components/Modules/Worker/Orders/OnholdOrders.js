@@ -73,7 +73,15 @@ const OnholdOrders = () => {
         accessor: 'total_weight_aw',
       },
       { Header: 'Order Status', accessor: 'order_status', Cell: ({ row }) => row.original.order_status || 'N/A' },
-      { Header: 'Work Status', accessor: 'work_status' },
+      {
+        Header: 'Work Status', 
+        accessor: 'work_status',
+        Cell: ({ row }) => (
+          <span style={{ color: row.original.work_status === 'Hold' ? 'Orange' : 'black' }}>
+            {row.original.work_status || 'N/A'}
+          </span>
+       ),
+      },
       {
         Header: 'Image',
         accessor: 'image_url',
