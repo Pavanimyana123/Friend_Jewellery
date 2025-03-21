@@ -342,7 +342,7 @@ const ViewOrders = () => {
       {
         Header: 'Assigned Status',
         accessor: 'assigned_status',
-        Cell: ({ row }) => row.original.assigned_status || 'Not Assigned',
+        Cell: ({ row }) => row.original.assigned_status || '',
       },
       {
         Header: 'Worker Name',
@@ -353,7 +353,11 @@ const ViewOrders = () => {
       {
         Header: 'Work Status',
         accessor: 'work_status',
-        Cell: ({ row }) => row.original.work_status || 'N/A',
+        Cell: ({ row }) => (
+          <span style={{ color: row.original.work_status === 'Pending' ? 'red' : 'black' }}>
+            {row.original.work_status || 'N/A'}
+          </span>
+       ),
       },
       {
         Header: 'Action',

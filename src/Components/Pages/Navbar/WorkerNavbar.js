@@ -67,7 +67,7 @@ function VendorNavbar() {
                         textDecoration: 'none',
                     }}
                 >
-                    Assigned Orders</Link>
+                    Assigned</Link>
                 <Link
                     to="/w-inprogress-orders"
                     onClick={handleItemClick}
@@ -77,8 +77,8 @@ function VendorNavbar() {
                         textDecoration: 'none',
                     }}
                 >
-                    InProgress Orders</Link>
-                    <Link
+                    InProgress</Link>
+                <Link
                     to="/w-completed-orders"
                     onClick={handleItemClick}
                     style={{
@@ -87,18 +87,38 @@ function VendorNavbar() {
                         textDecoration: 'none',
                     }}
                 >
-                    Completed Orders</Link>   
-                     <Link
-                                        to="/"
-                                        onClick={handleItemClick}
-                                        className='logout-desktop'
-                                        style={{
-                                            color: window.location.pathname === '/' ? '#a36e29' : 'black',
-                                            backgroundColor: 'transparent',
-                                            textDecoration: 'none',
-                                        }}
-                                    >
-                                        Logout</Link> 
+                    Completed</Link>
+                    <Link
+                    to="/w-pending-orders"
+                    onClick={handleItemClick}
+                    style={{
+                        color: window.location.pathname === '/w-pending-orders' ? '#a36e29' : 'black',
+                        backgroundColor: 'transparent',
+                        textDecoration: 'none',
+                    }}
+                >
+                    Pending</Link>
+                    <Link
+                    to="/w-hold-orders"
+                    onClick={handleItemClick}
+                    style={{
+                        color: window.location.pathname === '/w-hold-orders' ? '#a36e29' : 'black',
+                        backgroundColor: 'transparent',
+                        textDecoration: 'none',
+                    }}
+                >
+                    On Hold</Link>      
+                <Link
+                    to="/"
+                    onClick={handleItemClick}
+                    className='logout-desktop'
+                    style={{
+                        color: window.location.pathname === '/' ? '#a36e29' : 'black',
+                        backgroundColor: 'transparent',
+                        textDecoration: 'none',
+                    }}
+                >
+                    Logout</Link>
 
             </nav>
             <div className='username'>

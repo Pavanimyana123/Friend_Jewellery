@@ -57,10 +57,10 @@ const Dashboard = () => {
 
     const workerCards = [
         { title: "Assigned Orders", link: "/w-assigned-orders", count: data.length }, // Total assigned orders
-        { title: "Pending Orders", link: "/w-pendingorders", count: pendingCount }, // Pending count
+        { title: "Pending Orders", link: "/w-pending-orders", count: pendingCount }, // Pending count
         { title: "In Progress Orders", link: "/w-inprogress-orders", count: inProgressCount }, // In Progress count
         { title: "Completed Orders", link: "/w-completed-orders", count: completedCount }, // Completed count
-        { title: "On Hold Orders", link: "/w-holdorders", count: holdCount }, // On Hold count   
+        { title: "On Hold Orders", link: "/w-hold-orders", count: holdCount }, // On Hold count   
     ];
 
     return (

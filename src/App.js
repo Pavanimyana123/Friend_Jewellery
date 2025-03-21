@@ -31,6 +31,8 @@ import Rates from "./Components/Modules/Admin/Rates/Rates";
 import CancelReq from "./Components/Modules/Admin/Orders/CancelReq";
 import DesignReq from "./Components/Modules/Admin/Orders/DesignReq";
 import EditOrdersForm from "./Components/Modules/Admin/Orders/EditOrdersForm";
+import PendingOrders from "./Components/Modules/Worker/Orders/PendingOrders";
+import OnholdOrders from "./Components/Modules/Worker/Orders/OnholdOrders";
 
 export default function MainApp() {
   return (
@@ -70,7 +72,9 @@ export default function MainApp() {
 
       <Route path="/w-dashboard" exact element={<WorkerDashboard />} />
       <Route path="/w-assigned-orders" exact element={<AssignedOrders />} />
-      <Route path="/w-inprogress-orders" exact element={<InprogressOrders />} /> 
+      <Route path="/w-inprogress-orders" exact element={<InprogressOrders />} />
+      <Route path="/w-pending-orders" exact element={<PendingOrders />} />
+      <Route path="/w-hold-orders" exact element={<OnholdOrders />} /> 
       <Route path="/w-completed-orders" exact element={<CompletedOrders />} />
       <Route path="/a-design-requests" exact element={<DesignReq />} />
 
