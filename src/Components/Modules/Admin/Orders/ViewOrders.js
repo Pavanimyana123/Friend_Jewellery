@@ -4,10 +4,11 @@ import DataTable from '../../../Pages/InputField/DataTable';
 import { Button, Row, Col } from 'react-bootstrap';
 import './ViewOrders.css';
 import axios from "axios";
-import { FaEdit, FaTrash, FaEye } from 'react-icons/fa';
+import { FaEdit, FaTrash } from 'react-icons/fa';
 import baseURL from '../../../../Url/NodeBaseURL';
 import Navbar from '../../../Pages/Navbar/Navbar';
-import 'jspdf-autotable';
+import { jsPDF } from "jspdf";
+import autoTable from "jspdf-autotable"; // ✅ Ensure this is installed and imported
 import * as XLSX from 'xlsx';
 
 const ViewOrders = () => {
@@ -18,6 +19,7 @@ const ViewOrders = () => {
   const [assignedWorkers, setAssignedWorkers] = useState({});
   const [orders, setOrders] = useState([]);
   const [filteredData, setFilteredData] = useState([]); // New state for filtered data
+  const [selectedRows, setSelectedRows] = useState([]);
 
   // Fetch workers
   useEffect(() => {
@@ -28,20 +30,17 @@ const ViewOrders = () => {
           throw new Error('Failed to fetch workers');
         }
         const result = await response.json();
-
         const workers = result
           .filter((item) => item.account_group === 'WORKER')
           .map((item) => ({
             id: item.id,
             account_name: item.account_name,
           }));
-
         setWorkers(workers);
       } catch (error) {
         console.error('Error fetching workers:', error);
       }
     };
-
     fetchWorkers();
   }, []);
 
@@ -60,6 +59,7 @@ const ViewOrders = () => {
       setLoading(false);
     }
   };
+
   useEffect(() => {
     fetchData();
   }, []);
@@ -74,8 +74,8 @@ const ViewOrders = () => {
         },
         body: JSON.stringify({
           assigned_status: workerId ? 'Assigned' : 'Not Assigned',
-          worker_id: workerId,  // Store worker ID in the database
-          worker_name: workerName,  // Store worker Name in the database
+          worker_id: workerId,
+          worker_name: workerName,
           work_status: 'Pending',
         }),
       });
@@ -83,7 +83,6 @@ const ViewOrders = () => {
       if (!response.ok) {
         throw new Error('Failed to update order');
       }
-
       // Update UI state after successful update
       // setData((prevData) =>
       //   prevData.map((order) =>
@@ -92,10 +91,8 @@ const ViewOrders = () => {
       //       : order
       //   )
       // );
-
       setAssignedWorkers((prev) => ({ ...prev, [orderId]: workerName })); // Store worker name for display
       fetchData();
-
     } catch (error) {
       console.error('Error updating order:', error);
     }
@@ -122,16 +119,15 @@ const ViewOrders = () => {
     navigate(`/a-edit-order/${id}`);
   };
 
-
   const exportToExcel = () => {
     // Use filteredData if available, otherwise export all data
     const exportData = filteredData.length > 0 ? filteredData : data;
-  
+
     if (exportData.length === 0) {
       alert("No data available for export.");
       return;
     }
-  
+
     // Map data into a structured format for Excel
     const worksheet = XLSX.utils.json_to_sheet(exportData.map(order => ({
       'Order No.': order.order_number,
@@ -152,79 +148,226 @@ const ViewOrders = () => {
       'Worker Name': order.worker_name,
       'Work Status': order.work_status,
     })));
-  
+
     const workbook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(workbook, worksheet, 'Orders');
-    
+
     // Generate file name dynamically based on filter state
     const fileName = filteredData.length > 0 ? 'filtered_orders.xlsx' : 'all_orders.xlsx';
-  
+
     XLSX.writeFile(workbook, fileName);
   };
-  
-  
+
+
+  // Handle individual row selection
+  const handleRowSelect = (rowId) => {
+    setSelectedRows((prevSelected) =>
+      prevSelected.includes(rowId)
+        ? prevSelected.filter((id) => id !== rowId)
+        : [...prevSelected, rowId]
+    );
+  };
+
+  // Handle "Select All" checkbox
+  const handleSelectAll = () => {
+    if (selectedRows.length === data.length) {
+      setSelectedRows([]);
+    } else {
+      setSelectedRows(data.map((row) => row.id));
+    }
+  };
+
+
+  // const downloadPDF = () => {
+  //   if (selectedRows.length === 0) {
+  //     alert("Please select at least one order to download.");
+  //     return;
+  //   }
+
+  //   const doc = new jsPDF();
+  //   doc.text("Selected Orders", 10, 10);
+
+  //   // Prepare data for the table
+  //   const tableData = selectedRows.map((id) => {
+  //     const row = data.find((order) => order.id === id);
+  //     return [row.id, row.date, row.account_name, row.order_number, row.metal, row.total_price];
+  //   });
+
+  //   // Use autoTable to create the table
+  //   autoTable(doc, {
+  //     head: [["ID", "Date", "Customer", "Order No.", "Metal", "Total Amount"]],
+  //     body: tableData,
+  //   });
+
+  //   doc.save("Selected_Orders.pdf");
+  // };
+
+  const downloadPDF = () => {
+    if (selectedRows.length === 0) {
+      alert("Please select at least one order to download.");
+      return;
+    }
+
+    const doc = new jsPDF();
+
+    // Company Header
+    doc.setFontSize(16);
+    doc.text("Company Name", 10, 15);
+    doc.setFontSize(10);
+    doc.text("123 Business Street, City, Country", 10, 22);
+    doc.text("Phone: (123) 456-7890 | Email: info@company.com", 10, 28);
+    doc.text("----------------------------------------------------", 10, 32);
+
+    // Invoice Title
+    doc.setFontSize(14);
+    doc.text("INVOICE", 90, 40);
+
+    // Invoice Metadata
+    const date = new Date().toLocaleDateString();
+    doc.setFontSize(10);
+    doc.text(`Invoice Date: ${date}`, 150, 50);
+
+    // Prepare order data
+    const tableData = selectedRows.map((id, index) => {
+      const row = data.find((order) => order.id === id);
+      if (!row) return []; // Prevents errors if row is undefined
+
+      const totalPrice = parseFloat(row.total_price) || 0; // Convert safely
+      return [
+        index + 1,
+        row.order_number || "N/A",
+        row.account_name || "N/A",
+        row.date || "N/A",
+        row.metal || "N/A",
+        `$${totalPrice.toFixed(2)}`,
+      ];
+    });
+
+    // Ensure there is data to display
+    if (tableData.length === 0) {
+      alert("No valid data to generate a PDF.");
+      return;
+    }
+
+    // Generate Invoice Table and Get `finalY`
+    const tableOutput = autoTable(doc, {
+      startY: 60,
+      head: [["#", "Order No.", "Customer", "Date", "Metal", "Total Amount"]],
+      body: tableData,
+      theme: "striped",
+      styles: { fontSize: 10 },
+      headStyles: { fillColor: [44, 62, 80] },
+    });
+
+    // Check if tableOutput is defined before using `finalY`
+    const finalY = tableOutput?.lastAutoTable?.finalY || 70;
+
+    // Total Amount Calculation
+    const totalAmount = tableData.reduce((sum, row) => sum + parseFloat(row[5]?.replace("$", "")) || 0, 0);
+    doc.setFontSize(12);
+    doc.text(`Total Amount: $${totalAmount.toFixed(2)}`, 140, finalY + 10);
+
+    // Footer
+    doc.setFontSize(10);
+    doc.text("Thank you for your business!", 10, finalY + 20);
+    doc.text("Terms & Conditions: Payment is due within 15 days.", 10, finalY + 30);
+
+    doc.save("Invoice.pdf");
+  };
+
 
   const columns = React.useMemo(
     () => [
-      { Header: 'Sr. No.', Cell: ({ row }) => row.index + 1 },
+      {
+        Header: (
+          <input
+            type="checkbox"
+            checked={selectedRows.length === data.length && data.length > 0}
+            onChange={handleSelectAll}
+          />
+        ),
+        Cell: ({ row }) => (
+          <input
+            type="checkbox"
+            checked={selectedRows.includes(row.original.id)}
+            onChange={() => handleRowSelect(row.original.id)}
+          />
+        ),
+        id: 'select', // Add an ID for the select column
+      },
+      { Header: 'Sr. No.', Cell: ({ row }) => row.index + 1, id: 'sr_no' },
       {
         Header: 'Date',
         accessor: (row) => {
           const date = new Date(row.date);
           return date.toLocaleDateString('en-GB');
         },
+        id: 'date', // Add an ID for the date column
       },
       {
         Header: 'Mobile',
         accessor: 'mobile',
+        id: 'mobile', // Add an ID for the mobile column
       },
       {
         Header: 'Customer',
         accessor: 'account_name',
+        id: 'customer', // Add an ID for the customer column
       },
       {
         Header: 'Order No.',
         accessor: 'order_number',
+        id: 'order_no', // Add an ID for the order number column
       },
       {
         Header: 'Metal',
         accessor: 'metal',
+        id: 'metal', // Add an ID for the metal column
       },
       {
         Header: 'Category',
         accessor: 'category',
+        id: 'category', // Add an ID for the category column
       },
       {
         Header: 'Sub Category',
         accessor: 'subcategory',
+        id: 'sub_category', // Add an ID for the subcategory column
       },
       {
         Header: 'Purity',
         accessor: 'purity',
+        id: 'purity', // Add an ID for the purity column
       },
       {
         Header: 'Design Name',
         accessor: 'product_design_name',
+        id: 'design_name', // Add an ID for the design name column
       },
       {
         Header: 'Gross Wt',
         accessor: 'gross_weight',
+        id: 'gross_weight', // Add an ID for the gross weight column
       },
       {
         Header: 'Stone Wt',
         accessor: 'stone_weight',
+        id: 'stone_weight', // Add an ID for the stone weight column
       },
       {
         Header: 'Total Wt',
         accessor: 'total_weight_aw',
+        id: 'total_weight', // Add an ID for the total weight column
       },
       {
         Header: 'Total Amt',
         accessor: 'total_price',
+        id: 'total_amt', // Add an ID for the total amount column
       },
       {
         Header: "Order Status",
         accessor: "order_status",
+        id: 'order_status', // Add an ID for the order status column
         Cell: ({ row }) => {
           const [status, setStatus] = useState(row.original.order_status || "Placed");
           const isPending = row.original.work_status === "Pending"; // Check if work_status is Pending
@@ -236,9 +379,9 @@ const ViewOrders = () => {
 
             try {
               const response = await axios.put(`${baseURL}/api/orders/status/${row.original.id}`, {
-                order_status: newStatus, // Update order_status
-                worker_id: row.original.worker_id, // Keep worker_id same
-                worker_name: row.original.worker_name, // Keep worker_name same
+                order_status: newStatus,
+                worker_id: row.original.worker_id,
+                worker_name: row.original.worker_name,
               });
 
               console.log("Status updated:", response.data);
@@ -263,24 +406,10 @@ const ViewOrders = () => {
           );
         },
       },
-      // {
-      //   Header: 'Image',
-      //   accessor: 'image_url', // Keep accessor as is
-      //   Cell: ({ value }) => (
-      //     value ? (
-      //       <img
-      //         src={`${baseURL}${value}`} // Construct full image URL
-      //         alt="Order Image"
-      //         style={{ width: '50px', height: '50px', borderRadius: '5px', objectFit: 'cover' }}
-      //       />
-      //     ) : (
-      //       'No Image' // Display text if image is missing
-      //     )
-      //   ),
-      // },
       {
         Header: 'Image',
         accessor: 'image_url',
+        id: 'image', // Add an ID for the image column
         Cell: ({ value }) => {
           const handleImageClick = () => {
             if (value) {
@@ -296,7 +425,7 @@ const ViewOrders = () => {
                     </body>
                   </html>
                 `);
-                newWindow.document.close(); // Close document stream to fully load content
+                newWindow.document.close();
               }
             }
           };
@@ -316,18 +445,19 @@ const ViewOrders = () => {
       },
       {
         Header: 'Assign Worker',
+        id: 'assign_worker', // Add an ID for the assign worker column
         Cell: ({ row }) => {
-          const assignedWorkerName = row.original.worker_name; // Get assigned worker name from row data
-          const isDisabled = row.original.assigned_status === 'Accepted'; // Check if status is 'Accepted'
+          const assignedWorkerName = row.original.worker_name;
+          const isDisabled = row.original.assigned_status === 'Accepted';
 
           return (
             <select
-              value={assignedWorkerName || ''} // Set selected value if worker_name matches
+              value={assignedWorkerName || ''}
               onChange={(e) => {
                 const selectedWorker = workers.find(worker => worker.account_name === e.target.value);
                 updateOrderWithWorker(row.original.id, selectedWorker?.id, selectedWorker?.account_name);
               }}
-              disabled={isDisabled} // Disable select if status is 'Accepted'
+              disabled={isDisabled}
             >
               <option value="">Select Worker</option>
               {workers.map((worker) => (
@@ -342,40 +472,43 @@ const ViewOrders = () => {
       {
         Header: 'Assigned Status',
         accessor: 'assigned_status',
+        id: 'assigned_status', // Add an ID for the assigned status column
         Cell: ({ row }) => row.original.assigned_status || '',
       },
       {
         Header: 'Worker Name',
         accessor: 'worker_name',
+        id: 'worker_name', // Add an ID for the worker name column
         Cell: ({ row }) => row.original.worker_name || 'N/A',
       },
-
       {
         Header: 'Work Status',
         accessor: 'work_status',
+        id: 'work_status', // Add an ID for the work status column
         Cell: ({ row }) => (
           <span style={{ color: row.original.work_status === 'Pending' ? 'red' : 'black' }}>
             {row.original.work_status || 'N/A'}
           </span>
-       ),
+        ),
       },
       {
         Header: 'Action',
+        id: 'action', // Add an ID for the action column
         Cell: ({ row }) => (
-          <div >
+          <div>
             <FaEdit
-              style={{ cursor: 'pointer', marginLeft: '10px', color: 'blue', }}
+              style={{ cursor: 'pointer', marginLeft: '10px', color: 'blue' }}
               onClick={() => handleEdit(row.original.id)}
             />
             <FaTrash
-              style={{ cursor: 'pointer', marginLeft: '10px', color: 'red', }}
+              style={{ cursor: 'pointer', marginLeft: '10px', color: 'red' }}
               onClick={() => handleDelete(row.original.id)}
             />
           </div>
         ),
       },
     ],
-    [workers, assignedWorkers]
+    [workers, assignedWorkers, selectedRows, data]
   );
 
   return (
@@ -388,6 +521,9 @@ const ViewOrders = () => {
               <h3>Orders</h3>
             </Col>
             <Col className="d-flex justify-content-end gap-2">
+              <Button onClick={downloadPDF} disabled={selectedRows.length === 0}>
+                Generate Invoice
+              </Button>
               <Button
                 className="export_but"
                 onClick={exportToExcel}
@@ -405,8 +541,6 @@ const ViewOrders = () => {
             </Col>
           </Row>
           {loading ? <div>Loading...</div> : <DataTable columns={columns} data={[...data].reverse()} />}
-          {/* {loading ? <div>Loading...</div> : <DataTable columns={columns} data={data} onFilterChange={handleFilterChange} />} */}
-
         </div>
       </div>
     </>
