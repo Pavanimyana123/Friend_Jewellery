@@ -68,7 +68,14 @@ const styles = StyleSheet.create({
         leftColumn: {
                 // flex: 1,
                 // paddingLeft: 100,
-                marginLeft: 100,
+                marginLeft: 140,
+        },
+        label: {
+                fontWeight: 'bold', // Makes the label bold
+        },
+        row: {
+                marginBottom: 3, // Adds spacing between rows
+                textAlign: 'left',
         },
         rightColumn: {
                 flex: 1,
@@ -242,11 +249,10 @@ const TaxINVoiceReceipt = () => {
 
                                                 {/* Flat No. Section */}
                                                 <View style={styles.leftColumn}>
-                                                        <Text style={styles.flatNo}>Flat No : 1323/1324, 16th B Cross Housing </Text>
-                                                        <Text style={styles.cin}>Board Colony EWS 3rd Phase, Yelahanka New </Text>
-                                                        <Text style={styles.cin}>Town, Bengaluru Urban, Karnataka - 560064.</Text>
-                                                        <Text style={styles.cin}>CIN : U46498KA2024PTC185784</Text>
-
+                                                <Text style={styles.row}><Text style={styles.label}>Flat No.:</Text> SHOP NO.F2</Text>
+                                                        <Text style={styles.row}><Text style={styles.label}>Building:</Text> SKITCHAN NGODUP COMPLEX</Text>
+                                                        <Text style={styles.row}><Text style={styles.label}>Road/Street:</Text> NEAR OLD BUS STAND</Text>
+                                                        <Text style={styles.row}><Text style={styles.label}>Locality/Sub Locality:</Text> LEH</Text>
                                                 </View>
 
                                                 {/* Vertical Divider */}
@@ -254,10 +260,11 @@ const TaxINVoiceReceipt = () => {
 
                                                 {/* Branch Section */}
                                                 <View style={styles.rightColumn}>
-                                                        <Text style={[styles.branch, { fontFamily: 'Helvetica-Bold' }]}>BRANCH:</Text>
-                                                        <Text style={styles.branchContent}>Shop no. 1 No.2063, Dairy Circle, </Text>
-                                                        <Text style={styles.branchContent}> Asha Arcade, 16th B Cross Rd,</Text>
-                                                        <Text style={styles.branchContent}>Yalahanka New Town, Bangalore - 064</Text>
+                                                <Text style={styles.row}><Text style={styles.label}>City/Town/Village:</Text> Leh,</Text>
+                                                        <Text style={styles.row}><Text style={styles.label}>District:</Text> Leh Ladakh,</Text>
+                                                        <Text style={styles.row}><Text style={styles.label}>State:</Text>  Ladakh</Text>
+                                                        <Text style={styles.row}><Text style={styles.label}>PIN Code:</Text> 194101</Text>
+                                                       
                                                 </View>
                                         </View>
 
