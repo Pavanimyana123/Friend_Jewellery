@@ -1,8 +1,8 @@
 import React from "react";
 
 import { Page, Text, View, Document, StyleSheet, Image } from "@react-pdf/renderer";
-import logo1 from './Logos/logo.jpeg'
-import logo2 from './Logos/logo_dark.png'
+import logo1 from '../../../Pages/Images/logo.jpeg'
+
 
 // Define styles
 const styles = StyleSheet.create({
@@ -183,20 +183,24 @@ const styles = StyleSheet.create({
         },
 });
 
-const TaxINVoiceReceipt = () => {
+const TaxINVoiceReceipt = ({ selectedOrders }) => {
+        console.log("selected orders=", selectedOrders);
         return (
                 <Document>
                         <Page size="A4" style={styles.page}>
                                 {/* First Row */}
-                                <View style={[styles.row, { flexDirection: 'row', justifyContent: 'space-between', marginBottom:'20px' }]}>
-                                        <View style={[styles.column, { marginTop: 20, width: '20%', marginLeft: 20, fontFamily: 'Helvetica-Bold' }]}>
-                                                <Text style={[styles.boldText, { marginBottom: 6 }]}>CUSTOMER DETAILS:</Text>
-                                                <Text style={{ marginBottom: 6 }}>SHUBHA,</Text>
+                                <View style={[styles.row, { flexDirection: 'row', justifyContent: 'space-between', marginBottom: '20px' }]}>
+                                        {selectedOrders.length > 0 && (
+                                                <View style={[styles.column, { marginTop: 20, width: '20%', marginLeft: 20, fontFamily: 'Helvetica-Bold' }]}>
+                                                        <Text style={[styles.boldText, { marginBottom: 6 }]}>CUSTOMER DETAILS:</Text>
+                                                        <Text style={{ marginBottom: 6 }}>{selectedOrders[0].account_name || "N/A"}</Text>
+                                                        <Text style={{ marginBottom: 6 }}>{selectedOrders[0].city || "N/A"}</Text>
+                                                        <Text style={{ marginBottom: 6 }}>MOBILE: {selectedOrders[0].mobile || "N/A"}</Text>
+                                                        <Text style={{ marginBottom: 6 }}>PAN NO: {selectedOrders[0].pan_card || "N/A"}</Text>
+                                                </View>
+                                        )}
 
-                                                <Text style={{ marginBottom: 6 }}>BANGALORE</Text>
-                                                <Text style={{ marginBottom: 6 }}>MOBILE: 9901517112</Text>
-                                                <Text style={{ marginBottom: 6 }}>PAN NO: DRXPR9966P</Text>
-                                        </View>
+
                                         <View style={[styles.column, { width: '30%', height: '80px', marginRight: '20px' }]}>
                                                 <Image
                                                         style={styles.image1}
@@ -249,7 +253,7 @@ const TaxINVoiceReceipt = () => {
 
                                                 {/* Flat No. Section */}
                                                 <View style={styles.leftColumn}>
-                                                <Text style={styles.row}><Text style={styles.label}>Flat No.:</Text> SHOP NO.F2</Text>
+                                                        <Text style={styles.row}><Text style={styles.label}>Flat No.:</Text> SHOP NO.F2</Text>
                                                         <Text style={styles.row}><Text style={styles.label}>Building:</Text> SKITCHAN NGODUP COMPLEX</Text>
                                                         <Text style={styles.row}><Text style={styles.label}>Road/Street:</Text> NEAR OLD BUS STAND</Text>
                                                         <Text style={styles.row}><Text style={styles.label}>Locality/Sub Locality:</Text> LEH</Text>
@@ -260,11 +264,11 @@ const TaxINVoiceReceipt = () => {
 
                                                 {/* Branch Section */}
                                                 <View style={styles.rightColumn}>
-                                                <Text style={styles.row}><Text style={styles.label}>City/Town/Village:</Text> Leh,</Text>
+                                                        <Text style={styles.row}><Text style={styles.label}>City/Town/Village:</Text> Leh,</Text>
                                                         <Text style={styles.row}><Text style={styles.label}>District:</Text> Leh Ladakh,</Text>
                                                         <Text style={styles.row}><Text style={styles.label}>State:</Text>  Ladakh</Text>
                                                         <Text style={styles.row}><Text style={styles.label}>PIN Code:</Text> 194101</Text>
-                                                       
+
                                                 </View>
                                         </View>
 
@@ -284,11 +288,11 @@ const TaxINVoiceReceipt = () => {
                                                                 <Text style={[styles.tableCell, styles.tableCellHeader]}>SI</Text>
                                                                 <View style={styles.divider1} />
 
-                                                                <Text style={[styles.tableCell, styles.tableCellDescription]}>Description</Text>
+                                                                <Text style={[styles.tableCell, styles.tableCellDescription]}>Product Name</Text>
                                                                 <View style={styles.divider1} />
 
-                                                                <Text style={[styles.tableCell, styles.tableCellHSN]}>HSN</Text>
-                                                                <View style={styles.divider1} />
+                                                                {/* <Text style={[styles.tableCell, styles.tableCellHSN]}>HSN</Text>
+                                                                <View style={styles.divider1} /> */}
 
                                                                 <Text style={[styles.tableCell, styles.tableCellQty]}>Qty</Text>
                                                                 <View style={styles.divider1} />
@@ -319,79 +323,44 @@ const TaxINVoiceReceipt = () => {
                                                         <View style={styles.horizontalLine} />
 
                                                         {/* Add rows of data below */}
-                                                        <View style={styles.tableRow}>
-                                                                <Text style={[styles.tableCell, styles.tableCellHeader]}>1</Text>
-                                                                <View style={[styles.divider1, { marginTop: -2 }]} />
+                                                        {selectedOrders.map((order, index) => (
+                                                                <View style={styles.tableRow} key={index}>
+                                                                        <Text style={[styles.tableCell, styles.tableCellHeader]}>1</Text>
+                                                                        <View style={[styles.divider1, { marginTop: -2 }]} />
 
-                                                                <Text style={[styles.tableCell, styles.tableCellDescription]}>GOLD-NOSTPIN GOLD</Text>
-                                                                <View style={[styles.divider1, { marginTop: -2 }]} />
+                                                                        <Text style={[styles.tableCell, styles.tableCellDescription]}>{order.subcategory || "N/A"}</Text>
+                                                                        <View style={[styles.divider1, { marginTop: -2 }]} />
 
-                                                                <Text style={[styles.tableCell, styles.tableCellHSN]}>711311</Text>
-                                                                <View style={[styles.divider1, { marginTop: -2 }]} />
+                                                                        {/* <Text style={[styles.tableCell, styles.tableCellHSN]}>711311</Text>
+                                                                <View style={[styles.divider1, { marginTop: -2 }]} /> */}
 
-                                                                <Text style={[styles.tableCell, styles.tableCellQty]}>1</Text>
-                                                                <View style={[styles.divider1, { marginTop: -2 }]} />
+                                                                        <Text style={[styles.tableCell, styles.tableCellQty]}>1</Text>
+                                                                        <View style={[styles.divider1, { marginTop: -2 }]} />
 
-                                                                <Text style={[styles.tableCell, styles.tableCellPurity]}>76</Text>
-                                                                <View style={[styles.divider1, { marginTop: -2 }]} />
+                                                                        <Text style={[styles.tableCell, styles.tableCellPurity]}>{order.purity || "N/A"}</Text>
+                                                                        <View style={[styles.divider1, { marginTop: -2 }]} />
 
-                                                                <Text style={[styles.tableCell, styles.tableCellGrossWt]}>0.226</Text>
-                                                                <View style={[styles.divider1, { marginTop: -2 }]} />
+                                                                        <Text style={[styles.tableCell, styles.tableCellGrossWt]}>{order.gross_weight || "N/A"}</Text>
+                                                                        <View style={[styles.divider1, { marginTop: -2 }]} />
 
-                                                                <Text style={[styles.tableCell, styles.tableCellStoneWt]}></Text>
-                                                                <View style={[styles.divider1, { marginTop: -2 }]} />
+                                                                        <Text style={[styles.tableCell, styles.tableCellStoneWt]}>{order.stone_weight || "N/A"}</Text>
+                                                                        <View style={[styles.divider1, { marginTop: -2 }]} />
 
-                                                                <Text style={[styles.tableCell, styles.tableCellNetWt]}>0.226</Text>
-                                                                <View style={[styles.divider1, { marginTop: -2 }]} />
+                                                                        <Text style={[styles.tableCell, styles.tableCellNetWt]}>{order.total_weight_aw || "N/A"}</Text>
+                                                                        <View style={[styles.divider1, { marginTop: -2 }]} />
 
-                                                                <Text style={[styles.tableCell, styles.tableCellRate]}></Text>
-                                                                <View style={[styles.divider1, { marginTop: -2 }]} />
+                                                                        <Text style={[styles.tableCell, styles.tableCellRate]}>{order.rate || "N/A"}</Text>
+                                                                        <View style={[styles.divider1, { marginTop: -2 }]} />
 
-                                                                <Text style={[styles.tableCell, styles.tableCellMC]}></Text>
-                                                                <View style={[styles.divider1, { marginTop: -2 }]} />
+                                                                        <Text style={[styles.tableCell, styles.tableCellMC]}>{order.total_mc || "N/A"}</Text>
+                                                                        <View style={[styles.divider1, { marginTop: -2 }]} />
 
-                                                                <Text style={[styles.tableCell, styles.tableCellStAmt]}></Text>
-                                                                <View style={[styles.divider1, { marginTop: -2 }]} />
+                                                                        <Text style={[styles.tableCell, styles.tableCellStAmt]}>{order.stone_price || "N/A"}</Text>
+                                                                        <View style={[styles.divider1, { marginTop: -2 }]} />
 
-                                                                <Text style={[styles.tableCell, styles.tableCellTotal]}>2330.10</Text>
-                                                        </View>
-                                                        <View style={styles.tableRow}>
-                                                                <Text style={[styles.tableCell, styles.tableCellHeader]}>2</Text>
-                                                                <View style={[styles.divider1, { marginTop: -2 }]} />
-
-
-                                                                <Text style={[styles.tableCell, styles.tableCellDescription]}>GOLD-NECKLACE</Text>
-                                                                <View style={[styles.divider1, { marginTop: -2 }]} />
-
-                                                                <Text style={[styles.tableCell, styles.tableCellHSN]}>711311</Text>
-                                                                <View style={[styles.divider1, { marginTop: -2 }]} />
-
-                                                                <Text style={[styles.tableCell, styles.tableCellQty]}>1</Text>
-                                                                <View style={[styles.divider1, { marginTop: -2 }]} />
-
-                                                                <Text style={[styles.tableCell, styles.tableCellPurity]}>916</Text>
-                                                                <View style={[styles.divider1, { marginTop: -2 }]} />
-
-                                                                <Text style={[styles.tableCell, styles.tableCellGrossWt]}>49.841</Text>
-                                                                <View style={[styles.divider1, { marginTop: -2 }]} />
-
-                                                                <Text style={[styles.tableCell, styles.tableCellStoneWt]}></Text>
-                                                                <View style={[styles.divider1, { marginTop: -2 }]} />
-
-                                                                <Text style={[styles.tableCell, styles.tableCellNetWt]}>49.841</Text>
-                                                                <View style={[styles.divider1, { marginTop: -2 }]} />
-
-                                                                <Text style={[styles.tableCell, styles.tableCellRate]}>7135.00</Text>
-                                                                <View style={[styles.divider1, { marginTop: -2 }]} />
-
-                                                                <Text style={[styles.tableCell, styles.tableCellMC]}>9.75%</Text>
-                                                                <View style={[styles.divider1, { marginTop: -2 }]} />
-
-                                                                <Text style={[styles.tableCell, styles.tableCellStAmt]}></Text>
-                                                                <View style={[styles.divider1, { marginTop: -2 }]} />
-
-                                                                <Text style={[styles.tableCell, styles.tableCellTotal]}>390391.54</Text>
-                                                        </View>
+                                                                        <Text style={[styles.tableCell, styles.tableCellTotal]}>{order.total_price || "N/A"}</Text>
+                                                                </View>
+                                                        ))}
                                                         <View style={styles.tableRow}>
                                                                 <Text style={[styles.tableCell, styles.tableCellHeader]}></Text>
                                                                 <View style={[styles.divider1, { marginTop: -2 }]} />
@@ -400,304 +369,8 @@ const TaxINVoiceReceipt = () => {
                                                                 <Text style={[styles.tableCell, styles.tableCellDescription]}></Text>
                                                                 <View style={[styles.divider1, { marginTop: -2 }]} />
 
-                                                                <Text style={[styles.tableCell, styles.tableCellHSN]}></Text>
-                                                                <View style={[styles.divider1, { marginTop: -2 }]} />
-
-                                                                <Text style={[styles.tableCell, styles.tableCellQty]}></Text>
-                                                                <View style={[styles.divider1, { marginTop: -2 }]} />
-
-                                                                <Text style={[styles.tableCell, styles.tableCellPurity]}></Text>
-                                                                <View style={[styles.divider1, { marginTop: -2 }]} />
-
-                                                                <Text style={[styles.tableCell, styles.tableCellGrossWt]}></Text>
-                                                                <View style={[styles.divider1, { marginTop: -2 }]} />
-
-                                                                <Text style={[styles.tableCell, styles.tableCellStoneWt]}></Text>
-                                                                <View style={[styles.divider1, { marginTop: -2 }]} />
-
-                                                                <Text style={[styles.tableCell, styles.tableCellNetWt]}></Text>
-                                                                <View style={[styles.divider1, { marginTop: -2 }]} />
-
-                                                                <Text style={[styles.tableCell, styles.tableCellRate]}></Text>
-                                                                <View style={[styles.divider1, { marginTop: -2 }]} />
-
-                                                                <Text style={[styles.tableCell, styles.tableCellMC]}></Text>
-                                                                <View style={[styles.divider1, { marginTop: -2 }]} />
-
-                                                                <Text style={[styles.tableCell, styles.tableCellStAmt]}></Text>
-                                                                <View style={[styles.divider1, { marginTop: -2 }]} />
-
-                                                                <Text style={[styles.tableCell, styles.tableCellTotal]}></Text>
-                                                        </View>
-                                                        <View style={styles.tableRow}>
-                                                                <Text style={[styles.tableCell, styles.tableCellHeader]}></Text>
-                                                                <View style={[styles.divider1, { marginTop: -2 }]} />
-
-
-                                                                <Text style={[styles.tableCell, styles.tableCellDescription]}></Text>
-                                                                <View style={[styles.divider1, { marginTop: -2 }]} />
-
-                                                                <Text style={[styles.tableCell, styles.tableCellHSN]}></Text>
-                                                                <View style={[styles.divider1, { marginTop: -2 }]} />
-
-                                                                <Text style={[styles.tableCell, styles.tableCellQty]}></Text>
-                                                                <View style={[styles.divider1, { marginTop: -2 }]} />
-
-                                                                <Text style={[styles.tableCell, styles.tableCellPurity]}></Text>
-                                                                <View style={[styles.divider1, { marginTop: -2 }]} />
-
-                                                                <Text style={[styles.tableCell, styles.tableCellGrossWt]}></Text>
-                                                                <View style={[styles.divider1, { marginTop: -2 }]} />
-
-                                                                <Text style={[styles.tableCell, styles.tableCellStoneWt]}></Text>
-                                                                <View style={[styles.divider1, { marginTop: -2 }]} />
-
-                                                                <Text style={[styles.tableCell, styles.tableCellNetWt]}></Text>
-                                                                <View style={[styles.divider1, { marginTop: -2 }]} />
-
-                                                                <Text style={[styles.tableCell, styles.tableCellRate]}></Text>
-                                                                <View style={[styles.divider1, { marginTop: -2 }]} />
-
-                                                                <Text style={[styles.tableCell, styles.tableCellMC]}></Text>
-                                                                <View style={[styles.divider1, { marginTop: -2 }]} />
-
-                                                                <Text style={[styles.tableCell, styles.tableCellStAmt]}></Text>
-                                                                <View style={[styles.divider1, { marginTop: -2 }]} />
-
-                                                                <Text style={[styles.tableCell, styles.tableCellTotal]}></Text>
-                                                        </View>
-                                                        <View style={styles.tableRow}>
-                                                                <Text style={[styles.tableCell, styles.tableCellHeader]}></Text>
-                                                                <View style={[styles.divider1, { marginTop: -2 }]} />
-
-
-                                                                <Text style={[styles.tableCell, styles.tableCellDescription]}></Text>
-                                                                <View style={[styles.divider1, { marginTop: -2 }]} />
-
-                                                                <Text style={[styles.tableCell, styles.tableCellHSN]}></Text>
-                                                                <View style={[styles.divider1, { marginTop: -2 }]} />
-
-                                                                <Text style={[styles.tableCell, styles.tableCellQty]}></Text>
-                                                                <View style={[styles.divider1, { marginTop: -2 }]} />
-
-                                                                <Text style={[styles.tableCell, styles.tableCellPurity]}></Text>
-                                                                <View style={[styles.divider1, { marginTop: -2 }]} />
-
-                                                                <Text style={[styles.tableCell, styles.tableCellGrossWt]}></Text>
-                                                                <View style={[styles.divider1, { marginTop: -2 }]} />
-
-                                                                <Text style={[styles.tableCell, styles.tableCellStoneWt]}></Text>
-                                                                <View style={[styles.divider1, { marginTop: -2 }]} />
-
-                                                                <Text style={[styles.tableCell, styles.tableCellNetWt]}></Text>
-                                                                <View style={[styles.divider1, { marginTop: -2 }]} />
-
-                                                                <Text style={[styles.tableCell, styles.tableCellRate]}></Text>
-                                                                <View style={[styles.divider1, { marginTop: -2 }]} />
-
-                                                                <Text style={[styles.tableCell, styles.tableCellMC]}></Text>
-                                                                <View style={[styles.divider1, { marginTop: -2 }]} />
-
-                                                                <Text style={[styles.tableCell, styles.tableCellStAmt]}></Text>
-                                                                <View style={[styles.divider1, { marginTop: -2 }]} />
-
-                                                                <Text style={[styles.tableCell, styles.tableCellTotal]}></Text>
-                                                        </View>
-                                                        <View style={styles.tableRow}>
-                                                                <Text style={[styles.tableCell, styles.tableCellHeader]}></Text>
-                                                                <View style={[styles.divider1, { marginTop: -2 }]} />
-
-
-                                                                <Text style={[styles.tableCell, styles.tableCellDescription]}></Text>
-                                                                <View style={[styles.divider1, { marginTop: -2 }]} />
-
-                                                                <Text style={[styles.tableCell, styles.tableCellHSN]}></Text>
-                                                                <View style={[styles.divider1, { marginTop: -2 }]} />
-
-                                                                <Text style={[styles.tableCell, styles.tableCellQty]}></Text>
-                                                                <View style={[styles.divider1, { marginTop: -2 }]} />
-
-                                                                <Text style={[styles.tableCell, styles.tableCellPurity]}></Text>
-                                                                <View style={[styles.divider1, { marginTop: -2 }]} />
-
-                                                                <Text style={[styles.tableCell, styles.tableCellGrossWt]}></Text>
-                                                                <View style={[styles.divider1, { marginTop: -2 }]} />
-
-                                                                <Text style={[styles.tableCell, styles.tableCellStoneWt]}></Text>
-                                                                <View style={[styles.divider1, { marginTop: -2 }]} />
-
-                                                                <Text style={[styles.tableCell, styles.tableCellNetWt]}></Text>
-                                                                <View style={[styles.divider1, { marginTop: -2 }]} />
-
-                                                                <Text style={[styles.tableCell, styles.tableCellRate]}></Text>
-                                                                <View style={[styles.divider1, { marginTop: -2 }]} />
-
-                                                                <Text style={[styles.tableCell, styles.tableCellMC]}></Text>
-                                                                <View style={[styles.divider1, { marginTop: -2 }]} />
-
-                                                                <Text style={[styles.tableCell, styles.tableCellStAmt]}></Text>
-                                                                <View style={[styles.divider1, { marginTop: -2 }]} />
-
-                                                                <Text style={[styles.tableCell, styles.tableCellTotal]}></Text>
-                                                        </View>
-                                                        <View style={styles.tableRow}>
-                                                                <Text style={[styles.tableCell, styles.tableCellHeader]}></Text>
-                                                                <View style={[styles.divider1, { marginTop: -2 }]} />
-
-
-                                                                <Text style={[styles.tableCell, styles.tableCellDescription]}></Text>
-                                                                <View style={[styles.divider1, { marginTop: -2 }]} />
-
-                                                                <Text style={[styles.tableCell, styles.tableCellHSN]}></Text>
-                                                                <View style={[styles.divider1, { marginTop: -2 }]} />
-
-                                                                <Text style={[styles.tableCell, styles.tableCellQty]}></Text>
-                                                                <View style={[styles.divider1, { marginTop: -2 }]} />
-
-                                                                <Text style={[styles.tableCell, styles.tableCellPurity]}></Text>
-                                                                <View style={[styles.divider1, { marginTop: -2 }]} />
-
-                                                                <Text style={[styles.tableCell, styles.tableCellGrossWt]}></Text>
-                                                                <View style={[styles.divider1, { marginTop: -2 }]} />
-
-                                                                <Text style={[styles.tableCell, styles.tableCellStoneWt]}></Text>
-                                                                <View style={[styles.divider1, { marginTop: -2 }]} />
-
-                                                                <Text style={[styles.tableCell, styles.tableCellNetWt]}></Text>
-                                                                <View style={[styles.divider1, { marginTop: -2 }]} />
-
-                                                                <Text style={[styles.tableCell, styles.tableCellRate]}></Text>
-                                                                <View style={[styles.divider1, { marginTop: -2 }]} />
-
-                                                                <Text style={[styles.tableCell, styles.tableCellMC]}></Text>
-                                                                <View style={[styles.divider1, { marginTop: -2 }]} />
-
-                                                                <Text style={[styles.tableCell, styles.tableCellStAmt]}></Text>
-                                                                <View style={[styles.divider1, { marginTop: -2 }]} />
-
-                                                                <Text style={[styles.tableCell, styles.tableCellTotal]}></Text>
-                                                        </View>
-                                                        <View style={styles.tableRow}>
-                                                                <Text style={[styles.tableCell, styles.tableCellHeader]}></Text>
-                                                                <View style={[styles.divider1, { marginTop: -2 }]} />
-
-
-                                                                <Text style={[styles.tableCell, styles.tableCellDescription]}></Text>
-                                                                <View style={[styles.divider1, { marginTop: -2 }]} />
-
-                                                                <Text style={[styles.tableCell, styles.tableCellHSN]}></Text>
-                                                                <View style={[styles.divider1, { marginTop: -2 }]} />
-
-                                                                <Text style={[styles.tableCell, styles.tableCellQty]}></Text>
-                                                                <View style={[styles.divider1, { marginTop: -2 }]} />
-
-                                                                <Text style={[styles.tableCell, styles.tableCellPurity]}></Text>
-                                                                <View style={[styles.divider1, { marginTop: -2 }]} />
-
-                                                                <Text style={[styles.tableCell, styles.tableCellGrossWt]}></Text>
-                                                                <View style={[styles.divider1, { marginTop: -2 }]} />
-
-                                                                <Text style={[styles.tableCell, styles.tableCellStoneWt]}></Text>
-                                                                <View style={[styles.divider1, { marginTop: -2 }]} />
-
-                                                                <Text style={[styles.tableCell, styles.tableCellNetWt]}></Text>
-                                                                <View style={[styles.divider1, { marginTop: -2 }]} />
-
-                                                                <Text style={[styles.tableCell, styles.tableCellRate]}></Text>
-                                                                <View style={[styles.divider1, { marginTop: -2 }]} />
-
-                                                                <Text style={[styles.tableCell, styles.tableCellMC]}></Text>
-                                                                <View style={[styles.divider1, { marginTop: -2 }]} />
-
-                                                                <Text style={[styles.tableCell, styles.tableCellStAmt]}></Text>
-                                                                <View style={[styles.divider1, { marginTop: -2 }]} />
-
-                                                                <Text style={[styles.tableCell, styles.tableCellTotal]}></Text>
-                                                        </View>
-                                                        <View style={styles.tableRow}>
-                                                                <Text style={[styles.tableCell, styles.tableCellHeader]}></Text>
-                                                                <View style={[styles.divider1, { marginTop: -2 }]} />
-
-
-                                                                <Text style={[styles.tableCell, styles.tableCellDescription]}></Text>
-                                                                <View style={[styles.divider1, { marginTop: -2 }]} />
-
-                                                                <Text style={[styles.tableCell, styles.tableCellHSN]}></Text>
-                                                                <View style={[styles.divider1, { marginTop: -2 }]} />
-
-                                                                <Text style={[styles.tableCell, styles.tableCellQty]}></Text>
-                                                                <View style={[styles.divider1, { marginTop: -2 }]} />
-
-                                                                <Text style={[styles.tableCell, styles.tableCellPurity]}></Text>
-                                                                <View style={[styles.divider1, { marginTop: -2 }]} />
-
-                                                                <Text style={[styles.tableCell, styles.tableCellGrossWt]}></Text>
-                                                                <View style={[styles.divider1, { marginTop: -2 }]} />
-
-                                                                <Text style={[styles.tableCell, styles.tableCellStoneWt]}></Text>
-                                                                <View style={[styles.divider1, { marginTop: -2 }]} />
-
-                                                                <Text style={[styles.tableCell, styles.tableCellNetWt]}></Text>
-                                                                <View style={[styles.divider1, { marginTop: -2 }]} />
-
-                                                                <Text style={[styles.tableCell, styles.tableCellRate]}></Text>
-                                                                <View style={[styles.divider1, { marginTop: -2 }]} />
-
-                                                                <Text style={[styles.tableCell, styles.tableCellMC]}></Text>
-                                                                <View style={[styles.divider1, { marginTop: -2 }]} />
-
-                                                                <Text style={[styles.tableCell, styles.tableCellStAmt]}></Text>
-                                                                <View style={[styles.divider1, { marginTop: -2 }]} />
-
-                                                                <Text style={[styles.tableCell, styles.tableCellTotal]}></Text>
-                                                        </View>
-                                                        <View style={styles.tableRow}>
-                                                                <Text style={[styles.tableCell, styles.tableCellHeader]}></Text>
-                                                                <View style={[styles.divider1, { marginTop: -2 }]} />
-
-
-                                                                <Text style={[styles.tableCell, styles.tableCellDescription]}></Text>
-                                                                <View style={[styles.divider1, { marginTop: -2 }]} />
-
-                                                                <Text style={[styles.tableCell, styles.tableCellHSN]}></Text>
-                                                                <View style={[styles.divider1, { marginTop: -2 }]} />
-
-                                                                <Text style={[styles.tableCell, styles.tableCellQty]}></Text>
-                                                                <View style={[styles.divider1, { marginTop: -2 }]} />
-
-                                                                <Text style={[styles.tableCell, styles.tableCellPurity]}></Text>
-                                                                <View style={[styles.divider1, { marginTop: -2 }]} />
-
-                                                                <Text style={[styles.tableCell, styles.tableCellGrossWt]}></Text>
-                                                                <View style={[styles.divider1, { marginTop: -2 }]} />
-
-                                                                <Text style={[styles.tableCell, styles.tableCellStoneWt]}></Text>
-                                                                <View style={[styles.divider1, { marginTop: -2 }]} />
-
-                                                                <Text style={[styles.tableCell, styles.tableCellNetWt]}></Text>
-                                                                <View style={[styles.divider1, { marginTop: -2 }]} />
-
-                                                                <Text style={[styles.tableCell, styles.tableCellRate]}></Text>
-                                                                <View style={[styles.divider1, { marginTop: -2 }]} />
-
-                                                                <Text style={[styles.tableCell, styles.tableCellMC]}></Text>
-                                                                <View style={[styles.divider1, { marginTop: -2 }]} />
-
-                                                                <Text style={[styles.tableCell, styles.tableCellStAmt]}></Text>
-                                                                <View style={[styles.divider1, { marginTop: -2 }]} />
-
-                                                                <Text style={[styles.tableCell, styles.tableCellTotal]}></Text>
-                                                        </View>
-                                                        <View style={styles.tableRow}>
-                                                                <Text style={[styles.tableCell, styles.tableCellHeader]}></Text>
-                                                                <View style={[styles.divider1, { marginTop: -2 }]} />
-
-
-                                                                <Text style={[styles.tableCell, styles.tableCellDescription]}></Text>
-                                                                <View style={[styles.divider1, { marginTop: -2 }]} />
-
-                                                                <Text style={[styles.tableCell, styles.tableCellHSN]}></Text>
-                                                                <View style={[styles.divider1, { marginTop: -2 }]} />
+                                                                {/* <Text style={[styles.tableCell, styles.tableCellHSN]}></Text>
+                                                                <View style={[styles.divider1, { marginTop: -2 }]} /> */}
 
                                                                 <Text style={[styles.tableCell, styles.tableCellQty]}></Text>
                                                                 <View style={[styles.divider1, { marginTop: -2 }]} />
@@ -737,8 +410,8 @@ const TaxINVoiceReceipt = () => {
                                                         <Text style={[styles.tableCell, styles.tableCellDescription, styles.lastheight]}></Text>
                                                         <View style={[styles.divider1, { marginTop: -2 }]} />
 
-                                                        <Text style={[styles.tableCell, styles.tableCellHSN, styles.lastheight]}></Text>
-                                                        <View style={[styles.divider1, { marginTop: -2 }]} />
+                                                        {/* <Text style={[styles.tableCell, styles.tableCellHSN, styles.lastheight]}></Text>
+                                                        <View style={[styles.divider1, { marginTop: -2 }]} /> */}
 
                                                         <Text style={[styles.tableCell, styles.tableCellQty, styles.lastheight]}>2</Text>
                                                         <View style={[styles.divider1, { marginTop: -2 }]} />

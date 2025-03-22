@@ -10,6 +10,9 @@ import Navbar from '../../../Pages/Navbar/Navbar';
 import { jsPDF } from "jspdf";
 import autoTable from "jspdf-autotable"; // ✅ Ensure this is installed and imported
 import * as XLSX from 'xlsx';
+import { pdf } from "@react-pdf/renderer";
+import TaxINVoiceReceipt from "./TaxInvoiceA4";
+import { saveAs } from "file-saver";
 
 const ViewOrders = () => {
   const navigate = useNavigate();
@@ -18,6 +21,7 @@ const ViewOrders = () => {
   const [workers, setWorkers] = useState([]);
   const [assignedWorkers, setAssignedWorkers] = useState({});
   const [orders, setOrders] = useState([]);
+  const [selectedData, setSelectedData] = useState([]); // Store selected row details
   const [filteredData, setFilteredData] = useState([]); // New state for filtered data
   const [selectedRows, setSelectedRows] = useState([]);
 
@@ -158,21 +162,21 @@ const ViewOrders = () => {
     XLSX.writeFile(workbook, fileName);
   };
 
-  const handleRowSelect = (rowId) => {
-    setSelectedRows((prevSelected) =>
-      prevSelected.includes(rowId)
-        ? prevSelected.filter((id) => id !== rowId)
-        : [...prevSelected, rowId]
-    );
-  };
+  // const handleRowSelect = (rowId) => {
+  //   setSelectedRows((prevSelected) =>
+  //     prevSelected.includes(rowId)
+  //       ? prevSelected.filter((id) => id !== rowId)
+  //       : [...prevSelected, rowId]
+  //   );
+  // };
 
-  const handleSelectAll = () => {
-    if (selectedRows.length === data.length) {
-      setSelectedRows([]);
-    } else {
-      setSelectedRows(data.map((row) => row.id));
-    }
-  };
+  // const handleSelectAll = () => {
+  //   if (selectedRows.length === data.length) {
+  //     setSelectedRows([]);
+  //   } else {
+  //     setSelectedRows(data.map((row) => row.id));
+  //   }
+  // };
 
 
   // const downloadPDF = () => {
@@ -199,108 +203,146 @@ const ViewOrders = () => {
   //   doc.save("Selected_Orders.pdf");
   // };
 
-  const downloadPDF = () => {
-    if (selectedRows.length === 0) {
-      alert("Please select at least one order to download.");
-      return;
-    }
-
-    const doc = new jsPDF();
-
-    // Company Header
-    doc.setFontSize(16);
-    doc.text("Company Name", 10, 15);
-    doc.setFontSize(10);
-    doc.text("M/S NEW FRIENDS JEWELLERS", 10, 22);
-    doc.text("Phone: 1234567890 | Email: friendsjewellery@gmail.com", 10, 28);
-    doc.text("----------------------------------------------------", 10, 32);
-
-    // Invoice Title
-    doc.setFontSize(14);
-    doc.text("INVOICE", 90, 40);
-
-    // Invoice Metadata
-    const dateObj = new Date();
-    const date = `${dateObj.getDate().toString().padStart(2, '0')}/${(dateObj.getMonth() + 1).toString().padStart(2, '0')}/${dateObj.getFullYear()}`;
-
-    doc.setFontSize(10);
-    doc.text(`Invoice Date: ${date}`, 150, 50);
-
-
-    // Prepare order data
-    const tableData = selectedRows.map((id, index) => {
-      const row = data.find((order) => order.id === id);
-      if (!row) return []; // Prevents errors if row is undefined
-
-      const totalPrice = parseFloat(row.total_price) || 0; // Convert safely
-      return [
-        index + 1,
-        row.order_number || "N/A",
-        row.account_name || "N/A",
-        row.subcategory || "N/A",
-        row.product_design_name || "N/A",
-        row.purity || "N/A",
-        row.gross_weight || "N/A",
-        row.stone_weight || "N/A",
-        row.total_weight_aw || "N/A",  
-        `$${totalPrice.toFixed(2)}`,
-      ];
-    });
-
-    // Ensure there is data to display
-    if (tableData.length === 0) {
-      alert("No valid data to generate a PDF.");
-      return;
-    }
-
-    // Generate Invoice Table and Get `finalY`
-    autoTable(doc, {
-      startY: 60,
-      head: [
-        [
-          "SI",
-          "Order No.",
-          "Customer",
-          "Sub Category",
-          "Design Name",
-          "Purity",
-          "Gross Wt",
-          "Stone Wt",
-          "Total Wt",
-          "Total Amount",
-        ],
-      ],
-      body: tableData,
-      theme: "striped",
-      styles: { fontSize: 8 }, // Decrease body font size
-      headStyles: { fillColor: [44, 62, 80], fontSize: 9 }, // Decrease header font size
-    });
-    
-
-    // Get `finalY` safely
-    const finalY = doc.lastAutoTable ? doc.lastAutoTable.finalY : 70;
-
-    // Calculate Total Amount
-    const totalAmount = tableData.reduce((sum, row) => {
-      const price = parseFloat(row[9]?.replace("$", "")) || 0;
-      return sum + price;
-    }, 0);
-
-    // Total Amount Section
-    doc.setFontSize(12);
-    doc.setFont("helvetica", "bold");
-    doc.text(`Total Amount: $${totalAmount.toFixed(2)}`, 140, finalY + 10);
-    doc.setFont("helvetica", "normal");
-
-    // Footer Section
-    doc.setFontSize(10);
-    doc.text("Thank you for your business!", 10, finalY + 20);
-    doc.text("Terms & Conditions: Payment is due within 15 days.", 10, finalY + 30);
-
-    doc.save("Invoice.pdf");
-
-    setSelectedRows([]);
+  const handleRowSelect = (rowId) => {
+    setSelectedRows((prevSelected) =>
+      prevSelected.includes(rowId)
+        ? prevSelected.filter((id) => id !== rowId)
+        : [...prevSelected, rowId]
+    );
   };
+
+  const handleSelectAll = () => {
+    if (selectedRows.length === data.length) {
+      setSelectedRows([]);
+    } else {
+      setSelectedRows(data.map((row) => row.id));
+    }
+  };
+
+  // Function to generate and download PDF directly
+const downloadPDF = async () => {
+  if (selectedRows.length === 0) {
+    alert("Please select at least one order to download.");
+    return;
+  }
+
+  // Prepare selected data
+  const selectedOrders = data.filter((order) => selectedRows.includes(order.id));
+  setSelectedData(selectedOrders);
+
+  // Generate PDF Blob
+  const doc = <TaxINVoiceReceipt selectedOrders={selectedOrders} />;
+  const pdfBlob = await pdf(doc).toBlob();
+
+  // Trigger download
+  saveAs(pdfBlob, "Invoice.pdf");
+
+  // Clear selection
+  setSelectedRows([]);
+};
+
+  // const downloadPDF = () => {
+  //   if (selectedRows.length === 0) {
+  //     alert("Please select at least one order to download.");
+  //     return;
+  //   }
+
+  //   const doc = new jsPDF();
+
+  //   // Company Header
+  //   doc.setFontSize(16);
+  //   doc.text("Company Name", 10, 15);
+  //   doc.setFontSize(10);
+  //   doc.text("M/S NEW FRIENDS JEWELLERS", 10, 22);
+  //   doc.text("Phone: 1234567890 | Email: friendsjewellery@gmail.com", 10, 28);
+  //   doc.text("----------------------------------------------------", 10, 32);
+
+  //   // Invoice Title
+  //   doc.setFontSize(14);
+  //   doc.text("INVOICE", 90, 40);
+
+  //   // Invoice Metadata
+  //   const dateObj = new Date();
+  //   const date = `${dateObj.getDate().toString().padStart(2, '0')}/${(dateObj.getMonth() + 1).toString().padStart(2, '0')}/${dateObj.getFullYear()}`;
+
+  //   doc.setFontSize(10);
+  //   doc.text(`Invoice Date: ${date}`, 150, 50);
+
+
+  //   // Prepare order data
+  //   const tableData = selectedRows.map((id, index) => {
+  //     const row = data.find((order) => order.id === id);
+  //     if (!row) return []; // Prevents errors if row is undefined
+
+  //     const totalPrice = parseFloat(row.total_price) || 0; // Convert safely
+  //     return [
+  //       index + 1,
+  //       row.order_number || "N/A",
+  //       row.account_name || "N/A",
+  //       row.subcategory || "N/A",
+  //       row.product_design_name || "N/A",
+  //       row.purity || "N/A",
+  //       row.gross_weight || "N/A",
+  //       row.stone_weight || "N/A",
+  //       row.total_weight_aw || "N/A",  
+  //       `$${totalPrice.toFixed(2)}`,
+  //     ];
+  //   });
+
+  //   // Ensure there is data to display
+  //   if (tableData.length === 0) {
+  //     alert("No valid data to generate a PDF.");
+  //     return;
+  //   }
+
+  //   // Generate Invoice Table and Get `finalY`
+  //   autoTable(doc, {
+  //     startY: 60,
+  //     head: [
+  //       [
+  //         "SI",
+  //         "Order No.",
+  //         "Customer",
+  //         "Sub Category",
+  //         "Design Name",
+  //         "Purity",
+  //         "Gross Wt",
+  //         "Stone Wt",
+  //         "Total Wt",
+  //         "Total Amount",
+  //       ],
+  //     ],
+  //     body: tableData,
+  //     theme: "striped",
+  //     styles: { fontSize: 8 }, // Decrease body font size
+  //     headStyles: { fillColor: [44, 62, 80], fontSize: 9 }, // Decrease header font size
+  //   });
+
+
+  //   // Get `finalY` safely
+  //   const finalY = doc.lastAutoTable ? doc.lastAutoTable.finalY : 70;
+
+  //   // Calculate Total Amount
+  //   const totalAmount = tableData.reduce((sum, row) => {
+  //     const price = parseFloat(row[9]?.replace("$", "")) || 0;
+  //     return sum + price;
+  //   }, 0);
+
+  //   // Total Amount Section
+  //   doc.setFontSize(12);
+  //   doc.setFont("helvetica", "bold");
+  //   doc.text(`Total Amount: $${totalAmount.toFixed(2)}`, 140, finalY + 10);
+  //   doc.setFont("helvetica", "normal");
+
+  //   // Footer Section
+  //   doc.setFontSize(10);
+  //   doc.text("Thank you for your business!", 10, finalY + 20);
+  //   doc.text("Terms & Conditions: Payment is due within 15 days.", 10, finalY + 30);
+
+  //   doc.save("Invoice.pdf");
+
+  //   setSelectedRows([]);
+  // };
 
   const columns = React.useMemo(
     () => [
@@ -569,6 +611,14 @@ const ViewOrders = () => {
           {loading ? <div>Loading...</div> : <DataTable columns={columns} data={[...data].reverse()} />}
         </div>
       </div>
+      {/* {selectedData.length > 0 && (
+      <PDFDownloadLink
+        document={<TaxINVoiceReceipt selectedOrders={selectedData} />}
+        fileName="Invoice.pdf"
+      >
+        {({ loading }) => (loading ? "Generating PDF..." : "Download Invoice")}
+      </PDFDownloadLink>
+    )} */}
     </>
   );
 };
