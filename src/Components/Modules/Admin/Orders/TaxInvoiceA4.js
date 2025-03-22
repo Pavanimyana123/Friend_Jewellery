@@ -219,13 +219,13 @@ const TaxINVoiceReceipt = () => {
                                                 {/* STAFF */}
                                                 <View style={{ flexDirection: "row", justifyContent: "space-between", marginBottom: 6 }}>
                                                         <Text>STAFF:</Text>
-                                                        <Text style={{ textAlign: "right", flex: 1 }}>SGJ</Text>
+                                                        <Text style={{ textAlign: "right", flex: 1 }}>New Friend's Jewellery</Text>
                                                 </View>
 
                                                 {/* GSTIN */}
                                                 <View style={{ flexDirection: "row", justifyContent: "space-between", marginBottom: 6 }}>
                                                         <Text>GSTIN:</Text>
-                                                        <Text style={{ textAlign: "right", flex: 1 }}>29ABMCS9253K1ZG</Text>
+                                                        <Text style={{ textAlign: "right", flex: 1 }}>38RQAPS4222R1ZT</Text>
                                                 </View>
                                         </View>
 
@@ -266,7 +266,7 @@ const TaxINVoiceReceipt = () => {
 
                                         <View>
                                                 <Text>
-                                                        Mob : 9964644424 EMAIL : sadashri.Yel@gmail.com
+                                                        Mob : 9928541909 EMAIL : sadashri.Yel@gmail.com
                                                 </Text>
                                         </View>
 

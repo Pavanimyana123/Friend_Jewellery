@@ -158,8 +158,6 @@ const ViewOrders = () => {
     XLSX.writeFile(workbook, fileName);
   };
 
-
-  // Handle individual row selection
   const handleRowSelect = (rowId) => {
     setSelectedRows((prevSelected) =>
       prevSelected.includes(rowId)
@@ -168,7 +166,6 @@ const ViewOrders = () => {
     );
   };
 
-  // Handle "Select All" checkbox
   const handleSelectAll = () => {
     if (selectedRows.length === data.length) {
       setSelectedRows([]);
@@ -214,8 +211,8 @@ const ViewOrders = () => {
     doc.setFontSize(16);
     doc.text("Company Name", 10, 15);
     doc.setFontSize(10);
-    doc.text("123 Business Street, City, Country", 10, 22);
-    doc.text("Phone: (123) 456-7890 | Email: info@company.com", 10, 28);
+    doc.text("M/S NEW FRIENDS JEWELLERS", 10, 22);
+    doc.text("Phone: 1234567890 | Email: friendsjewellery@gmail.com", 10, 28);
     doc.text("----------------------------------------------------", 10, 32);
 
     // Invoice Title
@@ -223,9 +220,12 @@ const ViewOrders = () => {
     doc.text("INVOICE", 90, 40);
 
     // Invoice Metadata
-    const date = new Date().toLocaleDateString();
+    const dateObj = new Date();
+    const date = `${dateObj.getDate().toString().padStart(2, '0')}/${(dateObj.getMonth() + 1).toString().padStart(2, '0')}/${dateObj.getFullYear()}`;
+
     doc.setFontSize(10);
     doc.text(`Invoice Date: ${date}`, 150, 50);
+
 
     // Prepare order data
     const tableData = selectedRows.map((id, index) => {
@@ -237,8 +237,12 @@ const ViewOrders = () => {
         index + 1,
         row.order_number || "N/A",
         row.account_name || "N/A",
-        row.date || "N/A",
-        row.metal || "N/A",
+        row.subcategory || "N/A",
+        row.product_design_name || "N/A",
+        row.purity || "N/A",
+        row.gross_weight || "N/A",
+        row.stone_weight || "N/A",
+        row.total_weight_aw || "N/A",  
         `$${totalPrice.toFixed(2)}`,
       ];
     });
@@ -250,31 +254,53 @@ const ViewOrders = () => {
     }
 
     // Generate Invoice Table and Get `finalY`
-    const tableOutput = autoTable(doc, {
+    autoTable(doc, {
       startY: 60,
-      head: [["#", "Order No.", "Customer", "Date", "Metal", "Total Amount"]],
+      head: [
+        [
+          "SI",
+          "Order No.",
+          "Customer",
+          "Sub Category",
+          "Design Name",
+          "Purity",
+          "Gross Wt",
+          "Stone Wt",
+          "Total Wt",
+          "Total Amount",
+        ],
+      ],
       body: tableData,
       theme: "striped",
-      styles: { fontSize: 10 },
-      headStyles: { fillColor: [44, 62, 80] },
+      styles: { fontSize: 8 }, // Decrease body font size
+      headStyles: { fillColor: [44, 62, 80], fontSize: 9 }, // Decrease header font size
     });
+    
 
-    // Check if tableOutput is defined before using `finalY`
-    const finalY = tableOutput?.lastAutoTable?.finalY || 70;
+    // Get `finalY` safely
+    const finalY = doc.lastAutoTable ? doc.lastAutoTable.finalY : 70;
 
-    // Total Amount Calculation
-    const totalAmount = tableData.reduce((sum, row) => sum + parseFloat(row[5]?.replace("$", "")) || 0, 0);
+    // Calculate Total Amount
+    const totalAmount = tableData.reduce((sum, row) => {
+      const price = parseFloat(row[9]?.replace("$", "")) || 0;
+      return sum + price;
+    }, 0);
+
+    // Total Amount Section
     doc.setFontSize(12);
+    doc.setFont("helvetica", "bold");
     doc.text(`Total Amount: $${totalAmount.toFixed(2)}`, 140, finalY + 10);
+    doc.setFont("helvetica", "normal");
 
-    // Footer
+    // Footer Section
     doc.setFontSize(10);
     doc.text("Thank you for your business!", 10, finalY + 20);
     doc.text("Terms & Conditions: Payment is due within 15 days.", 10, finalY + 30);
 
     doc.save("Invoice.pdf");
-  };
 
+    setSelectedRows([]);
+  };
 
   const columns = React.useMemo(
     () => [
