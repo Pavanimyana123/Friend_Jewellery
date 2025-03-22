@@ -68,14 +68,7 @@ const styles = StyleSheet.create({
         leftColumn: {
                 // flex: 1,
                 // paddingLeft: 100,
-                marginLeft: 140,
-        },
-        label: {
-                fontWeight: 'bold', // Makes the label bold
-        },
-        row: {
-                marginBottom: 3, // Adds spacing between rows
-                textAlign: 'left',
+                marginLeft: 100,
         },
         rightColumn: {
                 flex: 1,
@@ -226,13 +219,13 @@ const TaxINVoiceReceipt = () => {
                                                 {/* STAFF */}
                                                 <View style={{ flexDirection: "row", justifyContent: "space-between", marginBottom: 6 }}>
                                                         <Text>STAFF:</Text>
-                                                        <Text style={{ textAlign: "right", flex: 1 }}>New Friend's Jewellery</Text>
+                                                        <Text style={{ textAlign: "right", flex: 1 }}>SGJ</Text>
                                                 </View>
 
                                                 {/* GSTIN */}
                                                 <View style={{ flexDirection: "row", justifyContent: "space-between", marginBottom: 6 }}>
                                                         <Text>GSTIN:</Text>
-                                                        <Text style={{ textAlign: "right", flex: 1 }}>38RQAPS4222R1ZT</Text>
+                                                        <Text style={{ textAlign: "right", flex: 1 }}>29ABMCS9253K1ZG</Text>
                                                 </View>
                                         </View>
 
@@ -249,10 +242,11 @@ const TaxINVoiceReceipt = () => {
 
                                                 {/* Flat No. Section */}
                                                 <View style={styles.leftColumn}>
-                                                <Text style={styles.row}><Text style={styles.label}>Flat No.:</Text> SHOP NO.F2</Text>
-                                                        <Text style={styles.row}><Text style={styles.label}>Building:</Text> SKITCHAN NGODUP COMPLEX</Text>
-                                                        <Text style={styles.row}><Text style={styles.label}>Road/Street:</Text> NEAR OLD BUS STAND</Text>
-                                                        <Text style={styles.row}><Text style={styles.label}>Locality/Sub Locality:</Text> LEH</Text>
+                                                        <Text style={styles.flatNo}>Flat No : 1323/1324, 16th B Cross Housing </Text>
+                                                        <Text style={styles.cin}>Board Colony EWS 3rd Phase, Yelahanka New </Text>
+                                                        <Text style={styles.cin}>Town, Bengaluru Urban, Karnataka - 560064.</Text>
+                                                        <Text style={styles.cin}>CIN : U46498KA2024PTC185784</Text>
+
                                                 </View>
 
                                                 {/* Vertical Divider */}
@@ -260,11 +254,10 @@ const TaxINVoiceReceipt = () => {
 
                                                 {/* Branch Section */}
                                                 <View style={styles.rightColumn}>
-                                                <Text style={styles.row}><Text style={styles.label}>City/Town/Village:</Text> Leh,</Text>
-                                                        <Text style={styles.row}><Text style={styles.label}>District:</Text> Leh Ladakh,</Text>
-                                                        <Text style={styles.row}><Text style={styles.label}>State:</Text>  Ladakh</Text>
-                                                        <Text style={styles.row}><Text style={styles.label}>PIN Code:</Text> 194101</Text>
-                                                       
+                                                        <Text style={[styles.branch, { fontFamily: 'Helvetica-Bold' }]}>BRANCH:</Text>
+                                                        <Text style={styles.branchContent}>Shop no. 1 No.2063, Dairy Circle, </Text>
+                                                        <Text style={styles.branchContent}> Asha Arcade, 16th B Cross Rd,</Text>
+                                                        <Text style={styles.branchContent}>Yalahanka New Town, Bangalore - 064</Text>
                                                 </View>
                                         </View>
 
@@ -273,7 +266,7 @@ const TaxINVoiceReceipt = () => {
 
                                         <View>
                                                 <Text>
-                                                        Mob : 9928541909 EMAIL : sadashri.Yel@gmail.com
+                                                        Mob : 9964644424 EMAIL : sadashri.Yel@gmail.com
                                                 </Text>
                                         </View>
 
