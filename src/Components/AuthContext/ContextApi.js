@@ -4,14 +4,18 @@ export const AuthContext = createContext();
 
 const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(() => {
-    // Initialize state from localStorage immediately
     const storedUser = localStorage.getItem("user");
     return storedUser ? JSON.parse(storedUser) : null;
   });
 
+  useEffect(() => {
+    if (user) {
+      localStorage.setItem("user", JSON.stringify(user));
+    }
+  }, [user]); // Automatically update localStorage when user state changes
+
   const login = (userData) => {
-    setUser(userData); // Update state first
-    localStorage.setItem("user", JSON.stringify(userData)); // Then store in localStorage
+    setUser(userData);
   };
 
   const logout = () => {

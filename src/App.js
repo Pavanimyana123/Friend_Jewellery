@@ -7,6 +7,7 @@ import {
 } from "react-router-dom";
 import "./App.css";
 import AuthProvider from "./Components/AuthContext/ContextApi";
+import ProtectedRoute from "./Components/AuthContext/ProtectedRoute"; // Import ProtectedRoute
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import Login from "./Components/Pages/Login/Login";
@@ -39,58 +40,217 @@ export default function MainApp() {
     <AuthProvider>
       <Router>
         <Routes>
-          {/* <Route path="/" exact element={<Login />} /> */}
-          <Route path ="/" exact element={<NewLogin />} />
+          {/* Public Routes */}
+          <Route path="/" exact element={<NewLogin />} />
           <Route path="/signup" exact element={<SignUp />} />
-          <Route path="/a-customers" exact element={<AdminCustomer />} />
-          <Route path="/a-customers/:id" exact element={<AdminCustomer />} />
-          <Route path="/a-workers" exact element={<AdminWorker />} />
-          <Route path="/a-workers/:id" exact element={<AdminWorker />} />
-          <Route path="/a-dashboard" exact element={<AdminDashboard />} />
-          <Route path="/a-orders" exact element={<AdminOrder />} />
-          <Route path="/a-view-orders" exact element={<AdminViewOrders />} />
-          <Route path="/a-edit-order/:id" exact element={<EditOrdersForm />} />
+
+          {/* Protected Routes */}
+          <Route
+            path="/a-customers"
+            exact
+            element={
+              <ProtectedRoute>
+                <AdminCustomer />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/a-customers/:id"
+            exact
+            element={
+              <ProtectedRoute>
+                <AdminCustomer />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/a-workers"
+            exact
+            element={
+              <ProtectedRoute>
+                <AdminWorker />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/a-workers/:id"
+            exact
+            element={
+              <ProtectedRoute>
+                <AdminWorker />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/a-dashboard"
+            exact
+            element={
+              <ProtectedRoute>
+                <AdminDashboard />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/a-orders"
+            exact
+            element={
+              <ProtectedRoute>
+                <AdminOrder />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/a-view-orders"
+            exact
+            element={
+              <ProtectedRoute>
+                <AdminViewOrders />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/a-edit-order/:id"
+            exact
+            element={
+              <ProtectedRoute>
+                <EditOrdersForm />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/a-design-requests"
+            exact
+            element={
+              <ProtectedRoute>
+                <DesignReq />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/a-cancel-requests"
+            exact
+            element={
+              <ProtectedRoute>
+                <CancelReq />
+              </ProtectedRoute>
+            }
+          />
           <Route
             path="/a-cancel-orders"
             exact
-            element={<AdminCancelOrders />}
+            element={
+              <ProtectedRoute>
+                <AdminCancelOrders />
+              </ProtectedRoute>
+            }
           />
           <Route
             path="/a-customertable"
             exact
-            element={<AdminCustomerTable />}
+            element={
+              <ProtectedRoute>
+                <AdminCustomerTable />
+              </ProtectedRoute>
+            }
           />
-          <Route path="/a-workertable" exact element={<AdminWorkerTable />} />
-          <Route path="/rates" exact element={<Rates />} />
-
-          <Route path="/c-dashboard" exact element={<CustomerDashboard />} />
-          <Route path="/c-vieworders" exact element={<ViewOrders />} />
-          <Route path="/c-cancelorders" exact element={<CancelOrders />} />
-
-
-      
-
-      <Route path="/w-dashboard" exact element={<WorkerDashboard />} />
-      <Route path="/w-assigned-orders" exact element={<AssignedOrders />} />
-      <Route path="/w-inprogress-orders" exact element={<InprogressOrders />} />
-      <Route path="/w-pending-orders" exact element={<PendingOrders />} />
-      <Route path="/w-hold-orders" exact element={<OnholdOrders />} /> 
-      <Route path="/w-completed-orders" exact element={<CompletedOrders />} />
-      <Route path="/a-design-requests" exact element={<DesignReq />} />
-
-      <Route path="/a-cancel-requests" exact element={<CancelReq />} />
-
-          <Route path="/w-dashboard" exact element={<WorkerDashboard />} />
-          <Route path="/w-assigned-orders" exact element={<AssignedOrders />} />
+          <Route
+            path="/a-workertable"
+            exact
+            element={
+              <ProtectedRoute>
+                <AdminWorkerTable />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/rates"
+            exact
+            element={
+              <ProtectedRoute>
+                <Rates />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/c-dashboard"
+            exact
+            element={
+              <ProtectedRoute>
+                <CustomerDashboard />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/c-vieworders"
+            exact
+            element={
+              <ProtectedRoute>
+                <ViewOrders />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/c-cancelorders"
+            exact
+            element={
+              <ProtectedRoute>
+                <CancelOrders />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/w-dashboard"
+            exact
+            element={
+              <ProtectedRoute>
+                <WorkerDashboard />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/w-assigned-orders"
+            exact
+            element={
+              <ProtectedRoute>
+                <AssignedOrders />
+              </ProtectedRoute>
+            }
+          />
           <Route
             path="/w-inprogress-orders"
             exact
-            element={<InprogressOrders />}
+            element={
+              <ProtectedRoute>
+                <InprogressOrders />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/w-pending-orders"
+            exact
+            element={
+              <ProtectedRoute>
+                <PendingOrders />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/w-hold-orders"
+            exact
+            element={
+              <ProtectedRoute>
+                <OnholdOrders />
+              </ProtectedRoute>
+            }
           />
           <Route
             path="/w-completed-orders"
             exact
-            element={<CompletedOrders />}
+            element={
+              <ProtectedRoute>
+                <CompletedOrders />
+              </ProtectedRoute>
+            }
           />
         </Routes>
       </Router>

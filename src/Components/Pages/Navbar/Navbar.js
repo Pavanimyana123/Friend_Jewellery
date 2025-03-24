@@ -7,6 +7,7 @@ import { FaSignOutAlt, FaWhatsapp } from "react-icons/fa";
 import logo from '../../Pages/Images/logo.jpeg';
 import './Navbar.css';
 import Swal from 'sweetalert2';
+import { AuthContext } from "../../AuthContext/ContextApi"; 
 
 function Navbar() {
     const [isOpen, setIsOpen] = useState(false);
@@ -14,6 +15,7 @@ function Navbar() {
 
     const location = useLocation();
     const navigate = useNavigate();
+    const { logout } = useContext(AuthContext); // Use logout from context
 
     const toggleMenu = () => setIsOpen(!isOpen);
     const toggleDropdown = () => setOrdersDropdownOpen(!ordersDropdownOpen);
@@ -27,8 +29,9 @@ function Navbar() {
     };
 
     const handleLogout = () => {
-        navigate("/");
-    };
+        logout(); // Clear user authentication
+        navigate("/login"); // Redirect to login page
+      };
 
     return (
         <header className="navbar-header">
