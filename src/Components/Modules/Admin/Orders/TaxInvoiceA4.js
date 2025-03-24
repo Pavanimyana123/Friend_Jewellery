@@ -418,13 +418,13 @@ const TaxINVoiceReceipt = ({ selectedOrders }) => {
                             <Text style={[styles.tableCell, styles.tableCellPurity, styles.lastheight]}></Text>
                             <View style={[styles.divider1, { marginTop: -2 }]} />
 
-                            <Text style={[styles.tableCell, styles.tableCellGrossWt, styles.lastheight]}>{totalNetWeight.toFixed(3)}</Text>
+                            <Text style={[styles.tableCell, styles.tableCellGrossWt, styles.lastheight]}>{totalGrossWeight.toFixed(3)}</Text>
                             <View style={[styles.divider1, { marginTop: -2 }]} />
 
                             <Text style={[styles.tableCell, styles.tableCellStoneWt, styles.lastheight]}></Text>
                             <View style={[styles.divider1, { marginTop: -2 }]} />
 
-                            <Text style={[styles.tableCell, styles.tableCellNetWt, styles.lastheight]}>{totalGrossWeight.toFixed(3)}</Text>
+                            <Text style={[styles.tableCell, styles.tableCellNetWt, styles.lastheight]}>{totalNetWeight.toFixed(3)}</Text>
                             <View style={[styles.divider1, { marginTop: -2 }]} />
 
                             <Text style={[styles.tableCell, styles.tableCellRate, styles.lastheight]}></Text>

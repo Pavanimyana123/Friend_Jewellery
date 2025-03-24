@@ -592,11 +592,12 @@ function Order() {
 
                   <Row style={{ marginBottom: "-12px" }}>
                     <InputField
-                      label="Estimated Delivery Date"
+                      label="Est Delivery Date"
                       name="estimated_delivery_date"
                       type="date"
                       value={formData.estimated_delivery_date}
-                      onChange={handleEstimatedDateChange} // Use the custom function
+                      min={new Date().toISOString().split("T")[0]} 
+                      // onChange={handleEstimatedDateChange} 
                     />
                   </Row>
 
@@ -766,9 +767,12 @@ function Order() {
                     name="delivery_date"
                     value={formData.delivery_date}
                     type="date"
-                    onChange={handleDateChange} // Use the new function
+                    min={new Date().toISOString().split("T")[0]} 
+                    // onChange={handleDateChange}
                   />
                 </Col>
+
+
                 <Col xs={12} md={2}>
                   <DropdownButton
                     id="dropdown-basic-button"
