@@ -204,12 +204,26 @@ const ViewOrders = () => {
   // };
 
   const handleRowSelect = (rowId) => {
+    const selectedOrder = data.find((order) => order.id === rowId);
+  
+    if (selectedRows.length > 0) {
+      const firstSelectedOrder = data.find((order) => order.id === selectedRows[0]);
+  
+      // Check if the selected mobile number is different
+      if (selectedOrder.mobile !== firstSelectedOrder.mobile) {
+        alert("You can only select orders with the same mobile number.");
+        return;
+      }
+    }
+  
+    // Proceed with selection logic
     setSelectedRows((prevSelected) =>
       prevSelected.includes(rowId)
         ? prevSelected.filter((id) => id !== rowId)
         : [...prevSelected, rowId]
     );
   };
+  
 
   const handleSelectAll = () => {
     if (selectedRows.length === data.length) {
@@ -238,7 +252,7 @@ const downloadPDF = async () => {
   saveAs(pdfBlob, "Invoice.pdf");
 
   // Clear selection
-  // setSelectedRows([]);
+  setSelectedRows([]);
 };
 
   // const downloadPDF = () => {

@@ -2,6 +2,7 @@ import React from "react";
 
 import { Page, Text, View, Document, StyleSheet, Image } from "@react-pdf/renderer";
 import logo1 from '../../../Pages/Images/logo.jpeg'
+import { toWords } from "number-to-words";
 
 
 // Define styles
@@ -186,13 +187,33 @@ const styles = StyleSheet.create({
 
 const TaxINVoiceReceipt = ({ selectedOrders }) => {
     console.log("selected orders=", selectedOrders);
+    const toWordsTitleCase = (num) => {
+        return toWords(num)
+            .split(" ")
+            .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+            .join(" ");
+    };
+
+    const totalQty = selectedOrders.reduce((sum, order) => sum + parseFloat(order.qty || 0), 0);
+    const totalGrossWeight = selectedOrders.reduce((sum, order) => sum + parseFloat(order.gross_weight || 0), 0);
+    const totalNetWeight = selectedOrders.reduce((sum, order) => sum + parseFloat(order.total_weight_aw || 0), 0);
+    const totalMetalAmount = selectedOrders.reduce((sum, order) => sum + parseFloat(order.amount || 0), 0);
+    const totalStoneAmount = selectedOrders.reduce((sum, order) => sum + parseFloat(order.stone_price || 0), 0);
+    const totalMC = selectedOrders.reduce((sum, order) => sum + parseFloat(order.total_mc || 0), 0);
+
+    const taxableAmount = totalMetalAmount + totalStoneAmount + totalMC;
+    const taxAmount = selectedOrders.reduce((sum, order) => sum + parseFloat(order.tax_amount || 0), 0);
+    const halfTax = (taxAmount / 2).toFixed(2);
+    const totalPrice = selectedOrders.reduce((sum, order) => sum + parseFloat(order.total_price || 0), 0);
+    const totalPriceInWords = toWordsTitleCase(totalPrice);
+
     return (
         <Document>
             <Page size="A4" style={styles.page}>
                 {/* First Row */}
                 <View style={[styles.row, { flexDirection: 'row', justifyContent: 'space-between', marginBottom: '20px' }]}>
                     {selectedOrders.length > 0 && (
-                        <View style={[styles.column, { marginTop: 20, width: '20%', marginLeft: 20, fontFamily: 'Helvetica-Bold' }]}>
+                        <View style={[styles.column, { marginTop: 20, width: '20%', marginLeft: 20, fontFamily: 'Times-Bold' }]}>
                             <Text style={[styles.boldText, { marginBottom: 6 }]}>CUSTOMER DETAILS:</Text>
                             <Text style={{ marginBottom: 6 }}>{selectedOrders[0].account_name || "N/A"},</Text>
                             <Text style={{ marginBottom: 6 }}>{selectedOrders[0].city || "N/A"}</Text>
@@ -200,17 +221,13 @@ const TaxINVoiceReceipt = ({ selectedOrders }) => {
                             <Text style={{ marginBottom: 6 }}>PAN NO: {selectedOrders[0].pan_card || "N/A"}</Text>
                         </View>
                     )}
-
-
                     <View style={[styles.column, { width: '25%', height: '60px', marginRight: '20px' }]}>
                         <Image
                             style={styles.image1}
                             src={logo1}
                         />
                     </View>
-
-
-                    <View style={[styles.column, { marginTop: 10, width: '20%', marginRight: '20px', fontFamily: 'Helvetica-Bold' }]}>
+                    <View style={[styles.column, { marginTop: 10, width: '20%', marginRight: '20px', fontFamily: 'Times-Bold' }]}>
                         <Text style={{ fontWeight: 'bold', fontSize: 14, marginBottom: 10, marginLeft: 20 }}>TAX INVOICE</Text>
                         {/* <View style={{ alignItems: 'center', marginBottom: 10 }}>
                                                         <Barcode value="SV1224" format="CODE128" width={1.5} height={50} />
@@ -240,52 +257,33 @@ const TaxINVoiceReceipt = ({ selectedOrders }) => {
                             <Text style={{ textAlign: "right", flex: 1 }}>38RQAPS4222R1ZT</Text>
                         </View>
                     </View>
-
                 </View>
-
-
-
                 <View style={styles.container}>
-                    {/* Centered Heading */}
-                    <Text style={[styles.heading, { fontFamily: 'Helvetica-Bold' }]}>NEW FRIEND'S JEWELLERY</Text>
-
-                    {/* Flat No. and Branch section */}
+                    <Text style={[styles.heading, { fontFamily: 'Times-Bold' }]}>NEW FRIEND'S JEWELLERY</Text>
                     <View style={styles.contentContainer}>
-
-                        {/* Flat No. Section */}
                         <View style={styles.leftColumn}>
                             <Text style={styles.row}><Text style={styles.label}>Flat No.:</Text> SHOP NO.F2</Text>
                             <Text style={styles.row}><Text style={styles.label}>Building:</Text> SKITCHAN NGODUP COMPLEX</Text>
                             <Text style={styles.row}><Text style={styles.label}>Road/Street:</Text> NEAR OLD BUS STAND</Text>
                             <Text style={styles.row}><Text style={styles.label}>Locality/Sub Locality:</Text> LEH</Text>
                         </View>
-
-                        {/* Vertical Divider */}
                         <View style={styles.divider1} />
-
-                        {/* Branch Section */}
                         <View style={styles.rightColumn}>
                             <Text style={styles.row}><Text style={styles.label}>City/Town/Village:</Text> Leh,</Text>
                             <Text style={styles.row}><Text style={styles.label}>District:</Text> Leh Ladakh,</Text>
                             <Text style={styles.row}><Text style={styles.label}>State:</Text>  Ladakh</Text>
                             <Text style={styles.row}><Text style={styles.label}>PIN Code:</Text> 194101</Text>
-
                         </View>
                     </View>
-
-                    {/* Horizontal Divider under both sections */}
                     <View style={styles.horizontalLine1} />
-
                     <View>
                         <Text>
-                            MOBILE : 9928541909 
+                            MOBILE : 9928541909
                         </Text>
                     </View>
-
-
                     <View style={styles.boxContainer}>
                         <View style={styles.table}>
-                            <View style={[styles.tableRow, { fontFamily: 'Helvetica-Bold' }]}>
+                            <View style={[styles.tableRow, { fontFamily: 'Times-Bold' }]}>
                                 <Text style={[styles.tableCell, styles.tableCellHeader]}>SI</Text>
                                 <View style={styles.divider1} />
 
@@ -322,8 +320,6 @@ const TaxINVoiceReceipt = ({ selectedOrders }) => {
                                 <Text style={[styles.tableCell, styles.tableCellTotal]}>Total</Text>
                             </View>
                             <View style={styles.horizontalLine} />
-
-                            {/* Add rows of data below */}
                             {selectedOrders.map((order, index) => (
                                 <View style={styles.tableRow} key={index}>
                                     <Text style={[styles.tableCell, styles.tableCellHeader]}>{index + 1}</Text>
@@ -335,7 +331,7 @@ const TaxINVoiceReceipt = ({ selectedOrders }) => {
                                     {/* <Text style={[styles.tableCell, styles.tableCellHSN]}>711311</Text>
                                                                 <View style={[styles.divider1, { marginTop: -2 }]} /> */}
 
-                                    <Text style={[styles.tableCell, styles.tableCellQty]}>1</Text>
+                                    <Text style={[styles.tableCell, styles.tableCellQty]}>{order.qty || "N/A"}</Text>
                                     <View style={[styles.divider1, { marginTop: -2 }]} />
 
                                     <Text style={[styles.tableCell, styles.tableCellPurity]}>{order.purity || "N/A"}</Text>
@@ -359,7 +355,11 @@ const TaxINVoiceReceipt = ({ selectedOrders }) => {
                                     <Text style={[styles.tableCell, styles.tableCellStAmt]}>{order.stone_price || "N/A"}</Text>
                                     <View style={[styles.divider1, { marginTop: -2 }]} />
 
-                                    <Text style={[styles.tableCell, styles.tableCellTotal]}>{order.total_price || "N/A"}</Text>
+                                    <Text style={[styles.tableCell, styles.tableCellTotal]}>
+                                        {(parseFloat(order.total_mc || 0) + parseFloat(order.amount || 0) + parseFloat(order.stone_price || 0)).toFixed(2)}
+                                    </Text>
+
+
                                 </View>
                             ))}
                             <View style={styles.tableRow}>
@@ -400,10 +400,8 @@ const TaxINVoiceReceipt = ({ selectedOrders }) => {
                                 <Text style={[styles.tableCell, styles.tableCellTotal]}></Text>
                             </View>
                         </View>
-
                         <View style={[styles.horizontalLine, { marginTop: -2 }]} />
-
-                        <View style={[styles.tableRow, { fontFamily: 'Helvetica-Bold' }]}>
+                        <View style={[styles.tableRow, { fontFamily: 'Times-Bold' }]}>
                             <Text style={[styles.tableCell, styles.tableCellHeader, styles.lastheight]}></Text>
                             <View style={[styles.divider1, { marginTop: -2 }]} />
 
@@ -414,19 +412,19 @@ const TaxINVoiceReceipt = ({ selectedOrders }) => {
                             {/* <Text style={[styles.tableCell, styles.tableCellHSN, styles.lastheight]}></Text>
                                                         <View style={[styles.divider1, { marginTop: -2 }]} /> */}
 
-                            <Text style={[styles.tableCell, styles.tableCellQty, styles.lastheight]}>1</Text>
+                            <Text style={[styles.tableCell, styles.tableCellQty, styles.lastheight]}>{totalQty}</Text>
                             <View style={[styles.divider1, { marginTop: -2 }]} />
 
                             <Text style={[styles.tableCell, styles.tableCellPurity, styles.lastheight]}></Text>
                             <View style={[styles.divider1, { marginTop: -2 }]} />
 
-                            <Text style={[styles.tableCell, styles.tableCellGrossWt, styles.lastheight]}>10.000</Text>
+                            <Text style={[styles.tableCell, styles.tableCellGrossWt, styles.lastheight]}>{totalNetWeight.toFixed(3)}</Text>
                             <View style={[styles.divider1, { marginTop: -2 }]} />
 
                             <Text style={[styles.tableCell, styles.tableCellStoneWt, styles.lastheight]}></Text>
                             <View style={[styles.divider1, { marginTop: -2 }]} />
 
-                            <Text style={[styles.tableCell, styles.tableCellNetWt, styles.lastheight]}>10.000</Text>
+                            <Text style={[styles.tableCell, styles.tableCellNetWt, styles.lastheight]}>{totalGrossWeight.toFixed(3)}</Text>
                             <View style={[styles.divider1, { marginTop: -2 }]} />
 
                             <Text style={[styles.tableCell, styles.tableCellRate, styles.lastheight]}></Text>
@@ -438,17 +436,14 @@ const TaxINVoiceReceipt = ({ selectedOrders }) => {
                             <Text style={[styles.tableCell, styles.tableCellStAmt, styles.lastheight]}></Text>
                             <View style={[styles.divider1, { marginTop: -2 }]} />
 
-                            <Text style={[styles.tableCell, styles.tableCellTotal, styles.lastheight]}>82297.00</Text>
+                            <Text style={[styles.tableCell, styles.tableCellTotal, styles.lastheight]}>{taxableAmount.toFixed(2)}</Text>
                         </View>
-
                         <View style={[styles.horizontalLine, { marginTop: -2 }]} />
 
-
-                        <View style={{ flexDirection: "row", justifyContent: "space-between", fontFamily: 'Helvetica-Bold' }}>
+                        <View style={{ flexDirection: "row", justifyContent: "space-between", fontFamily: 'Times-Bold' }}>
                             {/* Left Side Content */}
                             <View style={{ paddingLeft: 10, marginTop: 20 }}>
                                 <Text style={[styles.bold, { marginBottom: 3 }]}>Cash Recd: 45000.00</Text>
-
                                 <Text style={[styles.bold]}>NEFT Recd: 37297.00 #: Bank:</Text>
                             </View>
 
@@ -459,15 +454,15 @@ const TaxINVoiceReceipt = ({ selectedOrders }) => {
                                                                 </View> */}
                                 <View style={{ flexDirection: "row", justifyContent: "space-between", marginBottom: 3 }}>
                                     <Text>GST Value:</Text>
-                                    <Text style={{ textAlign: "right" }}>79900.00</Text>
+                                    <Text style={{ textAlign: "right" }}>{taxableAmount.toFixed(2)}</Text>
                                 </View>
                                 <View style={{ flexDirection: "row", justifyContent: "space-between", marginBottom: 3 }}>
                                     <Text>CGST @1.50%:  </Text>
-                                    <Text style={{ textAlign: "right" }}>1198.50</Text>
+                                    <Text style={{ textAlign: "right" }}>{halfTax}</Text>
                                 </View>
                                 <View style={{ flexDirection: "row", justifyContent: "space-between", marginBottom: 3 }}>
                                     <Text>SGST @1.50%:  </Text>
-                                    <Text style={{ textAlign: "right" }}>1198.50</Text>
+                                    <Text style={{ textAlign: "right" }}>{halfTax}</Text>
                                 </View>
                                 {/* <View style={{ flexDirection: "row", justifyContent: "space-between", marginBottom: 3 }}>
                                                                         <Text style={[styles.bold]}>Net Bill Value:  </Text>
@@ -479,17 +474,17 @@ const TaxINVoiceReceipt = ({ selectedOrders }) => {
                                                                 </View> */}
                                 <View style={{ flexDirection: "row", justifyContent: "space-between", marginBottom: 3 }}>
                                     <Text style={[styles.bold]}>Net Amount:</Text>
-                                    <Text style={{ textAlign: "right" }}>82297.00</Text>
+                                    <Text style={{ textAlign: "right" }}>{totalPrice.toFixed(2)}</Text>
                                 </View>
                             </View>
                         </View>
-                        <View style={{ alignItems: "center", fontFamily: 'Helvetica-Bold' }}>
+                        <View style={{ alignItems: "center", fontFamily: 'Times-Bold' }}>
                             <Text>
-                                (Rupees Eight Thousand Two Hundred Ninety Seven Only)
+                                (Rupees {totalPriceInWords} Only)
                             </Text>
                         </View>
 
-                        <View style={{ flexDirection: "row", marginTop: 20, justifyContent: "space-between", marginBottom: 3, fontFamily: 'Helvetica-Bold' }}>
+                        <View style={{ flexDirection: "row", marginTop: 20, justifyContent: "space-between", marginBottom: 3, fontFamily: 'Times-Bold' }}>
                             {/* Left Side */}
                             <View style={{ alignItems: "flex-start", paddingLeft: 10 }}>
                                 <Text style={[styles.bold]}>For Customer</Text>
