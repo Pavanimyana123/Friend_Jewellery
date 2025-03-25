@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import DataTable from '../../../Pages/InputField/DataTable';
-import { Button, Row, Col } from 'react-bootstrap';
+import { Button, Row, Col,Modal } from 'react-bootstrap';
 import './ViewOrders.css';
 import axios from "axios";
 import { FaEdit, FaTrash } from 'react-icons/fa';
@@ -24,6 +24,14 @@ const ViewOrders = () => {
   const [selectedData, setSelectedData] = useState([]); // Store selected row details
   const [filteredData, setFilteredData] = useState([]); // New state for filtered data
   const [selectedRows, setSelectedRows] = useState([]);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalImage, setModalImage] = useState("");
+
+   // Function to open image in modal
+   const handleImageClick = (imageSrc) => {
+    setModalImage(imageSrc);
+    setIsModalOpen(true);
+  };
 
   // Fetch workers
   useEffect(() => {
@@ -489,41 +497,25 @@ const downloadPDF = async () => {
         },
       },
       {
-        Header: 'Image',
-        accessor: 'image_url',
-        id: 'image', // Add an ID for the image column
-        Cell: ({ value }) => {
-          const handleImageClick = () => {
-            if (value) {
-              const newWindow = window.open();
-              if (newWindow) {
-                newWindow.document.write(`
-                  <html>
-                    <head>
-                      <title>Order Image</title>
-                    </head>
-                    <body style="margin:0; display:flex; justify-content:center; align-items:center; height:100vh;">
-                      <img src="${baseURL}${value}" alt="Order Image" style="width: auto; height: auto; max-width: 90vw; max-height: 90vh;" />
-                    </body>
-                  </html>
-                `);
-                newWindow.document.close();
-              }
-            }
-          };
-
-          return value ? (
+        Header: "Image",
+        accessor: "image_url",
+        Cell: ({ value }) =>
+          value ? (
             <img
               src={`${baseURL}${value}`}
               alt="Order Image"
-              style={{ width: '50px', height: '50px', borderRadius: '5px', objectFit: 'cover', cursor: 'pointer' }}
-              onClick={handleImageClick}
-              onError={(e) => (e.target.src = "/placeholder.png")}
+              style={{
+                width: "50px",
+                height: "50px",
+                borderRadius: "5px",
+                objectFit: "cover",
+                cursor: "pointer",
+              }}
+              onClick={() => handleImageClick(`${baseURL}${value}`)}
             />
           ) : (
-            'No Image'
-          );
-        }
+            "No Image"
+          ),
       },
       {
         Header: 'Assign Worker',
@@ -625,6 +617,18 @@ const downloadPDF = async () => {
           {loading ? <div>Loading...</div> : <DataTable columns={columns} data={[...data].reverse()} />}
         </div>
       </div>
+      <Modal show={isModalOpen} onHide={() => setIsModalOpen(false)} centered>
+        <Modal.Header closeButton>
+          <Modal.Title>Image Preview</Modal.Title>
+        </Modal.Header>
+        <Modal.Body className="d-flex justify-content-center">
+          <img
+            src={modalImage}
+            alt="Enlarged Order"
+            style={{ maxWidth: "100%", maxHeight: "80vh", borderRadius: "10px" }}
+          />
+        </Modal.Body>
+      </Modal>
       {/* {selectedData.length > 0 && (
       <PDFDownloadLink
         document={<TaxINVoiceReceipt selectedOrders={selectedData} />}

@@ -13,6 +13,14 @@ const CancelReq = () => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [orders, setOrders] = useState([]); // New state for orders
+  const [isModalOpen, setIsModalOpen] = useState(false);
+    const [modalImage, setModalImage] = useState("");
+  
+     // Function to open image in modal
+     const handleImageClick = (imageSrc) => {
+      setModalImage(imageSrc);
+      setIsModalOpen(true);
+    };
 
   const handleCancelRequest = async (orderId, action) => {
     if (!window.confirm(`Are you sure you want to ${action.toLowerCase()} this cancellation request?`)) return;
@@ -80,19 +88,25 @@ const CancelReq = () => {
         accessor: 'order_status',
       },
       {
-        Header: 'Image',
-        accessor: 'image_url', // Keep accessor as is
-        Cell: ({ value }) => (
+        Header: "Image",
+        accessor: "image_url",
+        Cell: ({ value }) =>
           value ? (
             <img
-              src={`${baseURL}${value}`} // Construct full image URL
+              src={`${baseURL}${value}`}
               alt="Order Image"
-              style={{ width: '50px', height: '50px', borderRadius: '5px', objectFit: 'cover' }}
+              style={{
+                width: "50px",
+                height: "50px",
+                borderRadius: "5px",
+                objectFit: "cover",
+                cursor: "pointer",
+              }}
+              onClick={() => handleImageClick(`${baseURL}${value}`)}
             />
           ) : (
-            'No Image' // Display text if image is missing
-          )
-        ),
+            "No Image"
+          ),
       },
       {
         Header: 'Cancel Request Status',
@@ -164,6 +178,18 @@ const CancelReq = () => {
           )}
         </div>
       </div>
+      <Modal show={isModalOpen} onHide={() => setIsModalOpen(false)} centered>
+              <Modal.Header closeButton>
+                <Modal.Title>Image Preview</Modal.Title>
+              </Modal.Header>
+              <Modal.Body className="d-flex justify-content-center">
+                <img
+                  src={modalImage}
+                  alt="Enlarged Order"
+                  style={{ maxWidth: "100%", maxHeight: "80vh", borderRadius: "10px" }}
+                />
+              </Modal.Body>
+            </Modal>
     </>
   );
 };

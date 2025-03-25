@@ -104,20 +104,20 @@ const WorkerTable = () => {
     fetchData();
   }, []);
 
-  // Delete a customer
+  // Delete a worker
   const handleDelete = async (id) => {
-    if (window.confirm('Are you sure you want to delete this customer?')) {
+    if (window.confirm('Are you sure you want to delete this Worker?')) {
       try {
         const response = await fetch(`${baseURL}/delete-account/${id}`, {
           method: 'DELETE',
         });
 
         if (response.ok) {
-          alert('Customer deleted successfully!');
+          alert('Worker deleted successfully!');
           setData((prevData) => prevData.filter((customer) => customer.id !== id));
         } else {
-          console.error('Failed to delete customer');
-          alert('Failed to delete customer.');
+          console.error('Failed to delete Worker');
+          alert('Failed to delete Worker.');
         }
       } catch (error) {
         console.error('Error:', error);

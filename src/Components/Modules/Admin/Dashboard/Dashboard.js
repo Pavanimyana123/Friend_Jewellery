@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Navbar from '../../../Pages/Navbar/Navbar';
 import './Dashboard.css';
 import baseURL from '../../../../Url/NodeBaseURL';
@@ -9,6 +10,7 @@ const formatDate = (dateString) => {
 };
 
 function Dashboard() {
+  const navigate = useNavigate();
   const [customerCount, setCustomerCount] = useState(0);
   const [workerCount, setWorkerCount] = useState(0);
   const [orderCount, setOrderCount] = useState(0);
@@ -16,7 +18,6 @@ function Dashboard() {
   const [inProgressOrderCount, setInProgressOrderCount] = useState(0);
   const [cancelOrderCount, setCancelOrderCount] = useState(0);
   const [completedOrderCount, setCompletedOrderCount] = useState(0);
-
   const [loading, setLoading] = useState(true);
 
   // Fetch accounts data (for customers and workers)
@@ -67,8 +68,9 @@ function Dashboard() {
           throw new Error('Failed to fetch orders');
         }
         const result = await response.json();
-        // Assuming result is an array
+        
         setOrderCount(result.length);
+        
         // Calculate dynamic counts based on work_status
         const pending = result.filter(
           (order) => order.work_status && order.work_status.toLowerCase() === 'pending'
@@ -79,6 +81,7 @@ function Dashboard() {
         const completed = result.filter(
           (order) => order.work_status && order.work_status.toLowerCase() === 'completed'
         ).length;
+
         setPendingOrderCount(pending);
         setInProgressOrderCount(inProgress);
         setCompletedOrderCount(completed);
@@ -108,7 +111,7 @@ function Dashboard() {
           (order) => order.order_status === "Canceled"
         );
 
-        setCancelOrderCount(cancelledOrders.length); // Set cancel orders count dynamically
+        setCancelOrderCount(cancelledOrders.length);
         console.log("Cancelled Orders:", cancelledOrders);
       } catch (error) {
         console.error('Error fetching cancel orders:', error);
@@ -117,6 +120,22 @@ function Dashboard() {
 
     fetchCancelOrders();
   }, [baseURL]);
+
+  // Define navigation paths for respective cards
+  const handleCardClick = (title) => {
+    const routes = {
+      "Customers": "/a-customertable",
+      "Workers": "/a-workertable",
+      "Orders": "/a-view-orders",
+      // "Pending Orders": "/orders/pending",
+      // "In progress Orders": "/orders/in-progress",
+      "Cancel Orders": "/a-cancel-orders",
+      // "Completed Orders": "/orders/completed",
+    };
+
+    const path = routes[title] || "/a-dashboard"; // Default to dashboard if no match
+    navigate(path);
+  };
 
   // Define cards with dynamic counts for all types.
   const cards = [
@@ -127,7 +146,6 @@ function Dashboard() {
     { title: "In progress Orders", count: inProgressOrderCount },
     { title: "Cancel Orders", count: cancelOrderCount },
     { title: "Completed Orders", count: completedOrderCount },
-
   ];
 
   if (loading) {
@@ -141,7 +159,12 @@ function Dashboard() {
         <h1 className="dashboard-title">Dashboard</h1>
         <div className="dashboard-cards">
           {cards.map((card, index) => (
-            <div className="dashboard-card" key={index}>
+            <div
+              className="dashboard-card"
+              key={index}
+              onClick={() => handleCardClick(card.title)}
+              style={{ cursor: "pointer" }} // Add cursor pointer to indicate clickability
+            >
               <h3>{card.title}</h3>
               <p className="dashboard-count">{card.count}</p>
             </div>
@@ -153,7 +176,3 @@ function Dashboard() {
 }
 
 export default Dashboard;
-
-
-
-

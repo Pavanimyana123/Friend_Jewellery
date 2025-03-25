@@ -9,7 +9,7 @@ import { Row, Col, Button } from 'react-bootstrap';
 import baseURL from '../../../../Url/NodeBaseURL';
 
 
-function Customer_Master() {
+function Customer_Master() { 
   const location = useLocation();
   const [isSaving, setIsSaving] = useState(false);
   const [formData, setFormData] = useState({
@@ -298,6 +298,7 @@ function Customer_Master() {
     setIsSaving(true); // Disable button and show "Saving..."
 
     if (!validateForm()) {
+      setIsSaving(false);
       return;
     }
 

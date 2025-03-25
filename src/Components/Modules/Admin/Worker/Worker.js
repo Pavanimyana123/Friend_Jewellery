@@ -289,13 +289,14 @@ function Worker_Master() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSaving(true);
-
+  
     if (!validateForm()) {
+      setIsSaving(false); // Ensure button is re-enabled when validation fails
       return;
     }
-
+  
     try {
-      // Check for duplicate mobile only when creating a new worker
+      // Uncomment this section if you need duplicate mobile validation
       // if (!id) {
       //   const response = await fetch(`${baseURL}/get/account-details`);
       //   if (!response.ok) {
@@ -303,19 +304,20 @@ function Worker_Master() {
       //   }
       //   const result = await response.json();
       //   const isDuplicateMobile = result.some((item) => item.mobile === formData.mobile);
-
+  
       //   if (isDuplicateMobile) {
       //     alert("This mobile number is already associated with another entry.");
+      //     setIsSaving(false); // Ensure button is re-enabled
       //     return;
       //   }
       // }
-
+  
       // Proceed with saving the record (POST or PUT)
       const method = id ? "PUT" : "POST";
       const endpoint = id
         ? `${baseURL}/update-account/${id}`
         : `${baseURL}/add-account`;
-
+  
       const saveResponse = await fetch(endpoint, {
         method,
         headers: {
@@ -323,7 +325,7 @@ function Worker_Master() {
         },
         body: JSON.stringify({ ...formData }),
       });
-
+  
       if (saveResponse.ok) {
         alert(`Worker ${id ? "updated" : "created"} successfully!`);
         navigate("/a-workertable");
@@ -333,14 +335,11 @@ function Worker_Master() {
     } catch (error) {
       console.error("Error:", error);
       alert("An error occurred while processing the request.");
-    }
-    finally {
-      setIsSaving(false); // Re-enable button after submission
+    } finally {
+      setIsSaving(false); // Ensure button is re-enabled after submission
     }
   };
-
-
-
+  
 
   const handleBack = () => {
     const from = location.state?.from || "/a-workertable";

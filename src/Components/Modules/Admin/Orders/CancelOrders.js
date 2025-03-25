@@ -128,9 +128,10 @@ const ViewOrders = () => {
           )}
         </div>
       </div>
-
-      {/* Image Preview Modal */}
       <Modal show={isModalOpen} onHide={() => setIsModalOpen(false)} centered>
+        <Modal.Header closeButton>
+          <Modal.Title>Image Preview</Modal.Title>
+        </Modal.Header>
         <Modal.Body className="d-flex justify-content-center">
           <img
             src={modalImage}
