@@ -19,12 +19,11 @@ h1, h2, h3, h4, h5, h6, p, span, div {
 }
 
 /* Table heading row background color */
-table thead tr {
+/* table thead tr {
   background-color: #a36e29;
-  color: white; /* Optional: Set text color for better contrast */
+  color: white; 
 }
 
-/* Optional: General table styling for consistency */
 table {
   width: 100%;
   border-collapse: collapse;
@@ -33,5 +32,5 @@ table {
 table th, table td {
   padding: 8px;
   text-align: left;
-  border: 1px solid #ddd; /* Add a border for better readability */
-}
+  border: 1px solid #ddd; 
+} */
