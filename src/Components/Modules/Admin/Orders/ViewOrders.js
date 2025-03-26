@@ -232,7 +232,6 @@ const ViewOrders = () => {
     );
   };
   
-
   const handleSelectAll = () => {
     if (selectedRows.length === data.length) {
       setSelectedRows([]);
@@ -241,27 +240,67 @@ const ViewOrders = () => {
     }
   };
 
-  // Function to generate and download PDF directly
-const downloadPDF = async () => {
-  if (selectedRows.length === 0) {
-    alert("Please select at least one order to download.");
-    return;
-  }
-
-  // Prepare selected data
-  const selectedOrders = data.filter((order) => selectedRows.includes(order.id));
-  setSelectedData(selectedOrders);
-
-  // Generate PDF Blob
-  const doc = <TaxINVoiceReceipt selectedOrders={selectedOrders} />;
-  const pdfBlob = await pdf(doc).toBlob();
-
-  // Trigger download
-  saveAs(pdfBlob, "Invoice.pdf");
-
-  // Clear selection
-  setSelectedRows([]);
-};
+  const generateInvoiceNumber = (latestInvoice) => {
+    if (!latestInvoice) return "INV001"; // Start from INV001 if none exist
+  
+    // Extract the numeric part and increment it
+    const match = latestInvoice.match(/INV(\d+)/);
+    if (match) {
+      const nextNumber = String(parseInt(match[1]) + 1).padStart(3, "0"); // Increment and pad
+      return `INV${nextNumber}`;
+    }
+  
+    return "INV001"; // Fallback
+  };
+  
+  const downloadPDF = async () => {
+    if (selectedRows.length === 0) {
+      alert("Please select at least one order to download.");
+      return;
+    }
+  
+    // Prepare selected data
+    const selectedOrders = data.filter((order) => selectedRows.includes(order.id));
+    setSelectedData(selectedOrders);
+  
+    try {
+      // Fetch the latest invoice number
+      const response = await fetch(`${baseURL}/api/get-latest-invoice`);
+      const result = await response.json();
+      
+      const latestInvoice = result.latestInvoiceNumber; // Get the latest invoice number from DB
+      const newInvoiceNumber = generateInvoiceNumber(latestInvoice); // Generate new number
+  
+      // Generate PDF Blob with Invoice Number
+      const doc = <TaxINVoiceReceipt selectedOrders={selectedOrders} invoiceNumber={newInvoiceNumber} />;
+      const pdfBlob = await pdf(doc).toBlob();
+  
+      // Trigger download
+      saveAs(pdfBlob, `${newInvoiceNumber}.pdf`);
+  
+      // Update database to set invoice_generated = 'Yes' and save invoice_number
+      await fetch(`${baseURL}/api/update-invoice-status`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          orderIds: selectedRows,
+          invoiceNumber: newInvoiceNumber, // Send the invoice number
+        }),
+      });
+  
+      alert(`Invoice ${newInvoiceNumber} generated successfully`);
+  
+      setSelectedRows([]);
+    } catch (error) {
+      console.error("Error generating invoice:", error);
+      alert("Failed to generate invoice.");
+    }
+  };
+  
+  
+  
 
   // const downloadPDF = () => {
   //   if (selectedRows.length === 0) {

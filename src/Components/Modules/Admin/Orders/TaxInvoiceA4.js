@@ -185,7 +185,7 @@ const styles = StyleSheet.create({
     },
 });
 
-const TaxINVoiceReceipt = ({ selectedOrders }) => {
+const TaxINVoiceReceipt = ({ selectedOrders, invoiceNumber }) => {
     console.log("selected orders=", selectedOrders);
     const toWordsTitleCase = (num) => {
         return toWords(num)
@@ -236,7 +236,7 @@ const TaxINVoiceReceipt = ({ selectedOrders }) => {
                         {/* BILL NO */}
                         <View style={{ flexDirection: "row", justifyContent: "space-between", marginBottom: 6 }}>
                             <Text>BILL NO:</Text>
-                            <Text style={{ textAlign: "right", flex: 1 }}>INV001</Text>
+                            <Text style={{ textAlign: "right", flex: 1 }}>{invoiceNumber}</Text>
                         </View>
 
                         {/* DATE */}
