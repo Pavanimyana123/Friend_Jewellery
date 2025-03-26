@@ -231,14 +231,29 @@ const ViewOrders = () => {
         : [...prevSelected, rowId]
     );
   };
-  
+
   const handleSelectAll = () => {
     if (selectedRows.length === data.length) {
-      setSelectedRows([]);
-    } else {
-      setSelectedRows(data.map((row) => row.id));
+      setSelectedRows([]); // Deselect all if already selected
+      return;
     }
+  
+    if (data.length === 0) return; // No data available
+  
+    const firstMobileNumber = data[0].mobile; // Get the mobile number of the first order
+  
+    // Filter orders that match the first mobile number
+    const sameMobileOrders = data.filter((order) => order.mobile === firstMobileNumber);
+  
+    if (sameMobileOrders.length !== data.length) {
+      alert("You can only select orders with the same mobile number.");
+      return;
+    }
+  
+    // Select only orders with the same mobile number
+    setSelectedRows(sameMobileOrders.map((row) => row.id));
   };
+  
 
   const generateInvoiceNumber = (latestInvoice) => {
     if (!latestInvoice) return "INV001"; // Start from INV001 if none exist
@@ -252,6 +267,27 @@ const ViewOrders = () => {
   
     return "INV001"; // Fallback
   };
+
+  const handleSavePDFToServer = async (pdfBlob, invoiceNumber) => {
+    const formData = new FormData();
+    formData.append("invoice", pdfBlob, `${invoiceNumber}.pdf`);
+  
+    try {
+      const response = await fetch(`${baseURL}/api/upload-invoice`, {
+        method: "POST",
+        body: formData,
+      });
+  
+      if (!response.ok) {
+        throw new Error("Failed to upload invoice");
+      }
+  
+      console.log(`Invoice ${invoiceNumber} saved on server`);
+    } catch (error) {
+      console.error("Error uploading invoice:", error);
+    }
+  };
+  
   
   const downloadPDF = async () => {
     if (selectedRows.length === 0) {
@@ -277,7 +313,8 @@ const ViewOrders = () => {
   
       // Trigger download
       saveAs(pdfBlob, `${newInvoiceNumber}.pdf`);
-  
+      await handleSavePDFToServer(pdfBlob, newInvoiceNumber);
+
       // Update database to set invoice_generated = 'Yes' and save invoice_number
       await fetch(`${baseURL}/api/update-invoice-status`, {
         method: "POST",
@@ -293,6 +330,7 @@ const ViewOrders = () => {
       alert(`Invoice ${newInvoiceNumber} generated successfully`);
   
       setSelectedRows([]);
+      fetchData();
     } catch (error) {
       console.error("Error generating invoice:", error);
       alert("Failed to generate invoice.");
@@ -413,6 +451,7 @@ const ViewOrders = () => {
             type="checkbox"
             checked={selectedRows.length === data.length && data.length > 0}
             onChange={handleSelectAll}
+            // disabled={data.every(row => row.invoice_generated === "Yes")} // Disable if all are invoiced
           />
         ),
         Cell: ({ row }) => (
@@ -420,10 +459,30 @@ const ViewOrders = () => {
             type="checkbox"
             checked={selectedRows.includes(row.original.id)}
             onChange={() => handleRowSelect(row.original.id)}
+            disabled={row.original.invoice_generated === "Yes"} // Disable if invoice is generated
           />
         ),
-        id: 'select', // Add an ID for the select column
+        id: "select",
       },
+      
+      {
+        Header: "Invoice",
+        Cell: ({ row }) =>
+          row.original.invoice_generated === "Yes" && row.original.invoice_number ? (
+            <a
+              href={`${baseURL}/invoices/${row.original.invoice_number}.pdf`} // Fetch from backend
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              📝 View
+            </a>
+          ) : (
+            "Not Available"
+          ),
+        id: "invoice",
+      },
+      
+      
       { Header: 'Sr. No.', Cell: ({ row }) => row.index + 1, id: 'sr_no' },
       {
         Header: 'Date',
