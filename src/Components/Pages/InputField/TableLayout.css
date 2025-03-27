@@ -1,16 +1,16 @@
 /* Table styling */
-.table {
-  border: 1px solid #ddd; /* Border around the entire table */
-  border-collapse: collapse; /* Ensure borders do not double up */
-}
+/* .table {
+  border: 1px solid #ddd; 
+  border-collapse: collapse; 
+} */
 
 /* Table cell styling */
 .dataTable_cell {
-  white-space: nowrap; /* Prevent text wrapping */
-  overflow: hidden;    /* Hide overflowing content */
-  text-overflow: ellipsis; /* Add ellipsis to truncated text */
-  max-width: 200px;    /* Set a maximum width for cells */
-  border: 1px solid #ddd; /* Border around each cell */
+  white-space: nowrap; 
+  overflow: hidden;    
+  text-overflow: ellipsis; 
+  max-width: 200px;    
+  border: 1px solid #ddd; 
   padding: 8px;
 }
 
