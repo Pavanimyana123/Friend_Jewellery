@@ -49,12 +49,11 @@ function Navbar() {
                 <Link
                     to="/a-dashboard"
                     onClick={handleItemClick}
-                    className={({ isActive }) => (isActive ? "active-link" : "")}
-                    style={({ isActive }) => ({
-                        color: isActive ? '#f2cc5d' : 'white',
+                    style={{
+                        color: window.location.pathname === '/a-dashboard' ? '#f2cc5d' : 'white',
                         backgroundColor: 'transparent',
                         textDecoration: 'none',
-                    })}
+                    }}
                 >
                     Dashboard</Link>
                 <Link

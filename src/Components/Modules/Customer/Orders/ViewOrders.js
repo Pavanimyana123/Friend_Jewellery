@@ -191,16 +191,20 @@ const ViewOrders = () => {
                         )}
                         style={{
                           backgroundColor: (designRequests ?? []).some((design) => design.order_id === order.id)
-                            ? (designRequests.find((design) => design.order_id === order.id)?.approve_status === "Requested" && "orange") ||
-                            (designRequests.find((design) => design.order_id === order.id)?.approve_status === "Approved" && "green") ||
-                            (designRequests.find((design) => design.order_id === order.id)?.approve_status === "Rejected" && "red")
+                            ? designRequests.find((design) => design.order_id === order.id)?.approve_status === "Requested"
+                              ? "orange"
+                              : designRequests.find((design) => design.order_id === order.id)?.approve_status === "Approved"
+                                ? "green"
+                                : "red"
                             : "rgb(62, 115, 247)",
                         }}
                       >
                         {(designRequests ?? []).some((design) => design.order_id === order.id) ? (
-                          (designRequests.find((design) => design.order_id === order.id)?.approve_status === "Requested" && "Design Requested") ||
-                          (designRequests.find((design) => design.order_id === order.id)?.approve_status === "Approved" && "Approved") ||
-                          (designRequests.find((design) => design.order_id === order.id)?.approve_status === "Rejected" && "Rejected")
+                          designRequests.find((design) => design.order_id === order.id)?.approve_status === "Requested"
+                            ? "Design Requested"
+                            : designRequests.find((design) => design.order_id === order.id)?.approve_status === "Approved"
+                              ? "Approved"
+                              : "Rejected"
                         ) : (
                           "Change Design Request"
                         )}
