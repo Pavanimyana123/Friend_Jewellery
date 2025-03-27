@@ -154,19 +154,21 @@ const ViewOrders = () => {
               filteredOrders.map((order, index) => (
                 <div className="order-card" key={index}>
                   <div className="order-header">
-                    <span><strong>Order ID:</strong> {order.order_number}</span>
-                    <span><strong>Total Amount:</strong> ₹{order.total_price}</span>
+                    <span><strong>Order ID:</strong> <span>{order.order_number}</span></span>
+                    <span><strong>Total Amount:</strong> <span>₹{order.total_price}</span></span>
                     <span>
                       <strong>Status:</strong>
-                      {order.cancel_req_status === "Pending"
-                        ? "Cancel Requested"
-                        : order.cancel_req_status === "Rejected"
-                          ? "Cancel Rejected"
-                          : order.order_status}
+                      <span>
+                        {order.cancel_req_status === "Pending"
+                          ? "Cancel Requested"
+                          : order.cancel_req_status === "Rejected"
+                            ? "Cancel Rejected"
+                            : order.order_status}
+                      </span>
                     </span>
+                    <span><strong>Order Date:</strong> <span>{new Date(order.date).toLocaleDateString()}</span></span>
 
-                    <span><strong>Order Date:</strong> {new Date(order.date).toLocaleDateString()}</span>
-                    <span>
+                    <div className="order-actions">
                       <button
                         onClick={() => handleCancelOrder(order.id)}
                         className="cancel-button"
@@ -180,25 +182,7 @@ const ViewOrders = () => {
                               ? "Order Canceled"
                               : "Cancel Order"}
                       </button>
-                    </span>
-                    {/* <span>
-                      <button
-                        className="change-design-button"
-                        onClick={() => handleShowModal(order)}
-                        disabled={(designRequests ?? []).some(
-                          (design) => design.order_id === order.id && ["Requested", "Approved", "Rejected"].includes(design.approve_status)
-                        )}
-                      >
-                        {(designRequests ?? []).some((design) => design.order_id === order.id) ? (
-                          (designRequests.find((design) => design.order_id === order.id)?.approve_status === "Requested" && "Design Requested") ||
-                          (designRequests.find((design) => design.order_id === order.id)?.approve_status === "Approved" && "Approved") ||
-                          (designRequests.find((design) => design.order_id === order.id)?.approve_status === "Rejected" && "Rejected")
-                        ) : (
-                          "Change Design Request"
-                        )}
-                      </button>
-                    </span> */}
-                    <span>
+
                       <button
                         className="change-design-button"
                         onClick={() => handleShowModal(order)}
@@ -221,9 +205,10 @@ const ViewOrders = () => {
                           "Change Design Request"
                         )}
                       </button>
-                    </span>
+                    </div>
 
                   </div>
+
                   <hr />
                   <div className="order-body">
                     <div className="order-content">
@@ -235,13 +220,14 @@ const ViewOrders = () => {
                         onClick={() => handleImageClick(order)}
                       />
                       <div className="product-details">
-                        <p><strong>Product Name:</strong> {order.subcategory}</p>
-                        <p><strong>Design Name:</strong> {order.product_design_name}</p>
-                        <p><strong>Gross Wt:</strong> {order.gross_weight}</p>
-                        <p><strong>Purity:</strong> {order.purity}</p>
-                        <p><strong>Quantity:</strong> {order.qty}</p>
-                        <p><strong>Price:</strong> ₹{order.total_price}</p>
+                        <p><strong>Product Name:</strong> <span>{order.subcategory}</span></p>
+                        <p><strong>Design Name:</strong> <span>{order.product_design_name}</span></p>
+                        <p><strong>Gross Wt:</strong> <span>{order.gross_weight}</span></p>
+                        <p><strong>Purity:</strong> <span>{order.purity}</span></p>
+                        <p><strong>Quantity:</strong> <span>{order.qty}</span></p>
+                        <p><strong>Price:</strong> <span>₹{order.total_price}</span></p>
                       </div>
+
                     </div>
                     <div className="order-tracker">
                       {orderStatusSteps.map((step, idx) => (

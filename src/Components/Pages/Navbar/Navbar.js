@@ -49,18 +49,19 @@ function Navbar() {
                 <Link
                     to="/a-dashboard"
                     onClick={handleItemClick}
-                    style={{
-                        color: window.location.pathname === '/a-dashboard' ? '#a36e29' : 'black',
+                    className={({ isActive }) => (isActive ? "active-link" : "")}
+                    style={({ isActive }) => ({
+                        color: isActive ? '#f2cc5d' : 'white',
                         backgroundColor: 'transparent',
                         textDecoration: 'none',
-                    }}
+                    })}
                 >
                     Dashboard</Link>
                 <Link
                     to="/rates"
                     onClick={handleItemClick}
                     style={{
-                        color: window.location.pathname === '/rates' ? '#a36e29' : 'black',
+                        color: window.location.pathname === '/rates' ? '#f2cc5d' : 'white',
                         backgroundColor: 'transparent',
                         textDecoration: 'none',
                     }}
@@ -70,7 +71,7 @@ function Navbar() {
                     to="/a-customertable"
                     onClick={handleItemClick}
                     style={{
-                        color: window.location.pathname === '/a-customertable' ? '#a36e29' : 'black',
+                        color: window.location.pathname === '/a-customertable' ? '#f2cc5d' : 'white',
                         backgroundColor: 'transparent',
                         textDecoration: 'none',
                     }}
@@ -80,7 +81,7 @@ function Navbar() {
                     to="/a-workertable"
                     onClick={handleItemClick}
                     style={{
-                        color: window.location.pathname === '/a-workertable' ? '#a36e29' : 'black',
+                        color: window.location.pathname === '/a-workertable' ? '#f2cc5d' : 'white',
                         backgroundColor: 'transparent',
                         textDecoration: 'none',
                     }}
@@ -101,7 +102,7 @@ function Navbar() {
                     to="/a-view-orders"
                     onClick={handleItemClick}
                     style={{
-                        color: window.location.pathname === '/a-view-orders' ? '#a36e29' : 'black',
+                        color: window.location.pathname === '/a-view-orders' ? '#f2cc5d' : 'white',
                         backgroundColor: 'transparent',
                         textDecoration: 'none',
                     }}
@@ -111,7 +112,7 @@ function Navbar() {
                     to="/a-cancel-orders"
                     onClick={handleItemClick}
                     style={{
-                        color: window.location.pathname === '/a-cancel-orders' ? '#a36e29' : 'black',
+                        color: window.location.pathname === '/a-cancel-orders' ? '#f2cc5d' : 'white',
                         backgroundColor: 'transparent',
                         textDecoration: 'none',
                     }}
@@ -121,7 +122,7 @@ function Navbar() {
                     to="/a-cancel-requests"
                     onClick={handleItemClick}
                     style={{
-                        color: window.location.pathname === '/a-cancel-requests' ? '#a36e29' : 'black',
+                        color: window.location.pathname === '/a-cancel-requests' ? '#f2cc5d' : 'white',
                         backgroundColor: 'transparent',
                         textDecoration: 'none',
                     }}
@@ -131,7 +132,7 @@ function Navbar() {
                     to="/a-design-requests"
                     onClick={handleItemClick}
                     style={{
-                        color: window.location.pathname === '/a-design-requests' ? '#a36e29' : 'black',
+                        color: window.location.pathname === '/a-design-requests' ? '#f2cc5d' : 'white',
                         backgroundColor: 'transparent',
                         textDecoration: 'none',
                     }}
@@ -142,7 +143,7 @@ function Navbar() {
                     onClick={handleItemClick}
                     className='logout-desktop'
                     style={{
-                        color: window.location.pathname === '/' ? '#a36e29' : 'black',
+                        color: window.location.pathname === '/' ? '#f2cc5d' : 'black',
                         backgroundColor: 'transparent',
                         textDecoration: 'none',
                     }}

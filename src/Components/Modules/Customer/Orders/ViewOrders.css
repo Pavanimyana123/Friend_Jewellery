@@ -189,12 +189,13 @@ h2 {
     flex-direction: column;
 }
 
-  .order-card .order-header{
+
+  /* .order-card .order-header{
     display: flex;
     flex-direction: column;
-    font-size: 23px;
+    font-size: 15px;
 
-  }
+  } */
   /* .order-tracker {
     display: flex
 ;
@@ -204,6 +205,29 @@ h2 {
     position: relative;
     width: 100%;
 } */
+.order-card .order-header {
+  display: flex;
+  flex-direction: column;
+  font-size: 15px;
+}
+
+.order-header span {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  /* width: 100%; */
+}
+
+.order-header strong {
+  text-align: left;
+  
+}
+
+.order-header span:last-child {
+  display: flex;
+  justify-content: flex-start;
+}
+
 .order-content {
   display: flex
 ;
@@ -231,10 +255,26 @@ h2 {
   flex: 1 1;
   font-size: 15px;
 }
-
-.product-details p{
-  font-size: 23px;
+.product-details p {
+  font-size: 15px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
+
+.product-details strong {
+  margin-left: -110px;
+  text-align: left;
+}
+
+.product-details span {
+  margin-right: -100px;
+  text-align: right;
+}
+
+/* .product-details p{
+  font-size: 15px;
+} */
 .main-container .order-title {
   font-size: 36px;
 
@@ -296,9 +336,34 @@ h2 {
   padding: 5px 10px;
   cursor: pointer;
   border-radius: 5px;
+  margin-right: 10px;
 }
 
 .cancel-button:disabled {
   background-color: gray;
   cursor: not-allowed;
 }
+
+@media screen and (max-width: 767px) {
+  .order-actions {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      width: 100%;
+  }
+
+  .order-actions button {
+      flex: 1; /* Make buttons evenly sized */
+      text-align: center;
+      padding: 8px;
+  }
+  .change-design-button{
+    background-color: rgb(62, 115, 247);
+    color: white;
+    border: none;
+    padding: 5px 20px;
+    cursor: pointer;
+    border-radius: 5px;
+  }
+}
+

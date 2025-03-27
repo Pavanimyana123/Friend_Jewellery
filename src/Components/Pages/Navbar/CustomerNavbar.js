@@ -52,7 +52,7 @@ function VendorNavbar() {
                     to="/c-dashboard"
                     onClick={handleItemClick}
                     style={{
-                        color: window.location.pathname === '/c-dashboard' ? '#a36e29' : 'black',
+                        color: window.location.pathname === '/c-dashboard' ? '#f2cc5d' : 'white',
                         backgroundColor: 'transparent',
                         textDecoration: 'none',
                     }}
@@ -62,7 +62,7 @@ function VendorNavbar() {
                     to="/c-vieworders"
                     onClick={handleItemClick}
                     style={{
-                        color: window.location.pathname === '/c-vieworders' ? '#a36e29' : 'black',
+                        color: window.location.pathname === '/c-vieworders' ? '#f2cc5d' : 'white',
                         backgroundColor: 'transparent',
                         textDecoration: 'none',
                     }}
@@ -72,7 +72,7 @@ function VendorNavbar() {
                     to="/c-cancelorders"
                     onClick={handleItemClick}
                     style={{
-                        color: window.location.pathname === '/c-cancelorders' ? '#a36e29' : 'black',
+                        color: window.location.pathname === '/c-cancelorders' ? '#f2cc5d' : 'white',
                         backgroundColor: 'transparent',
                         textDecoration: 'none',
                     }}
