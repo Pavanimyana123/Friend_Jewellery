@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import DataTable from "../../../Pages/InputField/TableLayout"; // Reusable table component
-import { Row, Col } from "react-bootstrap";
+import { Row, Col, Modal } from "react-bootstrap";
 import Navbar from "../../../Pages/Navbar/Navbar";
 import axios from "axios";
 import baseURL from "../../../../Url/NodeBaseURL";
@@ -12,6 +12,8 @@ const DesignReq = () => {
   const [orders, setOrders] = useState([]);
   const [mergedData, setMergedData] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+    const [modalImage, setModalImage] = useState("");
 
   // Fetch orders
   const fetchOrders = async () => {
@@ -98,7 +100,7 @@ const DesignReq = () => {
   const columns = React.useMemo(
     () => [
       {
-        Header: "Sr. No.",
+        Header: "S No.",
         Cell: ({ row }) => row.index + 1,
       },
       {
@@ -118,6 +120,14 @@ const DesignReq = () => {
         accessor: "metal",
       },
       {
+        Header: "Category",
+        accessor: "category",
+      },
+      {
+        Header: "Sub Category",
+        accessor: "subcategory",
+      },
+      {
         Header: "Existing Design",
         accessor: "product_design_name",
       },
@@ -126,16 +136,33 @@ const DesignReq = () => {
         accessor: "requested_design_name",
       },
       {
-        Header: "Category",
-        accessor: "category",
-      },
-      {
         Header: "Total Amt",
         accessor: "total_price",
       },
+      // {
+      //   Header: "Order Status",
+      //   accessor: "order_status",
+      // },
       {
-        Header: "Order Status",
-        accessor: "order_status",
+        Header: "Image",
+        accessor: "image_url",
+        Cell: ({ value }) =>
+          value ? (
+            <img
+              src={`${baseURL}${value}`}
+              alt="Order Image"
+              style={{
+                width: "50px",
+                height: "50px",
+                borderRadius: "5px",
+                objectFit: "cover",
+                cursor: "pointer",
+              }}
+              onClick={() => handleImageClick(`${baseURL}${value}`)}
+            />
+          ) : (
+            "No Image"
+          ),
       },
       {
         Header: "Approve Status",
@@ -156,6 +183,11 @@ const DesignReq = () => {
     []
   );
 
+  const handleImageClick = (imageSrc) => {
+    setModalImage(imageSrc);
+    setIsModalOpen(true);
+  };
+
   return (
     <>
       <Navbar />
@@ -173,6 +205,18 @@ const DesignReq = () => {
           )}
         </div>
       </div>
+      <Modal show={isModalOpen} onHide={() => setIsModalOpen(false)} centered>
+        <Modal.Header closeButton>
+          <Modal.Title>Image Preview</Modal.Title>
+        </Modal.Header>
+        <Modal.Body className="d-flex justify-content-center">
+          <img
+            src={modalImage}
+            alt="Enlarged Order"
+            style={{ maxWidth: "100%", maxHeight: "80vh", borderRadius: "10px" }}
+          />
+        </Modal.Body>
+      </Modal>
     </>
   );
 };

@@ -870,6 +870,7 @@ function Order() {
                   <th>Metal</th>
                   <th>Category</th>
                   <th>Subcategory</th>
+                  <th>Design Name</th>
                   <th>Purity</th>
                   <th>Gross Wt</th>
                   <th>Stone Wt</th>
@@ -889,6 +890,7 @@ function Order() {
                     <td>{order.metal}</td>
                     <td>{order.category}</td>
                     <td>{order.subcategory}</td>
+                    <td>{order.product_design_name}</td>
                     <td>{order.purity}</td>
                     <td>{order.gross_weight}</td>
                     <td>{order.stone_weight}</td>
