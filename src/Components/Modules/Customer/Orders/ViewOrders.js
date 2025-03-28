@@ -184,7 +184,7 @@ const ViewOrders = () => {
                       </button>
 
                       <button
-                        className="change-design-button"
+                        className="cancel-button"
                         onClick={() => handleShowModal(order)}
                         disabled={(designRequests ?? []).some(
                           (design) => design.order_id === order.id && ["Requested", "Approved", "Rejected"].includes(design.approve_status)
@@ -206,7 +206,7 @@ const ViewOrders = () => {
                               ? "Approved"
                               : "Rejected"
                         ) : (
-                          "Change Design Request"
+                          "Design Request"
                         )}
                       </button>
                     </div>
@@ -220,7 +220,7 @@ const ViewOrders = () => {
                         src={order.image_url ? `${baseURL}${order.image_url}` : 'default-image.jpg'}
                         alt="Product"
                         className="product-image"
-                        style={{ width: '70px', height: '70px', borderRadius: '5px', objectFit: 'cover', cursor: 'pointer' }}
+                        // style={{ width: 'auto', height: '70px', borderRadius: '5px', objectFit: 'cover', cursor: 'pointer' }}
                         onClick={() => handleImageClick(order)}
                       />
                       <div className="product-details">

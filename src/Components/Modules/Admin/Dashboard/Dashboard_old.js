@@ -1,23 +1,8 @@
-
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import './Dashboard.css';
-import { Bar, Pie, Line } from 'react-chartjs-2';
 import Navbar from '../../../Pages/Navbar/Navbar';
-import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend, ArcElement, PointElement, LineElement, } from 'chart.js';
+import './Dashboard.css';
 import baseURL from '../../../../Url/NodeBaseURL';
-
-ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  BarElement,
-  Title,
-  Tooltip,
-  Legend,
-  ArcElement,
-  PointElement,
-  LineElement
-);
 
 const formatDate = (dateString) => {
   const date = new Date(dateString);
@@ -32,9 +17,7 @@ function Dashboard() {
   const [pendingOrderCount, setPendingOrderCount] = useState(0);
   const [inProgressOrderCount, setInProgressOrderCount] = useState(0);
   const [cancelOrderCount, setCancelOrderCount] = useState(0);
-  const [deliveredOrderCount, setDeliveredOrderCount] = useState(0);
   const [completedOrderCount, setCompletedOrderCount] = useState(0);
-  const [holdOrderCount, setHoldOrderCount] = useState(0);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -83,9 +66,9 @@ function Dashboard() {
           throw new Error('Failed to fetch orders');
         }
         const result = await response.json();
-
+        
         setOrderCount(result.length);
-
+        
         // Calculate dynamic counts based on work_status
         const pending = result.filter(
           (order) => order.work_status && order.work_status.toLowerCase() === 'pending'
@@ -96,14 +79,10 @@ function Dashboard() {
         const completed = result.filter(
           (order) => order.work_status && order.work_status.toLowerCase() === 'completed'
         ).length;
-        const hold = result.filter(
-          (order) => order.work_status && order.work_status.toLowerCase() === 'hold'
-        ).length;
 
         setPendingOrderCount(pending);
         setInProgressOrderCount(inProgress);
         setCompletedOrderCount(completed);
-        setHoldOrderCount(hold);
 
       } catch (error) {
         console.error('Error fetching orders:', error);
@@ -129,12 +108,7 @@ function Dashboard() {
           (order) => order.order_status === "Canceled"
         );
 
-        const deliveredOrders = result.filter(
-          (order) => order.order_status === "Delivered"
-        );
-
         setCancelOrderCount(cancelledOrders.length);
-        setDeliveredOrderCount(deliveredOrders.length);
         console.log("Cancelled Orders:", cancelledOrders);
       } catch (error) {
         console.error('Error fetching cancel orders:', error);
@@ -155,7 +129,7 @@ function Dashboard() {
       // "Completed Orders": "/orders/completed",
     };
 
-    const path = routes[title] || "/a-dashboard"; 
+    const path = routes[title] || "/a-dashboard"; // Default to dashboard if no match
     navigate(path);
   };
 
@@ -163,89 +137,33 @@ function Dashboard() {
     { title: "Customers", count: customerCount },
     { title: "Workers", count: workerCount },
     { title: "Orders", count: orderCount },
-    { title: "Cancelled", count: cancelOrderCount },
-    { title: "Delivered", count: deliveredOrderCount },
-    { title: "Pending", count: pendingOrderCount },
-    { title: "In progress", count: inProgressOrderCount },
-    { title: "Completed", count: completedOrderCount },
-    { title: "On Hold", count: holdOrderCount },
+    { title: "Pending Orders", count: pendingOrderCount },
+    { title: "In progress Orders", count: inProgressOrderCount },
+    { title: "Cancel Orders", count: cancelOrderCount },
+    { title: "Completed Orders", count: completedOrderCount },
   ];
 
-  // const barData = {
-  //   labels: ['Sales', 'Repairs', 'Orders'],
-  //   datasets: [
-  //     {
-  //       label: 'Amount',
-  //       data: [3000, 2500, 2000],
-  //       backgroundColor: ['#cd853f', '#8b4513', '#ffa500'],
-  //     },
-  //   ],
-  // };
-
-  const pieDataReceivablesPayables = {
-    labels: ['Receivables', 'Payables'],
-    datasets: [
-      {
-        data: [60, 40],
-        backgroundColor: ['#cd853f', '#8b4513'],
-      },
-    ],
-  };
-
-  const lineDataRevenue = {
-    labels: ['Jan', 'Feb', 'Mar', 'Apr'],
-    datasets: [
-      {
-        label: 'Revenue',
-        data: [10000, 15000, 12000, 20000],
-        borderColor: '#cd853f',
-        borderWidth: 2,
-        fill: false,
-      },
-    ],
-  };
-
-  const pieDataOrderStatus = {
-    labels: ['Completed', 'Pending', 'In Progress'],
-    datasets: [
-      {
-        data: [50, 30, 20],
-        backgroundColor: ['#cd853f', '#8b4513', '#ffa500'],
-      },
-    ],
-  };
+  if (loading) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <>
       <Navbar />
-      <div className="main-container" style={{ backgroundColor: '#b7721834', minHeight:'100vh' }}>
-        <div className="dashboard-header">
-          <h2 style={{ marginTop: "25px", marginLeft: "15px" }}>Dashboard</h2>
-          {/* <CustomerDashboard onSelectCustomer={setSelectedMobile} /> */}
-        </div>
-        <div className="dashboard-container">
-          <div className="row-cards" style={{ marginTop: '15px', marginBottom: '15px' }}>
-            {cards.map((card, index) => (
-              <div key={index} className="metric-card">
-                <h3>{card.title}</h3>
-                <p style={{fontSize:'25px', color:'black', marginTop:'20px'}}>{card.count}</p>
-              </div>
-            ))}
-          </div>
-          <div className="row-cards" style={{ marginTop: '15px', marginBottom: '15px' }}>
-            {/* <div className="metric-card">
-              <Bar data={barData} options={{ responsive: true, maintainAspectRatio: false }} />
-            </div> */}
-            <div className="metric-card">
-              <Pie data={pieDataReceivablesPayables} options={{ responsive: true, maintainAspectRatio: false }} />
+      <div className="worker-dashboard-container">
+        <h1 className="dashboard-title">Dashboard</h1>
+        <div className="dashboard-cards">
+          {cards.map((card, index) => (
+            <div
+              className="dashboard-card"
+              key={index}
+              onClick={() => handleCardClick(card.title)}
+              style={{ cursor: "pointer" }} // Add cursor pointer to indicate clickability
+            >
+              <h3>{card.title}</h3>
+              <p className="dashboard-count">{card.count}</p>
             </div>
-            <div className="metric-card">
-              <Line data={lineDataRevenue} options={{ responsive: true, maintainAspectRatio: false }} />
-            </div>
-            <div className="metric-card">
-              <Pie data={pieDataOrderStatus} options={{ responsive: true, maintainAspectRatio: false }} />
-            </div>
-          </div>
+          ))}
         </div>
       </div>
     </>

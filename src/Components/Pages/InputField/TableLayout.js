@@ -51,7 +51,7 @@ export default function DataTable({ columns, data, initialSearchValue }) {
     {
       columns,
       data,
-      initialState: { pageIndex: 0, globalFilter: initialSearchValue, pageSize: 5 }, // Set initial global filter
+      initialState: { pageIndex: 0, globalFilter: initialSearchValue, pageSize: 10 }, // Set initial global filter
       globalFilter: filterAllColumns, // Use the custom filter function
     },
     useGlobalFilter,

@@ -51,61 +51,37 @@ function VendorNavbar() {
                 <Link
                     to="/w-dashboard"
                     onClick={handleItemClick}
-                    style={{
-                        color: window.location.pathname === '/w-dashboard' ? '#a36e29' : 'black',
-                        backgroundColor: 'transparent',
-                        textDecoration: 'none',
-                    }}
+                    className={window.location.pathname === '/w-dashboard' ? 'active' : ''}
                 >
                     Dashboard</Link>
                 <Link
                     to="/w-assigned-orders"
                     onClick={handleItemClick}
-                    style={{
-                        color: window.location.pathname === '/w-assigned-orders' ? '#a36e29' : 'black',
-                        backgroundColor: 'transparent',
-                        textDecoration: 'none',
-                    }}
+                    className={window.location.pathname === '/w-assigned-orders' ? 'active' : ''}
                 >
                     Assigned</Link>
                 <Link
                     to="/w-inprogress-orders"
                     onClick={handleItemClick}
-                    style={{
-                        color: window.location.pathname === '/w-inprogress-orders' ? '#a36e29' : 'black',
-                        backgroundColor: 'transparent',
-                        textDecoration: 'none',
-                    }}
+                    className={window.location.pathname === '/w-inprogress-orders' ? 'active' : ''}
                 >
                     InProgress</Link>
                 <Link
                     to="/w-completed-orders"
                     onClick={handleItemClick}
-                    style={{
-                        color: window.location.pathname === '/w-completed-orders' ? '#a36e29' : 'black',
-                        backgroundColor: 'transparent',
-                        textDecoration: 'none',
-                    }}
+                    className={window.location.pathname === '/w-completed-orders' ? 'active' : ''}
                 >
                     Completed</Link>
                     <Link
                     to="/w-pending-orders"
                     onClick={handleItemClick}
-                    style={{
-                        color: window.location.pathname === '/w-pending-orders' ? '#a36e29' : 'black',
-                        backgroundColor: 'transparent',
-                        textDecoration: 'none',
-                    }}
+                    className={window.location.pathname === '/w-pending-orders' ? 'active' : ''}
                 >
                     Pending</Link>
                     <Link
                     to="/w-hold-orders"
                     onClick={handleItemClick}
-                    style={{
-                        color: window.location.pathname === '/w-hold-orders' ? '#a36e29' : 'black',
-                        backgroundColor: 'transparent',
-                        textDecoration: 'none',
-                    }}
+                    className={window.location.pathname === '/w-hold-orders' ? 'active' : ''}
                 >
                     On Hold</Link>      
                 <Link

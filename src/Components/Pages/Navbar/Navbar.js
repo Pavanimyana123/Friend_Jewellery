@@ -7,7 +7,7 @@ import { FaSignOutAlt, FaWhatsapp } from "react-icons/fa";
 import logo from '../../Pages/Images/logo.jpeg';
 import './Navbar.css';
 import Swal from 'sweetalert2';
-import { AuthContext } from "../../AuthContext/ContextApi"; 
+import { AuthContext } from "../../AuthContext/ContextApi";
 
 function Navbar() {
     const [isOpen, setIsOpen] = useState(false);
@@ -31,7 +31,7 @@ function Navbar() {
     const handleLogout = () => {
         logout(); // Clear user authentication
         navigate("/login"); // Redirect to login page
-      };
+    };
 
     return (
         <header className="navbar-header">
@@ -49,41 +49,28 @@ function Navbar() {
                 <Link
                     to="/a-dashboard"
                     onClick={handleItemClick}
-                    style={{
-                        color: window.location.pathname === '/a-dashboard' ? '#f2cc5d' : 'white',
-                        backgroundColor: 'transparent',
-                        textDecoration: 'none',
-                    }}
+                    className={window.location.pathname === '/a-dashboard' ? 'active' : ''}
                 >
-                    Dashboard</Link>
+                    Dashboard
+                </Link>
+
                 <Link
                     to="/rates"
                     onClick={handleItemClick}
-                    style={{
-                        color: window.location.pathname === '/rates' ? '#f2cc5d' : 'white',
-                        backgroundColor: 'transparent',
-                        textDecoration: 'none',
-                    }}
+                    className={window.location.pathname === '/rates' ? 'active' : ''}
+                
                 >
                     Rates</Link>
                 <Link
                     to="/a-customertable"
                     onClick={handleItemClick}
-                    style={{
-                        color: window.location.pathname === '/a-customertable' ? '#f2cc5d' : 'white',
-                        backgroundColor: 'transparent',
-                        textDecoration: 'none',
-                    }}
+                    className={window.location.pathname === '/a-customertable' ? 'active' : ''}
                 >
                     Customers</Link>
                 <Link
                     to="/a-workertable"
                     onClick={handleItemClick}
-                    style={{
-                        color: window.location.pathname === '/a-workertable' ? '#f2cc5d' : 'white',
-                        backgroundColor: 'transparent',
-                        textDecoration: 'none',
-                    }}
+                    className={window.location.pathname === '/a-workertable' ? 'active' : ''}
                 >
                     Workers</Link>
                 {/* <div className="navbar-dropdown" onMouseEnter={toggleDropdown} onMouseLeave={toggleDropdown}>
@@ -100,41 +87,25 @@ function Navbar() {
                 <Link
                     to="/a-view-orders"
                     onClick={handleItemClick}
-                    style={{
-                        color: window.location.pathname === '/a-view-orders' ? '#f2cc5d' : 'white',
-                        backgroundColor: 'transparent',
-                        textDecoration: 'none',
-                    }}
+                    className={window.location.pathname === '/a-view-orders' ? 'active' : ''}
                 >
                     Orders</Link>
                 <Link
                     to="/a-cancel-orders"
                     onClick={handleItemClick}
-                    style={{
-                        color: window.location.pathname === '/a-cancel-orders' ? '#f2cc5d' : 'white',
-                        backgroundColor: 'transparent',
-                        textDecoration: 'none',
-                    }}
+                    className={window.location.pathname === '/a-cancel-orders' ? 'active' : ''}
                 >
                     Cancelled Orders</Link>
                 <Link
                     to="/a-cancel-requests"
                     onClick={handleItemClick}
-                    style={{
-                        color: window.location.pathname === '/a-cancel-requests' ? '#f2cc5d' : 'white',
-                        backgroundColor: 'transparent',
-                        textDecoration: 'none',
-                    }}
+                    className={window.location.pathname === '/a-cancel-requests' ? 'active' : ''}
                 >
                     Cancel Requests</Link>
                 <Link
                     to="/a-design-requests"
                     onClick={handleItemClick}
-                    style={{
-                        color: window.location.pathname === '/a-design-requests' ? '#f2cc5d' : 'white',
-                        backgroundColor: 'transparent',
-                        textDecoration: 'none',
-                    }}
+                    className={window.location.pathname === '/a-design-requests' ? 'active' : ''}
                 >
                     Design Requests</Link>
                 <Link

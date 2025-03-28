@@ -51,31 +51,19 @@ function VendorNavbar() {
                 <Link
                     to="/c-dashboard"
                     onClick={handleItemClick}
-                    style={{
-                        color: window.location.pathname === '/c-dashboard' ? '#f2cc5d' : 'white',
-                        backgroundColor: 'transparent',
-                        textDecoration: 'none',
-                    }}
+                    className={window.location.pathname === '/c-dashboard' ? 'active' : ''}
                 >
                     Dashboard</Link>
                 <Link
                     to="/c-vieworders"
                     onClick={handleItemClick}
-                    style={{
-                        color: window.location.pathname === '/c-vieworders' ? '#f2cc5d' : 'white',
-                        backgroundColor: 'transparent',
-                        textDecoration: 'none',
-                    }}
+                    className={window.location.pathname === '/c-vieworders' ? 'active' : ''}
                 >
                     View Orders</Link>
                 <Link
                     to="/c-cancelorders"
                     onClick={handleItemClick}
-                    style={{
-                        color: window.location.pathname === '/c-cancelorders' ? '#f2cc5d' : 'white',
-                        backgroundColor: 'transparent',
-                        textDecoration: 'none',
-                    }}
+                    className={window.location.pathname === '/c-cancelorders' ? 'active' : ''}
                 >
                     Cancel Orders</Link>
                     <Link

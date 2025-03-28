@@ -142,7 +142,7 @@ export default function DataTable({ columns, data }) {
     {
       columns,
       data: filteredData,
-      initialState: { pageIndex: 0, pageSize: 5 },
+      initialState: { pageIndex: 0, pageSize: 10 },
     },
     useGlobalFilter,
     useSortBy,
