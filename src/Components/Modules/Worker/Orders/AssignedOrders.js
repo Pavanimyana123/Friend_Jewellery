@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useContext } from 'react';
-import { Row, Col } from 'react-bootstrap';
+import { Row, Col, Modal } from 'react-bootstrap';
 import DataTable from '../../../Pages/InputField/DataTable'; // Import the reusable DataTable component
 import axios from "axios";
 import baseURL from '../../../../Url/NodeBaseURL';
@@ -12,10 +12,18 @@ const AssignedOrders = () => {
   const { user } = useContext(AuthContext);
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isModalOpenImg, setIsModalOpenImg] = useState(false);
   const [currentRow, setCurrentRow] = useState(null);
   const [comment, setComment] = useState("");
   const [newWorkStatus, setNewWorkStatus] = useState("Pending"); // State to hold the new work status
+  const [modalImage, setModalImage] = useState("");
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  
+    // Function to open image in modal
+    const handleImageClick = (imageSrc) => {
+      setModalImage(imageSrc);
+      setIsModalOpenImg(true);
+    };
 
   const columns = React.useMemo(
     () => [
@@ -193,41 +201,26 @@ const AssignedOrders = () => {
         },
       },
       {
-        Header: 'Image',
-        accessor: 'image_url',
-        Cell: ({ value }) => {
-          const handleImageClick = () => {
-            if (value) {
-              const newWindow = window.open();
-              if (newWindow) {
-                newWindow.document.write(`
-                  <html>
-                    <head>
-                      <title>Order Image</title>
-                    </head>
-                    <body style="margin:0; display:flex; justify-content:center; align-items:center; height:100vh;">
-                      <img src="${baseURL}${value}" alt="Order Image" style="width: auto; height: auto; max-width: 90vw; max-height: 90vh;" />
-                    </body>
-                  </html>
-                `);
-                newWindow.document.close(); // Close document stream to fully load content
-              }
-            }
-          };
-
-          return value ? (
+        Header: "Image",
+        accessor: "image_url",
+        Cell: ({ value }) =>
+          value ? (
             <img
               src={`${baseURL}${value}`}
               alt="Order Image"
-              style={{ width: '50px', height: '50px', borderRadius: '5px', objectFit: 'cover', cursor: 'pointer' }}
-              onClick={handleImageClick}
-              onError={(e) => (e.target.src = "/placeholder.png")}
+              style={{
+                width: "50px",
+                height: "50px",
+                borderRadius: "5px",
+                objectFit: "cover",
+                cursor: "pointer",
+              }}
+              onClick={() => handleImageClick(`${baseURL}${value}`)}
             />
           ) : (
-            'No Image'
-          );
-        }
-      }
+            "No Image"
+          ),
+      },
     ],
     []
   );
@@ -306,6 +299,18 @@ const AssignedOrders = () => {
         comment={comment}
         setComment={setComment}
       />
+      <Modal show={isModalOpenImg} onHide={() => setIsModalOpenImg(false)} centered>
+              <Modal.Header closeButton>
+                <Modal.Title>Image Preview</Modal.Title>
+              </Modal.Header>
+              <Modal.Body className="d-flex justify-content-center">
+                <img
+                  src={modalImage}
+                  alt="Enlarged Order"
+                  style={{ maxWidth: "100%", maxHeight: "80vh", borderRadius: "10px" }}
+                />
+              </Modal.Body>
+            </Modal>
     </>
   );
 };

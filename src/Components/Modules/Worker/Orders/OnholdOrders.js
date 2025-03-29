@@ -11,7 +11,7 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import DataTable from '../../../Pages/InputField/DataTable';
-import { Row, Col } from 'react-bootstrap';
+import { Row, Col, Modal } from 'react-bootstrap';
 import './OnholdOrders.css';
 import axios from "axios";
 import baseURL from '../../../../Url/NodeBaseURL';
@@ -22,6 +22,14 @@ const OnholdOrders = () => {
   const { user } = useContext(AuthContext);
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [modalImage, setModalImage] = useState("");
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  // Function to open image in modal
+  const handleImageClick = (imageSrc) => {
+    setModalImage(imageSrc);
+    setIsModalOpen(true);
+  };
 
   const columns = React.useMemo(
     () => [
@@ -74,50 +82,35 @@ const OnholdOrders = () => {
       },
       { Header: 'Order Status', accessor: 'order_status', Cell: ({ row }) => row.original.order_status || 'N/A' },
       {
-        Header: 'Work Status', 
+        Header: 'Work Status',
         accessor: 'work_status',
         Cell: ({ row }) => (
           <span style={{ color: row.original.work_status === 'Hold' ? 'Orange' : 'black' }}>
             {row.original.work_status || 'N/A'}
           </span>
-       ),
+        ),
       },
       {
-        Header: 'Image',
-        accessor: 'image_url',
-        Cell: ({ value }) => {
-          const handleImageClick = () => {
-            if (value) {
-              const newWindow = window.open();
-              if (newWindow) {
-                newWindow.document.write(`
-                  <html>
-                    <head>
-                      <title>Order Image</title>
-                    </head>
-                    <body style="margin:0; display:flex; justify-content:center; align-items:center; height:100vh;">
-                      <img src="${baseURL}${value}" alt="Order Image" style="width: auto; height: auto; max-width: 90vw; max-height: 90vh;" />
-                    </body>
-                  </html>
-                `);
-                newWindow.document.close(); // Close document stream to fully load content
-              }
-            }
-          };
-      
-          return value ? (
+        Header: "Image",
+        accessor: "image_url",
+        Cell: ({ value }) =>
+          value ? (
             <img
               src={`${baseURL}${value}`}
               alt="Order Image"
-              style={{ width: '50px', height: '50px', borderRadius: '5px', objectFit: 'cover', cursor: 'pointer' }}
-              onClick={handleImageClick}
-              onError={(e) => (e.target.src = "/placeholder.png")}
+              style={{
+                width: "50px",
+                height: "50px",
+                borderRadius: "5px",
+                objectFit: "cover",
+                cursor: "pointer",
+              }}
+              onClick={() => handleImageClick(`${baseURL}${value}`)}
             />
           ) : (
-            'No Image'
-          );
-        }
-      }  
+            "No Image"
+          ),
+      },
     ],
     []
   );
@@ -165,6 +158,18 @@ const OnholdOrders = () => {
           )}
         </div>
       </div>
+      <Modal show={isModalOpen} onHide={() => setIsModalOpen(false)} centered>
+        <Modal.Header closeButton>
+          <Modal.Title>Image Preview</Modal.Title>
+        </Modal.Header>
+        <Modal.Body className="d-flex justify-content-center">
+          <img
+            src={modalImage}
+            alt="Enlarged Order"
+            style={{ maxWidth: "100%", maxHeight: "80vh", borderRadius: "10px" }}
+          />
+        </Modal.Body>
+      </Modal>
     </>
   );
 };
