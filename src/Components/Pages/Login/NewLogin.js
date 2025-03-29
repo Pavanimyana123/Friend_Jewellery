@@ -66,14 +66,14 @@ function NewLogin() {
 
   return (
     <div
-      className="container-fluid d-flex align-items-center vh-100"
+      className="container-fluid d-flex align-items-center vh-100 bg-image"
       style={{
         background: `url(${backgroundImage}) no-repeat center center/cover`,
       }}
     >
       <div className="col-md-6 d-flex justify-content-center ms-auto me-4">
         <div
-          className="p-4 shadow-lg"
+          className="p-4 shadow-lg login-card"
           style={{
             background: "rgba(255, 255, 255, 0.9)",
             borderRadius: "15px",

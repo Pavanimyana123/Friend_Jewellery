@@ -9,7 +9,7 @@
 }
 
 /* Centered Card */
-.login-card {
+/* .login-card {
     display: flex;
     width: 700px;
     height: 420px;
@@ -22,7 +22,7 @@
 
 .login-card:hover {
     transform: scale(1.02);
-}
+} */
 
 /* Left Side - Jewellery Image */
 .login-image {
@@ -129,11 +129,11 @@ h3 {
 
 /* Responsive Design */
 @media (max-width: 768px) {
-    .login-card {
+    /* .login-card {
         flex-direction: column;
-        width: 90%;
+        width: 100%;
         height: auto;
-    }
+    } */
 
     .login-image {
         height: 220px;
@@ -151,7 +151,7 @@ h3 {
     .password-toggle {
         position: absolute;
         right: 13%;
-        top: 53%;
+        top: 54%;
         transform: translateY(-50%);
         cursor: pointer;
         color: #555;
@@ -163,11 +163,22 @@ h3 {
 
     .password-toggle {
         position: absolute;
-        right: 21%;
+        right: 20%;
         top: 53%;
         transform: translateY(-50%);
         cursor: pointer;
         color: #555;
+      }
+
+      .login-card {
+        width: 100% !important;
+        min-width: 335px !important; /* Adjust this value as needed */
+        padding: 20px !important;
+        align-items: center;
+      }
+
+      .bg-image {
+        background: #05254d !important;
       }
 
 }
