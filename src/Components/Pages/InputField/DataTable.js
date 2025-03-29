@@ -20,61 +20,67 @@ function GlobalFilter({
   allFiltersSet,
 }) {
   return (
-    <div className="dataTable_search mb-3 d-flex align-items-center gap-2">
-      {/* Search Input with Clear Icon */}
-      <div style={{ position: "relative", maxWidth: "200px" }}>
-        <input
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          className="form-control"
-          placeholder="🔍 Search..."
-          style={{ paddingRight: "30px" }}
-        />
-        {searchTerm && (
-          <FaTimes
-            onClick={() => setSearchTerm("")}
-            className="text-danger"
-            title="Clear Search"
-            style={{
-              position: "absolute",
-              right: "8px",
-              top: "50%",
-              transform: "translateY(-50%)",
-              cursor: "pointer",
-            }}
+    <div className="dataTable_search mb-3">
+      <div className="row g-2">
+        {/* Search Input (Full width on mobile, limited on desktop) */}
+        <div className="col-12 col-md-auto" style={{ position: "relative", maxWidth: "200px" }}>
+          <input
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="form-control"
+            placeholder="🔍 Search..."
+            style={{ paddingRight: "30px" }}
           />
-        )}
+          {searchTerm && (
+            <FaTimes
+              onClick={() => setSearchTerm("")}
+              className="text-danger"
+              title="Clear Search"
+              style={{
+                position: "absolute",
+                right: "8px",
+                top: "50%",
+                transform: "translateY(-50%)",
+                cursor: "pointer",
+              }}
+            />
+          )}
+        </div>
+
+        {/* Date Filters (Second row in mobile, same row in desktop) */}
+        <div className="col-12 col-md-auto d-flex gap-2 flex-wrap">
+          <input
+            type="date"
+            value={fromDate}
+            onChange={(e) => setFromDate(e.target.value)}
+            className="form-control"
+            style={{ maxWidth: "150px" }}
+          />
+          <input
+            type="date"
+            value={toDate}
+            onChange={(e) => setToDate(e.target.value)}
+            className="form-control"
+            style={{ maxWidth: "150px" }}
+          />
+          {/* Clear Filters Icon (Only when fromDate and toDate are set) */}
+          {allFiltersSet && (
+            <FaTimes
+              onClick={clearFilters}
+              className="text-danger fs-4 cursor-pointer"
+              title="Clear Filters"
+              style={{ cursor: "pointer", marginTop:'7px' }}
+            />
+          )}
+        </div>
       </div>
-
-      {/* From Date Input */}
-      <input
-        type="date"
-        value={fromDate}
-        onChange={(e) => setFromDate(e.target.value)}
-        className="form-control"
-        style={{ maxWidth: "150px" }}
-      />
-      {/* To Date Input */}
-      <input
-        type="date"
-        value={toDate}
-        onChange={(e) => setToDate(e.target.value)}
-        className="form-control"
-        style={{ maxWidth: "150px" }}
-      />
-
-      {/* Clear Filters Icon (Only when fromDate and toDate are set) */}
-      {allFiltersSet && (
-        <FaTimes
-          onClick={clearFilters}
-          className="text-danger fs-4 cursor-pointer"
-          title="Clear Filters"
-          style={{ cursor: "pointer" }}
-        />
-      )}
     </div>
   );
 }
+
+
+
+
 
 // Reusable DataTable Component
 export default function DataTable({ columns, data }) {
@@ -197,7 +203,7 @@ export default function DataTable({ columns, data }) {
       </div>
 
       <div className="d-flex align-items-center justify-content-between mt-3">
-        <div className="dataTable_pageInfo">
+        <div className="dataTable_pageInfo" style={{marginLeft:'-20px'}}>
           Page{" "}
           <strong>
             {pageIndex + 1} of {pageOptions.length}
