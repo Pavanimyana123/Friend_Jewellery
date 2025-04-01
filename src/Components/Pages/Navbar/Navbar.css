@@ -187,6 +187,7 @@
   height: 3px;
   background-color: #f2cc5d;
   transition: all 0.3s ease;
+  margin-left: 33px;
 }
 
 /* Close button (X) effect */
@@ -221,6 +222,7 @@
   font-weight: bold;
   /* color: rgb(163, 110, 41); */
   color: #f2cc5d;
+  white-space: nowrap;
 }
 
 .logout-desktop {
@@ -344,6 +346,7 @@
     font-weight: bold;
     /* color: rgb(163, 110, 41); */
     color: #f2cc5d;
+    white-space: nowrap;
   }
   .navbar-logout {
     display: none;
@@ -377,6 +380,7 @@
   }
   .navbar-brand img {
     height: 60px;
+    margin-left: -31px;
   }
 
   .navbar-links {
@@ -442,24 +446,25 @@
 
   .navbar-logo {
     font-size: 1.2rem;
-    margin-left: -35px;
+    margin-left: -30px;
   }
 
   .username {
     margin-right: 337px;
-    margin-left: -140px;
+    margin-left: -188px;
     margin-top: 2px;
-    font-size: 23px;
+    font-size: 15px;
     font-weight: bold;
     /* color: rgb(163, 110, 41); */
     color: #f2cc5d;
+    white-space: nowrap;
   }
 
   .navbar-hamburger {
     display: flex;
     z-index: 1000;
     margin-left: 166px;
-    margin-right: -15px;
+    margin-right: -100px;
   }
 }
 
