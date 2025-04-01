@@ -56,8 +56,8 @@ h2 {
 }
 
 .product-image {
-  width: auto;
-  height: 250px;
+  width: 250px;
+  height: auto;
   border-radius: 5px;
   object-fit: cover;
   cursor: pointer;
