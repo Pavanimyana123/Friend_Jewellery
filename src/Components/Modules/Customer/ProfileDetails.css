@@ -1,0 +1,39 @@
+ 
+.profile-details-container {
+    max-width: 1400px;
+    margin: 20px auto;
+    /* padding: 0 15px; */
+    padding-top: 20px;
+}
+
+.card {
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+
+}
+
+.card-header {
+    background-color: #f8f9fa;
+    border-bottom: 1px solid #dee2e6;
+    padding: 15px;
+}
+
+.card-body {
+    padding: 20px;
+}
+
+.table {
+    margin-bottom: 20px;
+}
+
+.table td {
+    padding: 12px;
+}
+
+
+.btn {
+    min-width: 120px;
+}
+.profile-buttons{
+    justify-content: flex-start;
+}

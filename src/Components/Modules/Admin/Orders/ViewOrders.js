@@ -443,6 +443,21 @@ const ViewOrders = () => {
   //   setSelectedRows([]);
   // };
 
+  const getStatusColor = (status) => {
+    switch (status) {
+      case "Pending":
+        return "red";
+      case "Completed":
+        return "green";
+      case "In Progress":
+        return "orange"; // Warning color
+      case "Hold":
+        return "orange";
+      default:
+        return "black";
+    }
+  };
+
   const columns = React.useMemo(
     () => [
       {
@@ -654,12 +669,12 @@ const ViewOrders = () => {
         Cell: ({ row }) => row.original.worker_name || 'N/A',
       },
       {
-        Header: 'Work Status',
-        accessor: 'work_status',
-        id: 'work_status', // Add an ID for the work status column
+        Header: "Work Status",
+        accessor: "work_status",
+        id: "work_status", // Add an ID for the work status column
         Cell: ({ row }) => (
-          <span style={{ color: row.original.work_status === 'Pending' ? 'red' : 'black' }}>
-            {row.original.work_status || 'N/A'}
+          <span style={{ color: getStatusColor(row.original.work_status) }}>
+            {row.original.work_status || "N/A"}
           </span>
         ),
       },

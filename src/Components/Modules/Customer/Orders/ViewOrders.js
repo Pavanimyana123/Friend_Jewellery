@@ -155,7 +155,7 @@ const ViewOrders = () => {
                 <div className="order-card" key={index}>
                   <div className="order-header">
                     <span><strong>Order ID:</strong> <span>{order.order_number}</span></span>
-                    <span><strong>Total Amount:</strong> <span>₹{order.total_price}</span></span>
+                    {/* <span><strong>Total Amount:</strong> <span>₹{order.total_price}</span></span> */}
                     <span>
                       <strong>Status:</strong>
                       <span>
@@ -166,6 +166,7 @@ const ViewOrders = () => {
                             : order.order_status}
                       </span>
                     </span>
+                    <span><strong>Worker Status:</strong> <span>{order.work_status}</span></span>
                     <span><strong>Order Date:</strong> <span>{new Date(order.date).toLocaleDateString()}</span></span>
 
                     <div className="order-actions">
@@ -229,7 +230,7 @@ const ViewOrders = () => {
                         <p><strong>Gross Wt:</strong> <span>{order.gross_weight}</span></p>
                         <p><strong>Purity:</strong> <span>{order.purity}</span></p>
                         <p><strong>Quantity:</strong> <span>{order.qty}</span></p>
-                        <p><strong>Price:</strong> <span>₹{order.total_price}</span></p>
+                        <p><strong>Total Price:</strong> <span>₹{order.total_price}</span></p>
                       </div>
 
                     </div>

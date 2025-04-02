@@ -34,6 +34,7 @@ import DesignReq from "./Components/Modules/Admin/Orders/DesignReq";
 import EditOrdersForm from "./Components/Modules/Admin/Orders/EditOrdersForm";
 import PendingOrders from "./Components/Modules/Worker/Orders/PendingOrders";
 import OnholdOrders from "./Components/Modules/Worker/Orders/OnholdOrders";
+import ProfileDetails from "./Components/Modules/Customer/ProfileDetails";
 
 export default function MainApp() {
   return (
@@ -195,6 +196,15 @@ export default function MainApp() {
             element={
               <ProtectedRoute>
                 <CancelOrders />
+              </ProtectedRoute>
+            }
+          />
+           <Route
+            path="/profile-details"
+            exact
+            element={
+              <ProtectedRoute>
+                <ProfileDetails />
               </ProtectedRoute>
             }
           />

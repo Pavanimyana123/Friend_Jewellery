@@ -663,11 +663,21 @@ function Order() {
                   />
                 </Col>
                 <Col xs={12} md={2}>
+                  <InputField label="Size" name="o_size" value={formData.o_size} type="text" onChange={handleChange} />
+                </Col>
+                <Col xs={12} md={2}>
+                  <InputField label="Length" name="o_length" value={formData.o_length} type="text" onChange={handleChange} />
+                </Col>
+                <Col xs={12} md={2}>
                   <InputField label="Gross Wt" name="gross_weight" value={formData.gross_weight} type="text" onChange={handleChange} />
                 </Col>
                 <Col xs={12} md={2}>
                   <InputField label="Stone Wt" name="stone_weight" value={formData.stone_weight} type="text" onChange={handleChange} />
                 </Col>
+                <Col xs={12} md={2}>
+                  <InputField label="Stone Name" name="stone_name" value={formData.stone_name} type="text" onChange={handleChange} />
+                </Col>
+        
                 <Col xs={12} md={2}>
                   <InputField label="St Price" name="stone_price" value={formData.stone_price} type="text" onChange={handleChange} />
                 </Col>
