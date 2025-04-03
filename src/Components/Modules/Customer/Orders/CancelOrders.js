@@ -1,12 +1,14 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import DataTable from "../../../Pages/InputField/TableLayout"; // Import DataTable component
 import { Row, Col, Modal } from "react-bootstrap";
 import "./ViewOrders.css";
 import baseURL from "../../../../Url/NodeBaseURL";
 import CustomerNavbar from "../../../Pages/Navbar/CustomerNavbar";
+import { AuthContext } from "../../../AuthContext/ContextApi";
 
 const CancelOrders = () => {
+  const { user } = useContext(AuthContext);
   const navigate = useNavigate();
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -106,14 +108,15 @@ const CancelOrders = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch(`${baseURL}/api/orders`);
+        const response = await fetch(`${baseURL}/api/orders`); 
         if (!response.ok) {
           throw new Error("Failed to fetch data");
         }
         const result = await response.json();
 
         // Filter only cancelled orders
-        const cancelledOrders = result.filter((order) => order.order_status === "Canceled");
+        const cancelledOrders = result.filter((order) => order.account_id === user?.id && order.order_status === "Canceled");
+        // const filteredData = result.filter(order => order.worker_id === user?.id && order.work_status === "In Progress");
 
         setData(cancelledOrders.reverse()); // Reverse to show latest orders first
         console.log("Cancelled Orders:", cancelledOrders);

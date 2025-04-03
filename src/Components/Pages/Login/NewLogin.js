@@ -1,6 +1,6 @@
 import Swal from "sweetalert2";
 import React, { useState, useContext } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { AuthContext } from "../../AuthContext/ContextApi";
 import axios from "axios";
 import backgroundImage from "../../../Components/assets/nfj.jpg";
@@ -132,11 +132,11 @@ function NewLogin() {
               Login
             </button>
 
-             <div className="text-center">
-              {/* <span>Don't have an account? </span> */}
-              {/* <Link to="/v-register" className="text-decoration-none fw-bold">
+             <div className="text-center mt-3">
+              <span>Don't have an account? </span>
+               <Link to="/c-register" className="text-decoration-none fw-bold">
                 Register Here
-              </Link> */}
+              </Link>
             </div> 
           </form>
         </div>

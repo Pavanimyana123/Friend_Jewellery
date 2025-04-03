@@ -12,7 +12,6 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import Login from "./Components/Pages/Login/Login";
 import NewLogin from "./Components/Pages/Login/NewLogin"
-import SignUp from "./Components/Pages/SignUp/SignUp";
 import AdminCustomer from "./Components/Modules/Admin/Customer/Customer";
 import AdminWorker from "./Components/Modules/Admin/Worker/Worker";
 import AdminDashboard from "./Components/Modules/Admin/Dashboard/Dashboard";
@@ -35,6 +34,8 @@ import EditOrdersForm from "./Components/Modules/Admin/Orders/EditOrdersForm";
 import PendingOrders from "./Components/Modules/Worker/Orders/PendingOrders";
 import OnholdOrders from "./Components/Modules/Worker/Orders/OnholdOrders";
 import ProfileDetails from "./Components/Modules/Customer/ProfileDetails";
+import Register from "./Components/Pages/Register/Register";
+import OTPVerification from "./Components/Pages/Register/OTPVerification";
 
 export default function MainApp() {
   return (
@@ -43,7 +44,9 @@ export default function MainApp() {
         <Routes>
           {/* Public Routes */}
           <Route path="/" exact element={<NewLogin />} />
-          <Route path="/signup" exact element={<SignUp />} />
+          <Route path="/login" element={<NewLogin />} />
+          <Route path="/c-register" exact element={<Register />} />
+          <Route path="/verify-otp" element={<OTPVerification />} />
 
           {/* Protected Routes */}
           <Route
