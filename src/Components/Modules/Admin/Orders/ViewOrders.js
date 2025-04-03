@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import DataTable from '../../../Pages/InputField/DataTable';
-import { Button, Row, Col,Modal } from 'react-bootstrap';
+import { Button, Row, Col, Modal } from 'react-bootstrap';
 import './ViewOrders.css';
 import axios from "axios";
 import { FaEdit, FaTrash } from 'react-icons/fa';
@@ -12,6 +12,7 @@ import autoTable from "jspdf-autotable"; // ✅ Ensure this is installed and imp
 import * as XLSX from 'xlsx';
 import { pdf } from "@react-pdf/renderer";
 import TaxINVoiceReceipt from "./TaxInvoiceA4";
+import EstimateReceipt from './EstimateReceipt';
 import { saveAs } from "file-saver";
 
 const ViewOrders = () => {
@@ -27,13 +28,11 @@ const ViewOrders = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalImage, setModalImage] = useState("");
 
-   // Function to open image in modal
-   const handleImageClick = (imageSrc) => {
+  const handleImageClick = (imageSrc) => {
     setModalImage(imageSrc);
     setIsModalOpen(true);
   };
 
-  // Fetch workers
   useEffect(() => {
     const fetchWorkers = async () => {
       try {
@@ -56,7 +55,6 @@ const ViewOrders = () => {
     fetchWorkers();
   }, []);
 
-  // Fetch orders
   const fetchData = async () => {
     try {
       const response = await fetch(`${baseURL}/api/orders`);
@@ -76,7 +74,6 @@ const ViewOrders = () => {
     fetchData();
   }, []);
 
-  // Function to update assigned worker in backend
   const updateOrderWithWorker = async (orderId, workerId, workerName) => {
     try {
       const response = await fetch(`${baseURL}/api/orders/assign/${orderId}`, {
@@ -110,7 +107,6 @@ const ViewOrders = () => {
     }
   };
 
-  // Function to delete order
   const handleDelete = async (id) => {
     if (!window.confirm("Are you sure you want to delete this order?")) {
       return;
@@ -170,60 +166,19 @@ const ViewOrders = () => {
     XLSX.writeFile(workbook, fileName);
   };
 
-  // const handleRowSelect = (rowId) => {
-  //   setSelectedRows((prevSelected) =>
-  //     prevSelected.includes(rowId)
-  //       ? prevSelected.filter((id) => id !== rowId)
-  //       : [...prevSelected, rowId]
-  //   );
-  // };
-
-  // const handleSelectAll = () => {
-  //   if (selectedRows.length === data.length) {
-  //     setSelectedRows([]);
-  //   } else {
-  //     setSelectedRows(data.map((row) => row.id));
-  //   }
-  // };
-
-
-  // const downloadPDF = () => {
-  //   if (selectedRows.length === 0) {
-  //     alert("Please select at least one order to download.");
-  //     return;
-  //   }
-
-  //   const doc = new jsPDF();
-  //   doc.text("Selected Orders", 10, 10);
-
-  //   // Prepare data for the table
-  //   const tableData = selectedRows.map((id) => {
-  //     const row = data.find((order) => order.id === id);
-  //     return [row.id, row.date, row.account_name, row.order_number, row.metal, row.total_price];
-  //   });
-
-  //   // Use autoTable to create the table
-  //   autoTable(doc, {
-  //     head: [["ID", "Date", "Customer", "Order No.", "Metal", "Total Amount"]],
-  //     body: tableData,
-  //   });
-
-  //   doc.save("Selected_Orders.pdf");
-  // };
-
   const handleRowSelect = (rowId) => {
     const selectedOrder = data.find((order) => order.id === rowId);
-  
+
     if (selectedRows.length > 0) {
       const firstSelectedOrder = data.find((order) => order.id === selectedRows[0]);
-  
+
       // Check if the selected mobile number is different
       if (selectedOrder.mobile !== firstSelectedOrder.mobile) {
         alert("You can only select orders with the same mobile number.");
         return;
       }
     }
-  
+
     // Proceed with selection logic
     setSelectedRows((prevSelected) =>
       prevSelected.includes(rowId)
@@ -237,80 +192,58 @@ const ViewOrders = () => {
       setSelectedRows([]); // Deselect all if already selected
       return;
     }
-  
+
     if (data.length === 0) return; // No data available
-  
+
     const firstMobileNumber = data[0].mobile; // Get the mobile number of the first order
-  
+
     // Filter orders that match the first mobile number
     const sameMobileOrders = data.filter((order) => order.mobile === firstMobileNumber);
-  
+
     if (sameMobileOrders.length !== data.length) {
       alert("You can only select orders with the same mobile number.");
       return;
     }
-  
+
     // Select only orders with the same mobile number
     setSelectedRows(sameMobileOrders.map((row) => row.id));
   };
-  
 
   const generateInvoiceNumber = (latestInvoice) => {
     if (!latestInvoice) return "INV001"; // Start from INV001 if none exist
-  
+
     // Extract the numeric part and increment it
     const match = latestInvoice.match(/INV(\d+)/);
     if (match) {
       const nextNumber = String(parseInt(match[1]) + 1).padStart(3, "0"); // Increment and pad
       return `INV${nextNumber}`;
     }
-  
+
     return "INV001"; // Fallback
   };
 
-  const handleSavePDFToServer = async (pdfBlob, invoiceNumber) => {
-    const formData = new FormData();
-    formData.append("invoice", pdfBlob, `${invoiceNumber}.pdf`);
-  
-    try {
-      const response = await fetch(`${baseURL}/api/upload-invoice`, {
-        method: "POST",
-        body: formData,
-      });
-  
-      if (!response.ok) {
-        throw new Error("Failed to upload invoice");
-      }
-  
-      console.log(`Invoice ${invoiceNumber} saved on server`);
-    } catch (error) {
-      console.error("Error uploading invoice:", error);
-    }
-  };
-  
-  
   const downloadPDF = async () => {
     if (selectedRows.length === 0) {
       alert("Please select at least one order to download.");
       return;
     }
-  
+
     // Prepare selected data
     const selectedOrders = data.filter((order) => selectedRows.includes(order.id));
     setSelectedData(selectedOrders);
-  
+
     try {
       // Fetch the latest invoice number
       const response = await fetch(`${baseURL}/api/get-latest-invoice`);
       const result = await response.json();
-      
+
       const latestInvoice = result.latestInvoiceNumber; // Get the latest invoice number from DB
       const newInvoiceNumber = generateInvoiceNumber(latestInvoice); // Generate new number
-  
+
       // Generate PDF Blob with Invoice Number
       const doc = <TaxINVoiceReceipt selectedOrders={selectedOrders} invoiceNumber={newInvoiceNumber} />;
       const pdfBlob = await pdf(doc).toBlob();
-  
+
       // Trigger download
       saveAs(pdfBlob, `${newInvoiceNumber}.pdf`);
       await handleSavePDFToServer(pdfBlob, newInvoiceNumber);
@@ -326,9 +259,9 @@ const ViewOrders = () => {
           invoiceNumber: newInvoiceNumber, // Send the invoice number
         }),
       });
-  
+
       alert(`Invoice ${newInvoiceNumber} generated successfully`);
-  
+
       setSelectedRows([]);
       fetchData();
     } catch (error) {
@@ -336,112 +269,85 @@ const ViewOrders = () => {
       alert("Failed to generate invoice.");
     }
   };
-  
-  
-  
 
-  // const downloadPDF = () => {
-  //   if (selectedRows.length === 0) {
-  //     alert("Please select at least one order to download.");
-  //     return;
-  //   }
+  const handleSavePDFToServer = async (pdfBlob, invoiceNumber) => {
+    const formData = new FormData();
+    formData.append("invoice", pdfBlob, `${invoiceNumber}.pdf`);
 
-  //   const doc = new jsPDF();
+    try {
+      const response = await fetch(`${baseURL}/api/upload-invoice`, {
+        method: "POST",
+        body: formData,
+      });
 
-  //   // Company Header
-  //   doc.setFontSize(16);
-  //   doc.text("Company Name", 10, 15);
-  //   doc.setFontSize(10);
-  //   doc.text("M/S NEW FRIENDS JEWELLERS", 10, 22);
-  //   doc.text("Phone: 1234567890 | Email: friendsjewellery@gmail.com", 10, 28);
-  //   doc.text("----------------------------------------------------", 10, 32);
+      if (!response.ok) {
+        throw new Error("Failed to upload invoice");
+      }
 
-  //   // Invoice Title
-  //   doc.setFontSize(14);
-  //   doc.text("INVOICE", 90, 40);
+      console.log(`Invoice ${invoiceNumber} saved on server`);
+    } catch (error) {
+      console.error("Error uploading invoice:", error);
+    }
+  };
 
-  //   // Invoice Metadata
-  //   const dateObj = new Date();
-  //   const date = `${dateObj.getDate().toString().padStart(2, '0')}/${(dateObj.getMonth() + 1).toString().padStart(2, '0')}/${dateObj.getFullYear()}`;
+  const generateEstimateNumber = (latestEstimate) => {
+    if (!latestEstimate) return "EST001"; // Start from EST001 if none exist
 
-  //   doc.setFontSize(10);
-  //   doc.text(`Invoice Date: ${date}`, 150, 50);
+    const match = latestEstimate.match(/EST(\d+)/);
+    if (match) {
+      const nextNumber = String(parseInt(match[1]) + 1).padStart(3, "0"); // Increment and pad
+      return `EST${nextNumber}`;
+    }
 
+    return "EST001"; // Fallback
+  };
 
-  //   // Prepare order data
-  //   const tableData = selectedRows.map((id, index) => {
-  //     const row = data.find((order) => order.id === id);
-  //     if (!row) return []; // Prevents errors if row is undefined
+  const downloadEstimatePDF = async () => {
+    if (selectedRows.length === 0) {
+      alert("Please select at least one order to download the estimate.");
+      return;
+    }
 
-  //     const totalPrice = parseFloat(row.total_price) || 0; // Convert safely
-  //     return [
-  //       index + 1,
-  //       row.order_number || "N/A",
-  //       row.account_name || "N/A",
-  //       row.subcategory || "N/A",
-  //       row.product_design_name || "N/A",
-  //       row.purity || "N/A",
-  //       row.gross_weight || "N/A",
-  //       row.stone_weight || "N/A",
-  //       row.total_weight_aw || "N/A",  
-  //       `$${totalPrice.toFixed(2)}`,
-  //     ];
-  //   });
+    const selectedOrders = data.filter((order) => selectedRows.includes(order.id));
+    setSelectedData(selectedOrders);
 
-  //   // Ensure there is data to display
-  //   if (tableData.length === 0) {
-  //     alert("No valid data to generate a PDF.");
-  //     return;
-  //   }
+    try {
+      // Fetch the latest estimate number
+      const response = await fetch(`${baseURL}/api/get-latest-estimate`);
+      const result = await response.json();
 
-  //   // Generate Invoice Table and Get `finalY`
-  //   autoTable(doc, {
-  //     startY: 60,
-  //     head: [
-  //       [
-  //         "SI",
-  //         "Order No.",
-  //         "Customer",
-  //         "Sub Category",
-  //         "Design Name",
-  //         "Purity",
-  //         "Gross Wt",
-  //         "Stone Wt",
-  //         "Total Wt",
-  //         "Total Amount",
-  //       ],
-  //     ],
-  //     body: tableData,
-  //     theme: "striped",
-  //     styles: { fontSize: 8 }, // Decrease body font size
-  //     headStyles: { fillColor: [44, 62, 80], fontSize: 9 }, // Decrease header font size
-  //   });
+      const latestEstimate = result.latestEstimateNumber;
+      const newEstimateNumber = generateEstimateNumber(latestEstimate);
 
+      // Generate PDF Blob with Estimate Number
+      const doc = <EstimateReceipt selectedOrders={selectedOrders} estimateNumber={newEstimateNumber} />;
+      const pdfBlob = await pdf(doc).toBlob();
 
-  //   // Get `finalY` safely
-  //   const finalY = doc.lastAutoTable ? doc.lastAutoTable.finalY : 70;
+      // Trigger download
+      saveAs(pdfBlob, `${newEstimateNumber}.pdf`);
+      await handleSavePDFToServer(pdfBlob, newEstimateNumber);
 
-  //   // Calculate Total Amount
-  //   const totalAmount = tableData.reduce((sum, row) => {
-  //     const price = parseFloat(row[9]?.replace("$", "")) || 0;
-  //     return sum + price;
-  //   }, 0);
+      // Optional: Update database to mark estimate generated
+      await fetch(`${baseURL}/api/update-estimate-status`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          orderIds: selectedRows,
+          estimateNumber: newEstimateNumber, // Send the estimate number
+        }),
+      });
 
-  //   // Total Amount Section
-  //   doc.setFontSize(12);
-  //   doc.setFont("helvetica", "bold");
-  //   doc.text(`Total Amount: $${totalAmount.toFixed(2)}`, 140, finalY + 10);
-  //   doc.setFont("helvetica", "normal");
+      alert(`Estimate ${newEstimateNumber} generated successfully`);
 
-  //   // Footer Section
-  //   doc.setFontSize(10);
-  //   doc.text("Thank you for your business!", 10, finalY + 20);
-  //   doc.text("Terms & Conditions: Payment is due within 15 days.", 10, finalY + 30);
-
-  //   doc.save("Invoice.pdf");
-
-  //   setSelectedRows([]);
-  // };
+      setSelectedRows([]);
+      fetchData();
+    } catch (error) {
+      console.error("Error generating estimate:", error);
+      alert("Failed to generate estimate.");
+    }
+  };
 
   const getStatusColor = (status) => {
     switch (status) {
@@ -466,7 +372,7 @@ const ViewOrders = () => {
             type="checkbox"
             checked={selectedRows.length === data.length && data.length > 0}
             onChange={handleSelectAll}
-            // disabled={data.every(row => row.invoice_generated === "Yes")} // Disable if all are invoiced
+          // disabled={data.every(row => row.invoice_generated === "Yes")} // Disable if all are invoiced
           />
         ),
         Cell: ({ row }) => (
@@ -479,7 +385,7 @@ const ViewOrders = () => {
         ),
         id: "select",
       },
-      
+
       {
         Header: "Invoice",
         Cell: ({ row }) =>
@@ -488,6 +394,7 @@ const ViewOrders = () => {
               href={`${baseURL}/invoices/${row.original.invoice_number}.pdf`} // Fetch from backend
               target="_blank"
               rel="noopener noreferrer"
+              style={{textDecoration:'none'}}
             >
               📝 View
             </a>
@@ -496,8 +403,26 @@ const ViewOrders = () => {
           ),
         id: "invoice",
       },
-      
-      
+
+      {
+        Header: "Estimate",
+        Cell: ({ row }) =>
+          row.original.estimate_generated === "Yes" && row.original.estimate_number ? (
+            <a
+              href={`${baseURL}/invoices/${row.original.estimate_number}.pdf`} // Fetch from backend
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{textDecoration:'none'}}
+            >
+              📝 View
+            </a>
+          ) : (
+            "Not Available"
+          ),
+        id: "estimate",
+      },
+
+
       { Header: 'Sr. No.', Cell: ({ row }) => row.index + 1, id: 'sr_no' },
       {
         Header: 'Date',
@@ -708,6 +633,9 @@ const ViewOrders = () => {
               <h3>Orders</h3>
             </Col>
             <Col className="d-flex justify-content-end gap-2">
+              <Button onClick={downloadEstimatePDF} disabled={selectedRows.length === 0}>
+                Generate Estimate
+              </Button>
               <Button onClick={downloadPDF} disabled={selectedRows.length === 0}>
                 Generate Invoice
               </Button>
