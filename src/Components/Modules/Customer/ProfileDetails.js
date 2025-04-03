@@ -46,17 +46,109 @@ const ProfileDetails = () => {
         fetchProfileDetails();
     }, [user]);
 
+    // const handleInputChange = (e) => {
+    //     const { name, value } = e.target;
+    //     setFormData({
+    //         ...formData,
+    //         [name]: value
+    //     });
+    // };
+
     const handleInputChange = (e) => {
         const { name, value } = e.target;
-        setFormData({
-            ...formData,
-            [name]: value
-        });
+        let updatedValue = value.trimStart(); // Prevent leading spaces
+
+        // Define regex patterns for validation
+        const alphabetRegex = /^[A-Za-z\s]*$/; // Only letters & spaces
+        const numericRegex = /^\d*$/; // Only numbers
+        const alphanumericRegex = /^[A-Za-z0-9]*$/; // Only alphanumeric (no special chars)
+
+        switch (name) {
+            case "account_name":
+            case "print_name":
+                // Allow only alphabets and spaces
+                if (!alphabetRegex.test(updatedValue)) return;
+
+                // Capitalize first letter
+                updatedValue = updatedValue.charAt(0).toUpperCase() + updatedValue.slice(1);
+
+                setFormData((prevData) => ({
+                    ...prevData,
+                    [name]: updatedValue,
+                    ...(name === "account_name" &&
+                        prevData.print_name === prevData.account_name && {
+                        print_name: updatedValue,
+                    }),
+                }));
+                return;
+
+            case "mobile":
+            case "phone":
+                // Allow only numbers and limit to 10 digits
+                updatedValue = updatedValue.replace(/\D/g, "").slice(0, 10);
+                break;
+
+            case "aadhar_card":
+                // Allow only numbers and limit to 12 digits
+                updatedValue = updatedValue.replace(/\D/g, "").slice(0, 12);
+                break;
+
+            case "pincode":
+                // Allow only numbers and limit to 6 digits
+                updatedValue = updatedValue.replace(/\D/g, "").slice(0, 6);
+                break;
+
+            case "gst_in":
+                // GSTIN must be 15 alphanumeric characters (uppercase)
+                if (!alphanumericRegex.test(updatedValue)) return;
+                updatedValue = updatedValue.toUpperCase().slice(0, 15);
+                break;
+
+            case "pan_card":
+                // PAN must be 10 alphanumeric characters (uppercase)
+                if (!alphanumericRegex.test(updatedValue)) return;
+                updatedValue = updatedValue.toUpperCase().slice(0, 10);
+                break;
+
+            case "ifsc_code":
+                // IFSC must be exactly 11 alphanumeric characters (uppercase)
+                if (!alphanumericRegex.test(updatedValue)) return;
+                updatedValue = updatedValue.toUpperCase().slice(0, 11);
+                break;
+            case "bank_account_no":
+                // Allow only numbers and reasonable length (6-18 digits)
+                updatedValue = updatedValue.replace(/\D/g, "").slice(0, 18);
+                break;
+
+            default:
+                break;
+        }
+
+        // Update state
+        setFormData((prevData) => ({
+            ...prevData,
+            [name]: updatedValue,
+        }));
     };
 
     const validateForm = () => {
+        if (!formData.account_name?.trim()) {
+            alert("Account name is required.");
+            return false;
+        }
         if (!formData.mobile?.trim()) {
             alert("Mobile number is required.");
+            return false;
+        }
+        if (!formData.email?.trim()) {
+            alert("Email is required.");
+            return false;
+        }
+
+        // Email validation using regex
+        const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+        if (!emailRegex.test(formData.email)) {
+            alert("Invalid email format.");
             return false;
         }
 
@@ -78,6 +170,10 @@ const ProfileDetails = () => {
         }
         if (formData.ifsc_code?.trim() && formData.ifsc_code.length !== 11) {
             alert("IFSC Code must be exactly 11 characters.");
+            return false;
+        }
+        if (formData.bank_account_no?.trim() && (formData.bank_account_no.length < 6 || formData.bank_account_no.length > 18)) {
+            alert("Bank Account Number must be between 6 and 18 digits.");
             return false;
         }
 
@@ -131,8 +227,8 @@ const ProfileDetails = () => {
                             <h2 className="text-center">Personal Information</h2>
                         </div>
                         <div className="card-body">
-                            <div className="row mb-3">
-                                <div className="col-md-4">
+                            <div className="profile-row mb-3">
+                                <div className="profile-col-md-4">
                                     <label className="form-label"><strong>Full Name:</strong></label>
                                     {isEditing ? (
                                         <input
@@ -146,7 +242,7 @@ const ProfileDetails = () => {
                                         <span>{profile?.account_name || ''}</span>
                                     )}
                                 </div>
-                                {/* <div className="col-md-4">
+                                {/* <div className="profile-col-md-4">
                                 <label className="form-label"><strong>Password:</strong></label>
                                 {isEditing ? (
                                     <div className="input-group">
@@ -169,7 +265,7 @@ const ProfileDetails = () => {
                                     <span>{profile?.password || ''}</span>
                                 )}
                             </div> */}
-                                <div className="col-md-4">
+                                <div className="profile-col-md-4">
                                     <label className="form-label"><strong>Mobile:</strong></label>
                                     {isEditing ? (
                                         <input
@@ -183,7 +279,7 @@ const ProfileDetails = () => {
                                         <span>{profile?.mobile || ''}</span>
                                     )}
                                 </div>
-                                <div className="col-md-4">
+                                <div className="profile-col-md-4">
                                     <label className="form-label"><strong>Email:</strong></label>
                                     {isEditing ? (
                                         <input
@@ -198,8 +294,8 @@ const ProfileDetails = () => {
                                     )}
                                 </div>
                             </div>
-                            <div className="row mb-3">
-                                <div className="col-md-4">
+                            <div className="profile-row mb-3">
+                                <div className="profile-col-md-4">
                                     <label className="form-label"><strong>Address1:</strong></label>
                                     {isEditing ? (
                                         <input
@@ -213,7 +309,7 @@ const ProfileDetails = () => {
                                         <span>{profile?.address1 || ''}</span>
                                     )}
                                 </div>
-                                <div className="col-md-4">
+                                <div className="profile-col-md-4">
                                     <label className="form-label"><strong>Address2:</strong></label>
                                     {isEditing ? (
                                         <input
@@ -227,7 +323,7 @@ const ProfileDetails = () => {
                                         <span>{profile?.address2 || ''}</span>
                                     )}
                                 </div>
-                                <div className="col-md-4">
+                                <div className="profile-col-md-4">
                                     <label className="form-label"><strong>City:</strong></label>
                                     {isEditing ? (
                                         <input
@@ -242,8 +338,8 @@ const ProfileDetails = () => {
                                     )}
                                 </div>
                             </div>
-                            <div className="row mb-3">
-                                <div className="col-md-4">
+                            <div className="profile-row mb-3">
+                                <div className="profile-col-md-4">
                                     <label className="form-label"><strong>Pincode:</strong></label>
                                     {isEditing ? (
                                         <input
@@ -257,7 +353,7 @@ const ProfileDetails = () => {
                                         <span>{profile?.pincode || ''}</span>
                                     )}
                                 </div>
-                                <div className="col-md-4">
+                                <div className="profile-col-md-4">
                                     <label className="form-label"><strong>State:</strong></label>
                                     {isEditing ? (
                                         <input
@@ -271,7 +367,7 @@ const ProfileDetails = () => {
                                         <span>{profile?.state || ''}</span>
                                     )}
                                 </div>
-                                <div className="col-md-4">
+                                <div className="profile-col-md-4">
                                     <label className="form-label"><strong>State Code:</strong></label>
                                     {isEditing ? (
                                         <input
@@ -286,8 +382,8 @@ const ProfileDetails = () => {
                                     )}
                                 </div>
                             </div>
-                            <div className='row mb-3'>
-                                <div className="col-md-4">
+                            <div className='profile-row mb-3'>
+                                <div className="profile-col-md-4">
                                     <label className="form-label"><strong>Birthday:</strong></label>
                                     {isEditing ? (
                                         <input
@@ -301,7 +397,7 @@ const ProfileDetails = () => {
                                         <span>{profile?.birthday ? profile.birthday.split('T')[0] : ''}</span>
                                     )}
                                 </div>
-                                <div className="col-md-4">
+                                <div className="profile-col-md-4">
                                     <label className="form-label"><strong>Anniversary:</strong></label>
                                     {isEditing ? (
                                         <input
@@ -315,7 +411,7 @@ const ProfileDetails = () => {
                                         <span>{profile?.anniversary ? profile.anniversary.split('T')[0] : ''}</span>
                                     )}
                                 </div>
-                                <div className="col-md-4">
+                                <div className="profile-col-md-4">
                                     <label className="form-label"><strong>Pancard:</strong></label>
                                     {isEditing ? (
                                         <input
@@ -330,22 +426,8 @@ const ProfileDetails = () => {
                                     )}
                                 </div>
                             </div>
-                            <div className="row mb-3">
-                                <div className="col-md-4">
-                                    <label className="form-label"><strong>Bank Account No:</strong></label>
-                                    {isEditing ? (
-                                        <input
-                                            type="text"
-                                            className="form-control"
-                                            name="bank_account_no"
-                                            value={formData.bank_account_no || ''}
-                                            onChange={handleInputChange}
-                                        />
-                                    ) : (
-                                        <span>{profile?.bank_account_no || ''}</span>
-                                    )}
-                                </div>
-                                <div className="col-md-4">
+                            <div className="profile-row mb-3">
+                                <div className="profile-col-md-4">
                                     <label className="form-label"><strong>Bank Name:</strong></label>
                                     {isEditing ? (
                                         <input
@@ -359,7 +441,21 @@ const ProfileDetails = () => {
                                         <span>{profile?.bank_name || ''}</span>
                                     )}
                                 </div>
-                                <div className="col-md-4">
+                                <div className="profile-col-md-4">
+                                    <label className="form-label"><strong>Account No:</strong></label>
+                                    {isEditing ? (
+                                        <input
+                                            type="text"
+                                            className="form-control"
+                                            name="bank_account_no"
+                                            value={formData.bank_account_no || ''}
+                                            onChange={handleInputChange}
+                                        />
+                                    ) : (
+                                        <span>{profile?.bank_account_no || ''}</span>
+                                    )}
+                                </div>
+                                <div className="profile-col-md-4">
                                     <label className="form-label"><strong>IFSC Code:</strong></label>
                                     {isEditing ? (
                                         <input
@@ -374,8 +470,8 @@ const ProfileDetails = () => {
                                     )}
                                 </div>
                             </div>
-                            <div className='row mb-3'>
-                                <div className="col-md-4">
+                            <div className='profile-row mb-3'>
+                                <div className="profile-col-md-4">
                                     <label className="form-label"><strong>Branch:</strong></label>
                                     {isEditing ? (
                                         <input
@@ -389,7 +485,7 @@ const ProfileDetails = () => {
                                         <span>{profile?.branch || ''}</span>
                                     )}
                                 </div>
-                                <div className="col-md-4">
+                                <div className="profile-col-md-4">
                                     <label className="form-label"><strong>GST IN:</strong></label>
                                     {isEditing ? (
                                         <input
@@ -403,7 +499,7 @@ const ProfileDetails = () => {
                                         <span>{profile?.gst_in || ''}</span>
                                     )}
                                 </div>
-                                <div className="col-md-4">
+                                <div className="profile-col-md-4">
                                     <label className="form-label"><strong>Aadhar Card :</strong></label>
                                     {isEditing ? (
                                         <input
@@ -426,34 +522,34 @@ const ProfileDetails = () => {
                                     <>
                                         <button
                                             type="button"
-                                            className="btn btn-success"
-                                            onClick={handleSave}
-                                            disabled={saveLoading}
-                                        >
-                                            {saveLoading ? 'Saving...' : 'Save'}
-                                        </button>
-                                        <button
-                                            type="button"
                                             className="btn btn-secondary"
                                             onClick={() => setIsEditing(false)}
                                             disabled={saveLoading}
                                         >
                                             Cancel
                                         </button>
+                                        <button
+                                            type="button"
+                                            className="btn btn-success"
+                                            onClick={handleSave}
+                                            disabled={saveLoading}
+                                        >
+                                            {saveLoading ? 'Saving...' : 'Save'}
+                                        </button>
                                     </>
                                 ) : (
                                     <>
-                                        <button
-                                            className="btn btn-primary"
-                                            onClick={() => setIsEditing(true)}
-                                        >
-                                            Edit
-                                        </button>
                                         <button
                                             className="btn btn-secondary"
                                             onClick={() => navigate('/c-dashboard')}
                                         >
                                             Back
+                                        </button>
+                                        <button
+                                            className="btn btn-primary"
+                                            onClick={() => setIsEditing(true)}
+                                        >
+                                            Edit
                                         </button>
                                     </>
                                 )}

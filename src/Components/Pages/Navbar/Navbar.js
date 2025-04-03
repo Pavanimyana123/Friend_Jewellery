@@ -64,13 +64,13 @@ function Navbar() {
                 <Link
                     to="/a-customertable"
                     onClick={handleItemClick}
-                    className={window.location.pathname === '/a-customertable' ? 'active' : ''}
+                    className={location.pathname === '/a-customertable' || location.pathname === '/a-customers' ? 'active' : ''}
                 >
                     Customers</Link>
                 <Link
                     to="/a-workertable"
                     onClick={handleItemClick}
-                    className={window.location.pathname === '/a-workertable' ? 'active' : ''}
+                    className={window.location.pathname === '/a-workertable' || location.pathname === '/a-workers' ? 'active' : ''}
                 >
                     Workers</Link>
                 {/* <div className="navbar-dropdown" onMouseEnter={toggleDropdown} onMouseLeave={toggleDropdown}>
@@ -87,7 +87,7 @@ function Navbar() {
                 <Link
                     to="/a-view-orders"
                     onClick={handleItemClick}
-                    className={window.location.pathname === '/a-view-orders' ? 'active' : ''}
+                    className={window.location.pathname === '/a-view-orders' || location.pathname === '/a-orders' || location.pathname === '/a-edit-order/:id'  ? 'active' : ''}
                 >
                     Orders</Link>
                 <Link

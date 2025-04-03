@@ -32,6 +32,7 @@ function VendorNavbar() {
         navigate("/");
     };
 
+
     return (
         <header className="navbar-header">
             <div className="navbar-brand">
@@ -74,7 +75,11 @@ function VendorNavbar() {
                 <FaUserCircle className="customer-profile-icon" />
                 {profileDropdownOpen && (
                     <div className="customer-profile-dropdown">
-                        <Link to="/profile-details" onClick={handleItemClick} className="profile-dropdown-item">Profile Details</Link>
+                        <Link to="/profile-details"
+                            onClick={handleItemClick}
+                            className={`customer-profile-dropdown-item ${isActive('/profile-details')}`}>
+                            Profile
+                        </Link>
                         <div className="customer-profile-dropdown-item" onClick={handleLogout}>Logout</div>
                     </div>
                 )}

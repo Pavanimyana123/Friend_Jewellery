@@ -9,7 +9,7 @@ import { Row, Col, Button } from 'react-bootstrap';
 import baseURL from '../../../../Url/NodeBaseURL';
 
 
-function Customer_Master() { 
+function Customer_Master() {
   const location = useLocation();
   const [isSaving, setIsSaving] = useState(false);
   const [formData, setFormData] = useState({
@@ -95,145 +95,84 @@ function Customer_Master() {
     fetchCustomer();
   }, [id]);
 
-  // const handleChange = (e) => {
-  //   const { name, value } = e.target;
-  //   let updatedValue = value;
-  //   const alphabetRegex = /^[A-Za-z\s]*$/; // Only letters & spaces
-
-  //   switch (name) {
-  //     case "account_name":
-  //     case "print_name":
-  //       // Allow only alphabets and spaces
-  //       if (!alphabetRegex.test(updatedValue)) return;
-  
-  //       // Capitalize first letter
-  //       updatedValue = updatedValue.charAt(0).toUpperCase() + updatedValue.slice(1);
-  
-  //       setFormData((prevData) => ({
-  //         ...prevData,
-  //         [name]: updatedValue,
-  //         ...(name === "account_name" &&
-  //           prevData.print_name === prevData.account_name && {
-  //             print_name: updatedValue,
-  //           }),
-  //       }));
-  //       return;
-
-  //     case "mobile":
-  //     case "phone":
-  //       // Allow only numbers and limit to 10 digits
-  //       updatedValue = value.replace(/\D/g, "").slice(0, 10);
-  //       break;
-
-  //     case "aadhar_card":
-  //       // Allow only numbers and limit to 12 digits
-  //       updatedValue = value.replace(/\D/g, "").slice(0, 12);
-  //       break;
-
-  //     case "pincode":
-  //       // Allow only numbers and limit to 6 digits
-  //       updatedValue = value.replace(/\D/g, "").slice(0, 6);
-  //       break;
-
-  //     case "gst_in":
-  //       // GSTIN must be 15 alphanumeric characters (uppercase)
-  //       updatedValue = value.toUpperCase().slice(0, 15);
-  //       break;
-
-  //     case "pan_card":
-  //       // PAN must be 10 alphanumeric characters (uppercase)
-  //       updatedValue = value.toUpperCase().slice(0, 10);
-  //       break;
-
-  //     case "ifsc_code":
-  //       // IFSC must be exactly 11 alphanumeric characters (uppercase)
-  //       updatedValue = value.toUpperCase().slice(0, 11);
-  //       break;
-
-  //     default:
-  //       break;
-  //   }
-
-  //   // Update state
-  //   setFormData((prevData) => ({
-  //     ...prevData,
-  //     [name]: updatedValue,
-  //   }));
-  // };
-
   const handleChange = (e) => {
     const { name, value } = e.target;
     let updatedValue = value.trimStart(); // Prevent leading spaces
-  
+
     // Define regex patterns for validation
     const alphabetRegex = /^[A-Za-z\s]*$/; // Only letters & spaces
     const numericRegex = /^\d*$/; // Only numbers
     const alphanumericRegex = /^[A-Za-z0-9]*$/; // Only alphanumeric (no special chars)
-  
+
     switch (name) {
       case "account_name":
       case "print_name":
         // Allow only alphabets and spaces
         if (!alphabetRegex.test(updatedValue)) return;
-  
+
         // Capitalize first letter
         updatedValue = updatedValue.charAt(0).toUpperCase() + updatedValue.slice(1);
-  
+
         setFormData((prevData) => ({
           ...prevData,
           [name]: updatedValue,
           ...(name === "account_name" &&
             prevData.print_name === prevData.account_name && {
-              print_name: updatedValue,
-            }),
+            print_name: updatedValue,
+          }),
         }));
         return;
-  
+
       case "mobile":
       case "phone":
         // Allow only numbers and limit to 10 digits
         updatedValue = updatedValue.replace(/\D/g, "").slice(0, 10);
         break;
-  
+
       case "aadhar_card":
         // Allow only numbers and limit to 12 digits
         updatedValue = updatedValue.replace(/\D/g, "").slice(0, 12);
         break;
-  
+
       case "pincode":
         // Allow only numbers and limit to 6 digits
         updatedValue = updatedValue.replace(/\D/g, "").slice(0, 6);
         break;
-  
+
       case "gst_in":
         // GSTIN must be 15 alphanumeric characters (uppercase)
         if (!alphanumericRegex.test(updatedValue)) return;
         updatedValue = updatedValue.toUpperCase().slice(0, 15);
         break;
-  
+
       case "pan_card":
         // PAN must be 10 alphanumeric characters (uppercase)
         if (!alphanumericRegex.test(updatedValue)) return;
         updatedValue = updatedValue.toUpperCase().slice(0, 10);
         break;
-  
+
       case "ifsc_code":
         // IFSC must be exactly 11 alphanumeric characters (uppercase)
         if (!alphanumericRegex.test(updatedValue)) return;
         updatedValue = updatedValue.toUpperCase().slice(0, 11);
         break;
-  
+
+      case "bank_account_no":
+        // Allow only numbers and reasonable length (6-18 digits)
+        updatedValue = updatedValue.replace(/\D/g, "").slice(0, 18);
+        break;
+
       default:
         break;
     }
-  
+
     // Update state
     setFormData((prevData) => ({
       ...prevData,
       [name]: updatedValue,
     }));
   };
-  
+
   useEffect(() => {
     const fetchStates = async () => {
       try {
@@ -286,6 +225,10 @@ function Customer_Master() {
     }
     if (formData.ifsc_code?.trim() && formData.ifsc_code.length !== 11) {
       alert("IFSC Code must be exactly 11 characters.");
+      return false;
+    }
+    if (formData.bank_account_no?.trim() && (formData.bank_account_no.length < 6 || formData.bank_account_no.length > 18)) {
+      alert("Bank Account Number must be between 6 and 18 digits.");
       return false;
     }
 
@@ -596,7 +539,7 @@ function Customer_Master() {
                 onClick={handleSubmit}
                 disabled={isSaving} // Disable button when saving
               >
-                  {isSaving ? (id ? "Updating..." : "Saving...") : id ? "Update" : "Save"}
+                {isSaving ? (id ? "Updating..." : "Saving...") : id ? "Update" : "Save"}
               </Button>
             </div>
           </form>
