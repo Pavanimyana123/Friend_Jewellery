@@ -77,6 +77,9 @@ function Order() {
     image_url: null, // Image URL after upload
     order_status: "Placed",
     qty: 1,
+    advance_gross_wt: "",
+    fine_wt: "",
+    advance_amount: "",
   });
   const [rates, setRates] = useState({ rate_24crt: "", rate_22crt: "", rate_18crt: "", rate_16crt: "", silver_rate: "" });
 
@@ -412,16 +415,22 @@ function Order() {
       return;
     }
 
+    const formData = new FormData();
+    const formDataData = { advance_gross_wt: formData.advance_gross_wt };
+
     // Ensure all orders have the latest customer details before submitting
     const updatedOrders = storedOrders.map(order => ({
       ...order,
       ...selectedCustomer,  // Update customer details
       account_id: selectedCustomer?.id, // Ensure correct account_id
       overall_total_weight: totalWeightSum,
-      advance_gross_wt:formData.advance_gross_wt,
+      overall_total_price: totalPriceSum,
+      advance_gross_wt: formDataData.advance_gross_wt,
+      // fine_wt: formData.fine_wt,
+      // advance_amount: formData.advance_amount
     }));
+    console.log("updated orders=",updatedOrders);
 
-    const formData = new FormData();
     updatedOrders.forEach((order, index) => {
       formData.append(`order`, JSON.stringify(order));
       if (order.image_url) {
@@ -964,38 +973,38 @@ function Order() {
 
             {/* Row for Input Fields */}
             <Row>
-            <Col xs={5} className="text-left fw-bold">Advance Gross Weight:</Col>
+              <Col xs={5} className="text-left fw-bold">Advance Gross Weight:</Col>
               <Col xs={2}>
                 <InputField
                   name="advance_gross_wt"
                   value={formData.advance_gross_wt}
                   type="text"
                   onChange={handleChange}
-                  readOnly
+
                 />
               </Col>
             </Row>
             <Row>
-            <Col xs={5} className="text-left fw-bold">Fine Weight:</Col>
+              <Col xs={5} className="text-left fw-bold">Fine Weight:</Col>
               <Col xs={2}>
                 <InputField
                   name="fine_wt"
                   value={formData.fine_wt}
                   type="text"
                   onChange={handleChange}
-                  readOnly
+
                 />
               </Col>
             </Row>
             <Row>
-            <Col xs={5} className="text-left fw-bold">Advance Amount:</Col>
+              <Col xs={5} className="text-left fw-bold">Advance Amount:</Col>
               <Col xs={2}>
                 <InputField
                   name="advance_amount"
                   value={formData.advance_amount}
                   type="text"
                   onChange={handleChange}
-                  readOnly
+
                 />
               </Col>
             </Row>
