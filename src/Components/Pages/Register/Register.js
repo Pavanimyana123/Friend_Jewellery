@@ -259,6 +259,7 @@ function Register() {
             {/* Address Information */}
             <div className="register-form-section">
               <h3 className="register-section-title">Address Information</h3>
+              <div className="register-form-row">
               <div className="register-form-group">
                 <label>Address Line 1</label>
                 <input
@@ -278,7 +279,7 @@ function Register() {
                   onChange={handleChange}
                 />
               </div>
-
+              </div>
               <div className="register-form-row">
                 <div className="register-form-group">
                   <label>City</label>
@@ -301,7 +302,6 @@ function Register() {
               </div>
 
               <div className="register-form-row">
-                <div className="register-form-row">
                   <div className="register-form-group">
                     <label>State*</label>
                     <select
@@ -335,8 +335,7 @@ function Register() {
                       className="register-input"
                       readOnly
                     />
-                  </div>
-                </div>
+                  </div>     
               </div>
             </div>
 

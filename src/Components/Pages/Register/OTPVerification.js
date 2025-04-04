@@ -32,28 +32,23 @@ function OTPVerification() {
 
   const handleVerifyOTP = async () => {
     try {
-      console.log('Verifying OTP for:', { email, otp }); // Debug log
-      
-      const response = await axios.post(`${baseURL}/verify-otp`, {
-        email,
-        otp
-      }, {
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      });
+      console.log('Verifying OTP for:', { email, otp });
+  
+      const response = await axios.post(`${baseURL}/verify-otp`, { email, otp });
   
       if (response.status === 200) {
         console.log('OTP verified, proceeding with registration');
-        const registerResponse = await axios.post(`${baseURL}/add-account`, formData, {
-          headers: {
-            'Content-Type': 'application/json'
-          }
-        });
-        
-        if (registerResponse.status === 200) {
+        console.log("Sending form data:", formData);
+  
+        const registerResponse = await axios.post(`${baseURL}/add-account`, formData);
+  
+        console.log("Registration response:", registerResponse);
+  
+        if (registerResponse.status === 200 || registerResponse.status === 201) {
           alert("Registration successful!");
-          navigate('/');
+          setTimeout(() => {
+            navigate('/');
+          }, 100);
         }
       }
     } catch (error) {
@@ -66,6 +61,7 @@ function OTPVerification() {
       }
     }
   };
+  
 
   const handleResendOTP = async () => {
     try {
