@@ -21,7 +21,13 @@ const AuthProvider = ({ children }) => {
   const logout = () => {
     localStorage.removeItem("user");
     setUser(null);
+  
+    // 👇 Notify React Native to remove user from AsyncStorage
+    if (window.ReactNativeWebView) {
+      window.ReactNativeWebView.postMessage("");
+    }
   };
+  
 
   return (
     <AuthContext.Provider value={{ user, login, logout }}>

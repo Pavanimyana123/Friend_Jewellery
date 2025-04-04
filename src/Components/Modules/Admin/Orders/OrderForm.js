@@ -417,6 +417,8 @@ function Order() {
       ...order,
       ...selectedCustomer,  // Update customer details
       account_id: selectedCustomer?.id, // Ensure correct account_id
+      overall_total_weight: totalWeightSum,
+      advance_gross_wt:formData.advance_gross_wt,
     }));
 
     const formData = new FormData();
@@ -963,7 +965,7 @@ function Order() {
             {/* Row for Input Fields */}
             <Row>
             <Col xs={5} className="text-left fw-bold">Advance Gross Weight:</Col>
-              <Col xs={3}>
+              <Col xs={2}>
                 <InputField
                   name="advance_gross_wt"
                   value={formData.advance_gross_wt}
@@ -975,7 +977,7 @@ function Order() {
             </Row>
             <Row>
             <Col xs={5} className="text-left fw-bold">Fine Weight:</Col>
-              <Col xs={3}>
+              <Col xs={2}>
                 <InputField
                   name="fine_wt"
                   value={formData.fine_wt}
@@ -987,7 +989,7 @@ function Order() {
             </Row>
             <Row>
             <Col xs={5} className="text-left fw-bold">Advance Amount:</Col>
-              <Col xs={3}>
+              <Col xs={2}>
                 <InputField
                   name="advance_amount"
                   value={formData.advance_amount}
