@@ -498,7 +498,7 @@ function Order() {
       <div className="main-container">
         <div className="order-form-container">
           <Form>
-            <div className="order-form">
+            <div className="order-form" style={{marginTop:'-10px'}}>
               {/* Left Section */}
               <div className="order-form-left">
                 <Col className="order-form-section">
@@ -612,7 +612,7 @@ function Order() {
                 </div>
               </div>
             </div>
-            <div className="order-form-section mt-1">
+            <div className="order-form-section">
               <h4 className="mb-3">Order Details</h4>
               <Row>
                 <Col xs={12} md={2}>
@@ -668,26 +668,26 @@ function Order() {
                     ]}
                   />
                 </Col>
-                <Col xs={12} md={2}>
+                <Col xs={12} md={1}>
                   <InputField label="Size" name="o_size" value={formData.o_size} type="text" onChange={handleChange} />
                 </Col>
-                <Col xs={12} md={2}>
+                <Col xs={12} md={1}>
                   <InputField label="Length" name="o_length" value={formData.o_length} type="text" onChange={handleChange} />
                 </Col>
-                <Col xs={12} md={2}>
+                <Col xs={12} md={1}>
                   <InputField label="Gross Wt" name="gross_weight" value={formData.gross_weight} type="text" onChange={handleChange} />
                 </Col>
-                <Col xs={12} md={2}>
+                <Col xs={12} md={1}>
                   <InputField label="Stone Wt" name="stone_weight" value={formData.stone_weight} type="text" onChange={handleChange} />
                 </Col>
                 <Col xs={12} md={2}>
                   <InputField label="Stone Name" name="stone_name" value={formData.stone_name} type="text" onChange={handleChange} />
                 </Col>
         
-                <Col xs={12} md={2}>
+                <Col xs={12} md={1}>
                   <InputField label="St Price" name="stone_price" value={formData.stone_price} type="text" onChange={handleChange} />
                 </Col>
-                <Col xs={12} md={2}>
+                <Col xs={12} md={1}>
                   <InputField label="Weight BW" name="weight_bw" value={formData.weight_bw} type="text" onChange={handleChange} readOnly />
                 </Col>
                 <Col xs={12} md={2}>
@@ -703,19 +703,19 @@ function Order() {
                     ]}
                   />
                 </Col>
-                <Col xs={12} md={2}>
+                <Col xs={12} md={1}>
                   <InputField label="Wastage %" name="wastage_percentage" value={formData.wastage_percentage} type="text" onChange={handleChange} />
                 </Col>
-                <Col xs={12} md={2}>
-                  <InputField label="Wastage Weight" name="wastage_weight" value={formData.wastage_weight} type="text" onChange={handleChange} readOnly />
+                <Col xs={12} md={1}>
+                  <InputField label="W.Wt" name="wastage_weight" value={formData.wastage_weight} type="text" onChange={handleChange} readOnly />
                 </Col>
-                <Col xs={12} md={2}>
-                  <InputField label="Total Weight AW" name="total_weight_aw" value={formData.total_weight_aw} type="text" onChange={handleChange} readOnly />
+                <Col xs={12} md={1}>
+                  <InputField label="Total Wt" name="total_weight_aw" value={formData.total_weight_aw} type="text" onChange={handleChange} readOnly />
                 </Col>
-                <Col xs={12} md={2}>
+                <Col xs={12} md={1}>
                   <InputField label="Rate" name="rate" value={formData.rate} type="text" onChange={handleChange} />
                 </Col>
-                <Col xs={12} md={2}>
+                <Col xs={12} md={1}>
                   <InputField
                     label="Amount"
                     name="amount"
@@ -740,7 +740,7 @@ function Order() {
                   />
                 </Col>
 
-                <Col xs={12} md={2}>
+                <Col xs={12} md={1}>
                   <InputField
                     label={formData.mc_on || "MC %"}  // Dynamically change label
                     name="mc_percentage"
@@ -750,7 +750,7 @@ function Order() {
                   />
                 </Col>
 
-                <Col xs={12} md={2}>
+                <Col xs={12} md={1}>
                   <InputField label="Total MC" name="total_mc" value={formData.total_mc} type="text" onChange={handleChange} />
                 </Col>
                 <Col xs={12} md={2}>
