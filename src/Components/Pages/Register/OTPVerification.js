@@ -7,6 +7,7 @@ import './OTPVerification.css';
 function OTPVerification() {
   const location = useLocation();
   const navigate = useNavigate();
+  const [isVerifying, setIsVerifying] = useState(false);
   const [otp, setOtp] = useState("");
   const [error, setError] = useState("");
   const [countdown, setCountdown] = useState(60);
@@ -30,38 +31,44 @@ function OTPVerification() {
     }
   }, [countdown]);
 
+
   const handleVerifyOTP = async () => {
+    setIsVerifying(true); // Disable button and show "Verifying..."
+
     try {
-      console.log('Verifying OTP for:', { email, otp });
-  
+      console.log("Verifying OTP for:", { email, otp });
+
       const response = await axios.post(`${baseURL}/verify-otp`, { email, otp });
-  
+
       if (response.status === 200) {
-        console.log('OTP verified, proceeding with registration');
+        console.log("OTP verified, proceeding with registration");
         console.log("Sending form data:", formData);
-  
+
         const registerResponse = await axios.post(`${baseURL}/add-account`, formData);
-  
+
         console.log("Registration response:", registerResponse);
-  
+
         if (registerResponse.status === 200 || registerResponse.status === 201) {
           alert("Registration successful!");
           setTimeout(() => {
-            navigate('/');
+            navigate("/");
           }, 100);
         }
       }
     } catch (error) {
       if (error.response) {
-        console.error('Verification failed:', error.response.data);
+        console.error("Verification failed:", error.response.data);
         setError(error.response.data.message || "Invalid OTP. Please try again.");
       } else {
-        console.error('Error:', error.message);
+        console.error("Error:", error.message);
         setError("Network error. Please try again.");
       }
+    } finally {
+      setIsVerifying(false); // Re-enable button after API response
     }
   };
-  
+
+
 
   const handleResendOTP = async () => {
     try {
@@ -81,7 +88,7 @@ function OTPVerification() {
       <div className="otp-verification-card">
         <h2>Verify Your Email Address</h2>
         <p>We've sent an OTP to {email}</p>
-        
+
         <div className="otp-input-group">
           <label>Enter 6-digit OTP</label>
           <input
@@ -94,12 +101,10 @@ function OTPVerification() {
           {error && <p className="error-message">{error}</p>}
         </div>
 
-        <button 
-          className="verify-button"
-          onClick={handleVerifyOTP}
-        >
-          Verify & Register
+        <button className="verify-button" onClick={handleVerifyOTP} disabled={isVerifying}>
+          {isVerifying ? "Verifying..." : "Verify"}
         </button>
+
 
         <div className="resend-otp">
           <p>Didn't receive OTP?</p>

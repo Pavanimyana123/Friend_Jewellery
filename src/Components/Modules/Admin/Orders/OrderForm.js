@@ -26,6 +26,9 @@ function Order() {
   const [showWebcam, setShowWebcam] = useState(false);
   const fileInputRef = useRef(null);
   const webcamRef = useRef(null);
+  const totalWeightSum = orders.reduce((sum, order) => sum + parseFloat(order.total_weight_aw || 0), 0);
+  const totalPriceSum = orders.reduce((sum, order) => sum + parseFloat(order.total_price || 0), 0);
+
   const [formData, setFormData] = useState({
     imagePreview: null, // For image preview before upload
     account_id: "",
@@ -498,7 +501,7 @@ function Order() {
       <div className="main-container">
         <div className="order-form-container">
           <Form>
-            <div className="order-form" style={{marginTop:'-10px'}}>
+            <div className="order-form" style={{ marginTop: '-10px' }}>
               {/* Left Section */}
               <div className="order-form-left">
                 <Col className="order-form-section">
@@ -602,8 +605,8 @@ function Order() {
                       name="estimated_delivery_date"
                       type="date"
                       value={formData.estimated_delivery_date}
-                      min={new Date().toISOString().split("T")[0]} 
-                      // onChange={handleEstimatedDateChange} 
+                      min={new Date().toISOString().split("T")[0]}
+                    // onChange={handleEstimatedDateChange} 
                     />
                   </Row>
 
@@ -683,7 +686,7 @@ function Order() {
                 <Col xs={12} md={2}>
                   <InputField label="Stone Name" name="stone_name" value={formData.stone_name} type="text" onChange={handleChange} />
                 </Col>
-        
+
                 <Col xs={12} md={1}>
                   <InputField label="St Price" name="stone_price" value={formData.stone_price} type="text" onChange={handleChange} />
                 </Col>
@@ -783,8 +786,8 @@ function Order() {
                     name="delivery_date"
                     value={formData.delivery_date}
                     type="date"
-                    min={new Date().toISOString().split("T")[0]} 
-                    // onChange={handleDateChange}
+                    min={new Date().toISOString().split("T")[0]}
+                  // onChange={handleDateChange}
                   />
                 </Col>
 
@@ -876,7 +879,7 @@ function Order() {
           </Form>
           {/* Orders Table */}
           <div className="order-form-section mt-1">
-            <h4>Stored Orders</h4>
+            <h4>Orders List</h4>
             <Table bordered hover responsive>
               <thead>
                 <tr>
@@ -943,6 +946,60 @@ function Order() {
               </tbody>
             </Table>
           </div>
+
+          <div className="order-form-section mt-1">
+            <h4>Summary</h4>
+
+            {/* Row for Total Price and Total Weight */}
+            <Row className="mb-3">
+              <Col xs={6} className="text-left fw-bold">Total Weight:</Col>
+              <Col xs={6} className="text-right">{totalWeightSum.toFixed(2)}</Col>
+            </Row>
+            <Row className="mb-3">
+              <Col xs={6} className="text-left fw-bold">Total Price:</Col>
+              <Col xs={6} className="text-right">{totalPriceSum.toFixed(2)}</Col>
+            </Row>
+
+            {/* Row for Input Fields */}
+            <Row>
+            <Col xs={5} className="text-left fw-bold">Advance Gross Weight:</Col>
+              <Col xs={3}>
+                <InputField
+                  name="advance_gross_wt"
+                  value={formData.advance_gross_wt}
+                  type="text"
+                  onChange={handleChange}
+                  readOnly
+                />
+              </Col>
+            </Row>
+            <Row>
+            <Col xs={5} className="text-left fw-bold">Fine Weight:</Col>
+              <Col xs={3}>
+                <InputField
+                  name="fine_wt"
+                  value={formData.fine_wt}
+                  type="text"
+                  onChange={handleChange}
+                  readOnly
+                />
+              </Col>
+            </Row>
+            <Row>
+            <Col xs={5} className="text-left fw-bold">Advance Amount:</Col>
+              <Col xs={3}>
+                <InputField
+                  name="advance_amount"
+                  value={formData.advance_amount}
+                  type="text"
+                  onChange={handleChange}
+                  readOnly
+                />
+              </Col>
+            </Row>
+          </div>
+
+
           <div className="form-buttons">
             <Button
               variant="secondary"

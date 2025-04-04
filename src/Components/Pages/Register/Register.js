@@ -30,6 +30,7 @@ function Register() {
 
   const [errors, setErrors] = useState({});
   const [states, setStates] = useState([]);
+  const [isRegistering, setIsRegistering] = useState(false);
   const [loadingStates, setLoadingStates] = useState(true);
   const navigate = useNavigate();
   const inputRefs = useRef({}); // Create a ref to store input references
@@ -111,8 +112,11 @@ function Register() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    
+    setIsRegistering(true); // Disable button and show 'Registering...'
+    
     const firstErrorField = validateForm();
-
+  
     if (firstErrorField) {
       // Scroll to the first error field
       const inputElement = inputRefs.current[firstErrorField];
@@ -120,14 +124,16 @@ function Register() {
         inputElement.scrollIntoView({ behavior: "smooth", block: "center" });
         inputElement.focus(); // Optionally focus the input
       }
+      
+      setIsRegistering(false); // Re-enable button since validation failed
       return;
     }
-
+  
     try {
       const otpResponse = await axios.post(`${baseURL}/send-otp`, {
         email: formData.email
       });
-
+  
       if (otpResponse.status === 200) {
         navigate('/verify-otp', {
           state: {
@@ -138,8 +144,11 @@ function Register() {
       }
     } catch (error) {
       alert("Failed to send OTP. Please try again.");
+    } finally {
+      setIsRegistering(false); // Re-enable button after API response
     }
   };
+  
 
   return (
     <div className="register-page-container">
@@ -260,25 +269,25 @@ function Register() {
             <div className="register-form-section">
               <h3 className="register-section-title">Address Information</h3>
               <div className="register-form-row">
-              <div className="register-form-group">
-                <label>Address Line 1</label>
-                <input
-                  type="text"
-                  name="address1"
-                  value={formData.address1}
-                  onChange={handleChange}
-                />
-              </div>
+                <div className="register-form-group">
+                  <label>Address Line 1</label>
+                  <input
+                    type="text"
+                    name="address1"
+                    value={formData.address1}
+                    onChange={handleChange}
+                  />
+                </div>
 
-              <div className="register-form-group">
-                <label>Address Line 2</label>
-                <input
-                  type="text"
-                  name="address2"
-                  value={formData.address2}
-                  onChange={handleChange}
-                />
-              </div>
+                <div className="register-form-group">
+                  <label>Address Line 2</label>
+                  <input
+                    type="text"
+                    name="address2"
+                    value={formData.address2}
+                    onChange={handleChange}
+                  />
+                </div>
               </div>
               <div className="register-form-row">
                 <div className="register-form-group">
@@ -302,40 +311,40 @@ function Register() {
               </div>
 
               <div className="register-form-row">
-                  <div className="register-form-group">
-                    <label>State*</label>
-                    <select
-                      name="state"
-                      value={formData.state}
-                      onChange={handleStateChange}
-                      className={`register-input ${errors.state ? "register-input-error" : ""}`}
-                      ref={el => inputRefs.current.state = el} // Store reference
-                    >
-                      <option value="">Select State</option>
-                      {loadingStates ? (
-                        <option>Loading states...</option>
-                      ) : (
-                        states.map((state) => (
-                          <option key={state.state_code} value={state.state_name}>
-                            {state.state_name}
-                          </option>
-                        ))
-                      )}
-                    </select>
+                <div className="register-form-group">
+                  <label>State*</label>
+                  <select
+                    name="state"
+                    value={formData.state}
+                    onChange={handleStateChange}
+                    className={`register-input ${errors.state ? "register-input-error" : ""}`}
+                    ref={el => inputRefs.current.state = el} // Store reference
+                  >
+                    <option value="">Select State</option>
+                    {loadingStates ? (
+                      <option>Loading states...</option>
+                    ) : (
+                      states.map((state) => (
+                        <option key={state.state_code} value={state.state_name}>
+                          {state.state_name}
+                        </option>
+                      ))
+                    )}
+                  </select>
 
-                    {errors.state && <span className="register-error">{errors.state}</span>}
-                  </div>
-                  <div className="register-form-group">
-                    <label>State Code</label>
-                    <input
-                      type="text"
-                      name="state_code"
-                      value={formData.state_code}
-                      onChange={handleChange}
-                      className="register-input"
-                      readOnly
-                    />
-                  </div>     
+                  {errors.state && <span className="register-error">{errors.state}</span>}
+                </div>
+                <div className="register-form-group">
+                  <label>State Code</label>
+                  <input
+                    type="text"
+                    name="state_code"
+                    value={formData.state_code}
+                    onChange={handleChange}
+                    className="register-input"
+                    readOnly
+                  />
+                </div>
               </div>
             </div>
 
@@ -418,8 +427,10 @@ function Register() {
           </div>
 
           <div className="register-form-actions">
-            <button type="submit" className="register-submit-btn">
-              Register
+            <button type="submit" className="register-submit-btn"
+              disabled={isRegistering}
+            >
+              {isRegistering ? "Registering..." : "Register"}
             </button>
             <p className="register-login-link ">
               Already have an account? <Link to="/">Login here</Link>
