@@ -64,7 +64,7 @@ function Order() {
     wastage_percentage: "",
     wastage_weight: "",
     total_weight_aw: "",
-    rate: "8662.00",
+    rate: "",
     amount: "",
     mc_on: "MC %",
     mc_percentage: "",
@@ -77,11 +77,12 @@ function Order() {
     image_url: null, // Image URL after upload
     order_status: "Placed",
     qty: 1,
-    advance_gross_wt: "",
-    fine_wt: "",
-    advance_amount: "",
   });
   const [rates, setRates] = useState({ rate_24crt: "", rate_22crt: "", rate_18crt: "", rate_16crt: "", silver_rate: "" });
+  const [advanceGrossWt, setAdvanceGrossWt] = useState("");
+  const [fineWt, setFineWt] = useState("");
+  const [advanceAmount, setAdvanceAmount] = useState("");
+
 
   useEffect(() => {
     const fetchCurrentRates = async () => {
@@ -382,7 +383,7 @@ function Order() {
       wastage_percentage: "",
       wastage_weight: "",
       total_weight_aw: "",
-      rate: "8662.00",
+      rate: "",
       amount: "",
       mc_on: "MC %",
       mc_percentage: "",
@@ -416,20 +417,19 @@ function Order() {
     }
 
     const formData = new FormData();
-    const formDataData = { advance_gross_wt: formData.advance_gross_wt };
-
     // Ensure all orders have the latest customer details before submitting
     const updatedOrders = storedOrders.map(order => ({
       ...order,
-      ...selectedCustomer,  // Update customer details
-      account_id: selectedCustomer?.id, // Ensure correct account_id
+      ...selectedCustomer,
+      account_id: selectedCustomer?.id,
       overall_total_weight: totalWeightSum,
       overall_total_price: totalPriceSum,
-      advance_gross_wt: formDataData.advance_gross_wt,
-      // fine_wt: formData.fine_wt,
-      // advance_amount: formData.advance_amount
+      advance_gross_wt: advanceGrossWt,
+      fine_wt: fineWt,
+      advance_amount: advanceAmount,
     }));
-    console.log("updated orders=",updatedOrders);
+    
+    console.log("updated orders=", updatedOrders);
 
     updatedOrders.forEach((order, index) => {
       formData.append(`order`, JSON.stringify(order));
@@ -476,35 +476,6 @@ function Order() {
     navigate("/a-customers", { state: { from: "/a-orders" } });
   };
 
-
-  const today = new Date().toISOString().split("T")[0]; // Get today's date in YYYY-MM-DD format
-
-
-
-  const handleDateChange = (event) => {
-    const selectedDate = event.target.value;
-    const today = new Date().toISOString().split("T")[0]; // Get today's date in YYYY-MM-DD format
-
-    if (selectedDate < today) {
-      alert("You cannot select a past date!");
-      return; // Prevent state update
-    }
-
-    handleChange(event); // Proceed with updating the state
-  };
-
-
-  const handleEstimatedDateChange = (event) => {
-    const selectedDate = event.target.value;
-    const today = new Date().toISOString().split("T")[0]; // Get today's date in YYYY-MM-DD format
-
-    if (selectedDate < today) {
-      alert("Estimated Delivery Date cannot be in the past!");
-      return; // Stop further execution
-    }
-
-    handleChange(event); // Update state if the date is valid
-  };
 
   return (
     <>
@@ -977,10 +948,9 @@ function Order() {
               <Col xs={2}>
                 <InputField
                   name="advance_gross_wt"
-                  value={formData.advance_gross_wt}
                   type="text"
-                  onChange={handleChange}
-
+                  value={advanceGrossWt}
+                  onChange={(e) => setAdvanceGrossWt(e.target.value)}
                 />
               </Col>
             </Row>
@@ -989,10 +959,9 @@ function Order() {
               <Col xs={2}>
                 <InputField
                   name="fine_wt"
-                  value={formData.fine_wt}
                   type="text"
-                  onChange={handleChange}
-
+                  value={fineWt}
+                  onChange={(e) => setFineWt(e.target.value)}
                 />
               </Col>
             </Row>
@@ -1001,10 +970,9 @@ function Order() {
               <Col xs={2}>
                 <InputField
                   name="advance_amount"
-                  value={formData.advance_amount}
                   type="text"
-                  onChange={handleChange}
-
+                  value={advanceAmount}
+                  onChange={(e) => setAdvanceAmount(e.target.value)}
                 />
               </Col>
             </Row>

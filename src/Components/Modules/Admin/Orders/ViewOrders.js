@@ -4,7 +4,7 @@ import DataTable from '../../../Pages/InputField/DataTable';
 import { Button, Row, Col, Modal } from 'react-bootstrap';
 import './ViewOrders.css';
 import axios from "axios";
-import { FaEdit, FaTrash } from 'react-icons/fa';
+import { FaEdit, FaTrash, FaEye } from 'react-icons/fa';
 import baseURL from '../../../../Url/NodeBaseURL';
 import Navbar from '../../../Pages/Navbar/Navbar';
 import { jsPDF } from "jspdf";
@@ -394,7 +394,7 @@ const ViewOrders = () => {
               href={`${baseURL}/invoices/${row.original.invoice_number}.pdf`} // Fetch from backend
               target="_blank"
               rel="noopener noreferrer"
-              style={{textDecoration:'none'}}
+              style={{ textDecoration: 'none' }}
             >
               📝 View
             </a>
@@ -412,7 +412,7 @@ const ViewOrders = () => {
               href={`${baseURL}/invoices/${row.original.estimate_number}.pdf`} // Fetch from backend
               target="_blank"
               rel="noopener noreferrer"
-              style={{textDecoration:'none'}}
+              style={{ textDecoration: 'none' }}
             >
               📝 View
             </a>
@@ -608,6 +608,10 @@ const ViewOrders = () => {
         id: 'action', // Add an ID for the action column
         Cell: ({ row }) => (
           <div>
+            <FaEye
+              style={{ cursor: 'pointer', color: 'green' }}
+              onClick={() => handleView(row.original)}
+            />
             <FaEdit
               style={{ cursor: 'pointer', marginLeft: '10px', color: 'blue' }}
               onClick={() => handleEdit(row.original.id)}
@@ -622,6 +626,15 @@ const ViewOrders = () => {
     ],
     [workers, assignedWorkers, selectedRows, data]
   );
+
+  const [showModal, setShowModal] = useState(false);
+  const [selectedOrder, setSelectedOrder] = useState(null);
+
+  const handleView = (order) => {
+    setSelectedOrder(order);
+    setShowModal(true);
+  };
+
 
   return (
     <>
@@ -670,14 +683,71 @@ const ViewOrders = () => {
           />
         </Modal.Body>
       </Modal>
-      {/* {selectedData.length > 0 && (
-      <PDFDownloadLink
-        document={<TaxINVoiceReceipt selectedOrders={selectedData} />}
-        fileName="Invoice.pdf"
-      >
-        {({ loading }) => (loading ? "Generating PDF..." : "Download Invoice")}
-      </PDFDownloadLink>
-    )} */}
+
+      <Modal show={showModal} onHide={() => setShowModal(false)} size="lg">
+        <Modal.Header closeButton>
+          <Modal.Title>Order Details</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          {selectedOrder && (
+            <Row>
+              <Col md={4}>
+                <p><strong>Order No.:</strong> {selectedOrder.order_number}</p>
+                <p><strong>Metal:</strong> {selectedOrder.metal}</p>
+                <p><strong>Gross Weight:</strong> {selectedOrder.gross_weight}</p>
+                <p><strong>Stone Price:</strong> {selectedOrder.stone_price}</p>
+                <p><strong>Wastage%:</strong> {selectedOrder.wastage_percentage}</p>
+                <p><strong>Rate:</strong> {selectedOrder.rate}</p>
+                <p><strong>MC%:</strong> {selectedOrder.mc_percentage}</p>
+                <p><strong>Tax Amt:</strong> {selectedOrder.tax_amount}</p>
+                <p><strong>Order Status:</strong> {selectedOrder.order_status}</p>
+                <p><strong>Advance Gross Weight:</strong> {selectedOrder.advance_gross_wt}</p>
+              </Col>
+              <Col md={4}>
+                <p><strong>Category:</strong> {selectedOrder.category}</p>
+                <p><strong>Design Name:</strong> {selectedOrder.product_design_name}</p>
+                <p><strong>Stone Weight:</strong> {selectedOrder.stone_weight}</p>
+                <p><strong>Weight BW:</strong> {selectedOrder.weight_bw}</p>
+                <p><strong>Wastage Wt:</strong> {selectedOrder.wastage_weight}</p>
+                <p><strong>Amount:</strong> {selectedOrder.amount}</p>
+                <p><strong>Total MC:</strong> {selectedOrder.total_mc}</p>
+                <p><strong>Total Price:</strong> {selectedOrder.total_price}</p>
+                <p><strong>Worker:</strong> {selectedOrder.worker_name}</p>               
+                <p><strong>Fine Weight:</strong> {selectedOrder.fine_wt}</p>            
+              </Col>
+              <Col md={4}>
+                <p><strong>Subcategory:</strong> {selectedOrder.subcategory}</p>
+                <p><strong>Purity:</strong> {selectedOrder.purity}</p>
+                <p><strong>Stone Name:</strong> {selectedOrder.stone_name}</p>
+                <p><strong>Wastage On:</strong> {selectedOrder.wastage_on}</p>
+                <p><strong>Total Weight:</strong> {selectedOrder.total_weight_aw}</p>
+                <p><strong>MC On:</strong> {selectedOrder.mc_on}</p>
+                <p><strong>Tax%:</strong> {selectedOrder.tax_percentage}</p>
+                <p><strong>Remarks:</strong> {selectedOrder.remarks}</p>
+                <p><strong>Work Status:</strong> {selectedOrder.work_status}</p>
+                <p><strong>Advance Amount:</strong> {selectedOrder.advance_amount}</p>
+              </Col>
+              {/* {selectedOrder.image_url && (
+                <div>
+                  <strong>Image:</strong><br />
+                  <img
+                    src={`${baseURL}${selectedOrder.image_url}`}
+                    alt="Order"
+                    style={{ width: '150px', borderRadius: '8px', marginTop: '10px' }}
+                  />
+                </div>
+              )} */}
+            </Row>
+          )}
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setShowModal(false)}>
+            Close
+          </Button>
+        </Modal.Footer>
+      </Modal>
+
+
     </>
   );
 };
