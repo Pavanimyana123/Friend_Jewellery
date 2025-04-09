@@ -1,0 +1,955 @@
+/* General Styles for Banner Section */
+
+
+
+.sec-1-banner-section {
+  position: relative;
+  width: 100%;
+  height: 535px; /* Adjust height as needed */
+  background-image: url(
+  './Images/websitebanner.png'
+  ); /* Replace with your image URL */
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  
+}
+
+.sec-1-banner-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 545px; 
+  background: rgba(0, 0, 0, -7.7); /* Semi-transparent overlay */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.sec-1-banner-heading {
+  font-size: 2.5rem; /* Adjust size for desktop */
+  color: #fff;
+  text-align: center;
+  padding: 0 1rem; /* Add padding for better readability */
+  /* margin-left: -400px; */
+  /* margin-top: 150px; */
+}
+
+@media  (min-width: 768px) and (max-width: 1024px)  {
+  .ab_image-container
+  .ab_responsive-image {
+    margin-top: 20px;
+    border-radius: 2px;
+    height: 270px;
+   
+}
+
+.ab_image-container {
+  max-width: 100%;
+  overflow: hidden;
+  text-align: center;
+  padding-top: 50px;
+}
+
+.sec-1-banner-section {
+  height: 350px; /* Adjust height for tablets */
+}
+.sec-1-banner-heading {
+  font-size: 2rem; /* Adjust font size */
+  color: #fff;
+  text-align: center;
+  padding: 0 1rem; /* Add padding for better readability */
+  margin-top: 150px;
+  margin-left: 0px;
+
+}
+.sec-4-pillar
+.pillar-image {
+    width: 82%;
+    height: 350px;
+    object-fit: cover;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+    margin-left: 55px;
+}
+.sec-4-pillars
+.sec-4-pillar h4 {
+  font-size: 25px;
+  color: #a36e29;
+  margin-bottom: 0.8rem;
+  font-weight: 700;
+  margin-top: -10px;
+}
+.image-section img {
+  width: 559px;
+  height: 400px;
+  margin-left: -40px;
+  margin-bottom: 25px;
+}
+
+.sec-3-container
+ .sec-3-section-title {
+  font-size: 32px;
+  color: #a36e29;
+  margin-bottom: 1rem;
+  font-weight: 600;
+  text-transform: capitalize;
+}
+
+.sec-4-container
+.sec-4-vision-title {
+  font-size: 2rem;
+  color: #a36e29;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+.sec-4-container
+.sec-4-pillars-title {
+  font-size: 2rem;
+  color: #a36e29;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+  text-transform: capitalize;
+}
+.sec-1-banner-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 351px;
+  /* background: rgba(0, 0, 0, 0.5); */
+  display: flex
+;
+  align-items: center;
+  justify-content: center;
+}
+
+.about-us
+.legacy-content .legacy-introduction {
+  width: 238%;
+  margin-left: -207px;
+font-size: 18px;
+}
+.about-us
+.legacy-section .legacy-infographic {
+  width: 100%;
+  max-width: 300%;
+
+}
+
+.legacy-section .legacy-infographic .infographic-image{
+  width: 100%;
+}
+
+}
+
+
+
+
+
+
+
+
+/* Responsive Styles for Mobile Devices */
+@media (max-width: 480px) {
+  .sec-1-banner-section {
+    height: 190px; /* Adjust height for smaller screens */
+  }
+
+  .sec-1-banner-heading {
+    font-size: 30px; /* Adjust font size */
+  }
+  .about-us
+  .ab_responsive-image {
+    width: 100%; /* Ensures the image spans the container's width */
+    height: 180px; /* Maintains the aspect ratio */
+    border-radius: 1px; /* Adds rounded corners */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Adds a subtle shadow effect */
+    margin: 0 auto; /* Centers the image */
+    display: block; /* Ensures no inline space around the image */
+    margin-top: 69px;
+  }
+
+  .sec-1-banner-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 271px;
+    /* background: rgba(0, 0, 0, 0.5); */
+    display: flex
+;
+    align-items: center;
+    justify-content: center;
+}
+}
+
+
+
+
+.ab_image-container {
+  max-width: 100%; /* Ensures the container doesn't exceed screen width */
+  overflow: hidden; /* Prevents overflow of the image */
+  text-align: center; /* Aligns the image to the center */
+}
+
+
+.ab_responsive-image {
+  width: 100%; /* Ensures the image spans the container's width */
+  height: 473px; /* Maintains the aspect ratio */
+  border-radius: 2px; /* Adds rounded corners */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Adds a subtle shadow effect */
+  margin: 0 auto; /* Centers the image */
+  display: block; /* Ensures no inline space around the image */
+  margin-top: 33px;
+
+}
+
+
+
+/* Styling for the Legacy Section */
+.legacy-section {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  /* padding: 2rem; */
+  border-radius: 8px;
+  gap: 1rem;
+  width: 77%;
+  margin: 0 auto;
+}
+
+/* Left Side: Content */
+.legacy-content {
+  flex: 1;
+  max-width: 50%;
+  padding: 1rem;
+}
+
+.legacy-title {
+  font-size: 36px;
+  color: #a36e29;;
+  margin-bottom: 1rem;
+  text-align: center;
+  font-weight: 500;
+}
+
+.legacy-introduction {
+  font-size: 18px;
+  line-height: 1.8;
+  color: #555;
+  margin-bottom: 1rem;
+  text-align: justify;
+  font-weight: 500;
+}
+
+/* Right Side: Infographic Image */
+.legacy-infographic {
+  flex: 1;
+  max-width: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.infographic-image {
+  width: 100%;
+  height: 400px;
+  margin-top: 30px;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Responsive Styling for Tablets */
+@media (max-width: 768px) {
+  .legacy-section {
+    flex-direction: column;
+    text-align: center;
+  }
+
+ /* .legacy-infographic {
+    max-width: 100%;
+  } */
+ 
+
+  .legacy-title {
+    font-size: 32px;
+    font-weight: 600;
+
+  }
+
+  .legacy-introduction {
+    font-size: 0.95rem;
+  }
+
+.infographic-image {
+    width: 686px;
+    height: 400px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin-top: 30px;
+    margin-bottom: -37px;
+}
+
+  
+}
+
+/* Responsive Styling for Mobile Devices */
+@media (max-width: 480px) {
+  .legacy-section {
+    padding: 1.5rem;
+  }
+
+  .legacy-title {
+    font-size: 30px;
+  }
+
+  .legacy-introduction {
+    width: 115%;
+    font-size: 16px;
+    margin-left: -23px;
+    }
+
+  .infographic-image {
+    height: 220px;
+    margin-top: 0px;
+  }
+
+
+  .legacy-section .legacy-infographic{
+    max-width: 101%;
+    margin-left: -6px;
+  }
+}
+
+
+
+      .sec-2-wisdom-section {
+        /* background: linear-gradient(145deg, #fff, #f7f7f7); */
+        /* border: 1px solid #ddd; */
+        border-radius: 8px;
+        /* padding: 2rem; */
+        /* box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); */
+      }
+      
+        .sec-2-section-title {
+          font-size: 36px;
+            color: #a36e29;
+          text-align: center;
+          margin-top: 10px;
+          font-weight: 500;
+
+        }
+      
+        .sec-2-section-subtitle {
+          font-size: 25px;
+          color: #444;
+          text-align: center;
+          margin-top: -30px;
+        }
+      
+        .sec-2-wisdom-quote {
+          font-size: 30px;
+          font-style: italic;
+          color: #b76e79;
+          text-align: center;
+          margin-top: -10px;
+          padding: 0 1rem;
+        }
+      
+      
+      
+        @media (max-width: 768px) {
+      
+          .sec-2-section-title {
+            font-size: 32px;
+            font-weight: 600;
+
+          }
+      
+          .sec-2-section-subtitle {
+            font-size: 1.3rem;
+          }
+      
+          .sec-2-wisdom-quote {
+            font-size: 25px;
+            padding: 0 0.5rem;
+          }
+      
+        
+        }
+      
+        @media (max-width: 480px){
+      
+          .sec-2-section-title {
+            font-size: 30px;
+          }
+      
+          .sec-2-section-subtitle {
+            font-size: 1.2rem;
+            padding: 0 8px;
+          }
+      
+          .sec-2-wisdom-quote {
+            font-size: 20px;
+          }
+      
+          
+        }
+
+
+
+
+        /* General Styling */
+.content-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem; /* Space between text and image */
+  /* padding: 1rem; */
+  width: 80%;
+  margin: 0 auto; /* Center the layout */
+  margin-bottom: 40px;
+}
+
+.text-section {
+  flex: 1;
+  max-width: 50%;
+  padding: 1rem;
+}
+
+.sec-2-wisdom-points {
+  list-style-type: disc; /* Use bullet points */
+  margin: 0;
+  padding: 0 1.5rem;
+  font-size: 18px;
+  line-height: 1.8;
+  color: #555;
+  font-weight: 500;
+  text-align: justify;
+}
+
+.image-section {
+  flex: 1;
+  max-width: 50%;
+  text-align: center;
+}
+
+.image-section img {
+  width: 86%; /* Scale image to fit */
+  height: auto; /* Maintain aspect ratio */
+  border-radius: 8px; /* Optional: Rounded corners */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+}
+
+/* Responsive Styles for Tablets (iPads) */
+@media (max-width: 768px) {
+  .content-wrapper {
+    flex-direction: column; /* Stack text and image vertically */
+    text-align: center; /* Center-align content */
+    width: 100%;
+  }
+
+  .text-section {
+    max-width: 100%; /* Full width for text */
+    padding: 1rem;
+  }
+
+  .image-section {
+    max-width: 80%; /* Slightly reduce image width */
+    margin: 0 auto;
+  }
+
+  .image-section img {
+
+    width: 686px;
+    height: 400px;
+    margin-left: -40px;
+    margin-bottom: 25px;
+  }
+
+  
+}
+
+/* Responsive Styles for Mobile (Phones) */
+@media (max-width: 480px) {
+  .content-wrapper {
+    padding: 0.5rem;
+    width: 95%;
+  }
+
+  .text-section {
+    padding: 0.5rem 0;
+  }
+
+  .sec-2-wisdom-points {
+    font-size: 16px; /* Slightly smaller text */
+    padding: 0 22px; /* Adjust padding */
+  }
+
+  .image-section {
+    max-width: 100%;
+  }
+
+  .image-section img {
+    margin: 0 auto;
+    height: 200px;
+    width: 350px;
+  }
+  .legacy-content {
+    max-width: 100%;
+    padding: 0px;
+    margin-top: 10px;
+}
+.sec-4-vision-content
+.strongtext {
+  font-style: italic;
+  font-size: 26px;
+  color: #a36e29;
+}
+}
+
+      
+      
+
+
+        /* Generational Wisdom Section */
+.sec-3-generational-wisdom {
+  background: linear-gradient(145deg, #fffaf0, #fdf6e4); /* Subtle gold theme */
+  padding: 1rem 1.5rem;
+}
+
+.sec-3-generational-wisdom .sec-3-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.sec-3-section-title {
+  font-size: 36px;
+  color:#a36e29; 
+  margin-bottom: 1rem;
+  font-weight: 500;
+  text-transform: capitalize;
+}
+
+.sec-3-generational-wisdom .sec-3-section-description {
+  font-size: 18px;
+  color: #4a4a4a;
+  line-height: 1.8;
+  margin-bottom: 2rem;
+  padding: 0 1rem;
+  text-align: justify;
+}
+
+.sec-3-generational-wisdom .sec-3-principles-list {
+  display: flex;
+  justify-content: space-around;
+  gap: 2rem;
+  flex-wrap: wrap;
+  margin-bottom: 2rem;
+}
+
+.sec-3-generational-wisdom .sec-3-principle {
+  background: #fff;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+  border: 2px solid #b2967d; /* Gold border */
+  border-radius: 12px;
+  padding: 1.5rem;
+  flex: 1;
+  max-width: 300px;
+  text-align: center;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.sec-3-generational-wisdom .sec-3-principle:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+.sec-3-generational-wisdom .sec-3-principle .sec-3-icon {
+  font-size: 2.5rem;
+  margin-bottom: 0.5rem;
+  display: block;
+  color: #b2967d;
+}
+
+.sec-3-generational-wisdom .sec-3-principle h3 {
+  font-size: 20px;
+  color: #333;
+  font-weight: 600;
+  text-transform: uppercase;
+  margin: 0.5rem 0;
+}
+
+.sec-3-generational-wisdom .sec-3-visual {
+  background: #f9f3e7;
+  border: 2px dashed #b2967d; /* Gold dashed border */
+  border-radius: 8px;
+  padding: 2rem;
+  color: #777;
+  font-size: 1rem;
+  text-align: center;
+}
+
+/* Tablet View */
+@media (max-width: 768px) {
+  .sec-3-generational-wisdom .sec-3-principles-list {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .sec-3-generational-wisdom .sec-3-principle {
+    max-width: 100%;
+  }
+}
+
+/* Mobile View */
+@media (max-width: 480px) {
+  .sec-3-generational-wisdom .sec-3-section-title {
+    font-size: 30px;
+  }
+
+  .sec-3-generational-wisdom .sec-3-section-description {
+    font-size: 1rem;
+    padding: 0;
+  }
+
+  .sec-3-generational-wisdom .sec-3-visual {
+    font-size: 0.9rem;
+  }
+}
+
+
+
+
+
+/* Vision Section */
+.sec-4-vision-section {
+  /* background: linear-gradient(145deg, #f9f3e7, #fffaf0);  */
+  /* background-image: url('./Images/visionimg.jpg'); */
+  padding: 15px 1.5rem;
+}
+
+.sec-4-vision-section .sec-4-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.sec-4-vision-title {
+  font-size: 36px;
+  color: #a36e29
+  ; /* Luxurious gold */
+  font-weight: 500;
+  margin-bottom: 1rem;
+}
+
+.sec-4-vision-subtitle {
+  font-size: 18px;
+  color: #4a4a4a;
+  margin-bottom: 2rem;
+}
+
+.sec-4-vision-content {
+  font-size: 18px;
+  color: #333;
+  line-height: 1.8;
+  margin-bottom: 2rem;
+  text-align: justify;
+}
+
+
+.strongtext{
+  font-style: italic;
+  font-size: 30px;
+  color: #a36e29
+
+}
+.sec-4-vision-visual {
+  /* background: url('/path/to/vision-image.jpg') center/cover no-repeat; */
+  height: 200px;
+  border: 2px solid #74573f; /* Gold border */
+  margin-top: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #131210d0;
+  font-size: 20px;
+  font-style: italic;
+  border-radius: 12px;
+}
+
+.sec-4-pillars-title {
+  font-size: 36px;
+  color: #a36e29;
+  font-weight: 500;
+  margin-bottom: 1.5rem;
+  text-transform: capitalize;
+}
+
+.sec-4-pillars {
+  display: flex;
+  justify-content: space-around;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.sec-4-pillar {
+  background: #fff;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+  border: 1px solid #b2967d;
+  border-radius: 8px;
+  padding: 1rem;
+  flex: 1;
+  width: 400px;
+  text-align: left;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.sec-4-pillar:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+.sec-4-pillar h4 {
+  font-size: 25px;
+  color: #a36e29;
+  margin-bottom: 0.8rem;
+  font-weight: 500;
+}
+
+.sec-4-pillar p {
+  font-size: 18px;
+  color: #555;
+  line-height: 1.6;
+  text-align: justify;
+
+}
+
+
+.pillar-image {
+  width: 100%;
+  height: 200px; /* Adjust height as needed */
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+/* Tablet View */
+@media (max-width: 768px) {
+  .sec-4-pillars {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .sec-4-pillar {
+    width: 95%;
+    margin-left: 1px;
+  }
+}
+
+/* Mobile View */
+@media (max-width: 480px) {
+  .sec-4-vision-title {
+    font-size: 30px;
+  }
+
+  .sec-4-vision-subtitle {
+    font-size: 1.2rem;
+  }
+
+  .sec-4-pillars-title {
+    font-size: 30px;
+  }
+
+  .sec-4-vision-content {
+    font-size: 1rem;
+  }
+
+  .sec-4-vision-visual {
+    height: 150px;
+    font-size: 0.9rem;
+  }
+
+  .sec-4-pillar {
+    width: 100%;
+    margin-left: -10px;
+    padding: 7px;
+    margin-bottom: 15px;
+  }
+
+.pillar-image {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 8px;
+    margin-bottom: -10px;
+}
+
+
+.sec-4-pillar p {
+  font-size: 16px;
+  color: #555;
+  line-height: 1.6;
+  text-align: justify;
+}
+}
+
+
+
+
+
+/* .sec-5-cta-section {
+  background-image: url('./Images/websitebanner2.png');
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  text-align: center;
+  padding: 2rem;
+  margin: 2rem auto;
+  height: 300px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+} */
+
+
+.lus_banner-section {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 2rem auto;
+  height: 300px; /* Adjust height as needed */
+  background-color: #f9f9f9; /* Optional background color */
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.lus_banner-image {
+  width: 100%;
+  height: 360px;
+  border-radius: 2px; /* Match the section's rounded corners */
+  object-fit: cover; /* Ensures the image scales properly */
+}
+
+
+/* Tablet view (e.g., iPads) */
+@media (max-width: 768px) {
+  .lus_banner-section {
+    height: 250px; /* Reduce height for tablets */
+  }
+
+  .lus_banner-image {
+    border-radius: 6px; /* Slightly smaller corners for smaller devices */
+    height: 250px; 
+  }
+}
+
+/* Mobile view (e.g., phones) */
+@media (max-width: 480px) {
+  .lus_banner-section {
+    height: 200px; /* Reduce height further for mobile devices */
+    margin: 1rem; /* Reduce margin for smaller screens */
+  }
+
+  .lus_banner-image {
+    border-radius: 4px; /* Smaller corners for compact view */
+    height: 200px;
+    width: 109%;
+  }
+}
+
+.sec-5-cta-title {
+  font-size: 2rem;
+  color: white;
+  margin-bottom: 1rem;
+}
+
+.sec-5-cta-subtitle {
+  font-size: 1.4rem;
+  color: black;
+  margin-bottom: 1.5rem;
+  font-weight: 600;
+}
+
+.sec-5-cta-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  justify-content: center;
+  margin-top: 260px;
+}
+
+.sec-5-cta-button {
+  background-color: white;
+  color: #d2a66d;
+  border: none;
+  border-radius: 5px;
+  padding: 0.75rem 1.5rem;
+  font-size: 20px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.sec-5-cta-button:hover {
+  background-color: #d2a66d;
+  color:white;
+  transform: scale(1.05);
+  border: 1px solid black;
+}
+
+.sec-5-cta-button:focus {
+  outline: none;
+  box-shadow: 0 0 5px rgba(183, 110, 121, 0.5);
+}
+
+/* Responsive Styling */
+@media (max-width: 768px) { /* Tablet View */
+  .sec-5-cta-section {
+    padding: 1.5rem;
+  }
+
+  .sec-5-cta-title {
+    font-size: 1.8rem;
+  }
+
+  .sec-5-cta-subtitle {
+    font-size: 1.3rem;
+  }
+
+  .sec-5-cta-button {
+    font-size: 0.95rem;
+    padding: 0.6rem 1.2rem;
+  }
+}
+
+@media (max-width: 480px) { /* Mobile View */
+  .sec-5-cta-section {
+    padding: 1rem;
+  }
+
+  .sec-5-cta-title {
+    font-size: 1.6rem;
+  }
+
+  .sec-5-cta-subtitle {
+    font-size: 1.2rem;
+  }
+
+  .sec-5-cta-buttons {
+    flex-direction: column;
+  }
+
+  .sec-5-cta-button {
+    font-size: 0.9rem;
+    padding: 0.5rem 1rem;
+    width: 100%; /* Buttons stack on mobile */
+  }
+}
+
+
+
+

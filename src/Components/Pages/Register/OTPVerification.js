@@ -51,7 +51,7 @@ function OTPVerification() {
         if (registerResponse.status === 200 || registerResponse.status === 201) {
           alert("Registration successful!");
           setTimeout(() => {
-            navigate("/");
+            navigate("/login");
           }, 100);
         }
       }

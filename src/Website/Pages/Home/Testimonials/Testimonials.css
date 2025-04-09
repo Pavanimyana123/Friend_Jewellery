@@ -1,0 +1,164 @@
+/* Testimonials Section */
+.testimonials-section {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 40px 20px;
+    background-color: #f9f9f9;
+    min-height: 400px;
+  }
+  
+  /* Main Content Wrapper */
+  .testimonials-content {
+    display: flex;
+    flex-direction: column;
+    max-width: 1200px;
+    width: 100%;
+    gap: 20px;
+  }
+  
+  /* Left side image */
+  .testimonials-image img {
+    width: 100%;
+    max-width: 500px;
+    height: auto;
+    border-radius: 10px;
+    object-fit: cover;
+  }
+  
+  /* Right side content */
+  .testimonials-text {
+    flex: 1;
+    text-align: center;
+    padding: 20px;
+  }
+  
+  /* Heading and Paragraph */
+  .testimonials-text h2 {
+    font-size: 28px;
+    color: #333;
+    margin-bottom: 10px;
+  }
+  
+  .testimonials-text p {
+    font-size: 16px;
+    color: #666;
+    margin-bottom: 20px;
+  }
+  
+  /* Slider styling */
+  .testimonial-slider {
+    max-width: 785px;
+    margin: 0 auto;
+  }
+  
+  .slick-slide {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  /* Testimonial Card */
+  .testimonial-card {
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    width: 300px;
+    transition: transform 0.3s ease;
+  }
+  
+  .testimonial-card:hover {
+    transform: translateY(-10px);
+  }
+  
+  .testimonial-header {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 15px;
+  }
+  
+  /* Profile Photo */
+  .testimonial-photo {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+  
+  /* Name and Location */
+  .testimonial-header h3 {
+    font-size: 18px;
+    color: #333;
+    margin: 0;
+  }
+  
+  .testimonial-header span {
+    font-size: 14px;
+    color: #888;
+  }
+  
+  .testimonial-card p {
+    font-size: 14px;
+    color: #666;
+    line-height: 1.6;
+  }
+  
+  /* Responsive Styling */
+  @media (min-width: 768px) {
+    .testimonials-content {
+      flex-direction: row;
+      gap: 40px;
+    }
+  
+    .testimonials-text h2 {
+      font-size: 32px;
+    }
+  
+    .testimonials-text p {
+      font-size: 16px;
+    }
+  }
+  
+  @media (min-width: 992px) {
+    .testimonials-text h2 {
+      font-size: 36px;
+    }
+  
+    .testimonials-text p {
+      font-size: 18px;
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .testimonials-text h2 {
+      font-size: 24px;
+    }
+  
+    .testimonials-text p {
+      font-size: 14px;
+    }
+  
+    .testimonials-content {
+      flex-direction: column;
+      gap: 20px;
+    }
+  
+    .testimonial-card {
+      width: 100%;
+      max-width: 280px;
+    }
+  }
+  
+
+  @media (min-width: 768px) and (max-width: 1024px) {
+  .testimonials-image img {
+    width: 100%;
+    max-width: 500px;
+    height: auto;
+    border-radius: 10px;
+    object-fit: cover;
+    margin-left: 15%;
+}
+  }

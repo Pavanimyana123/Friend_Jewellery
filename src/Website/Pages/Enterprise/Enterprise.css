@@ -1,0 +1,618 @@
+/* Enterprise Section */
+.enterprise-section {
+        background-color: #f0f5f9; /* Soft light blue background */
+        padding: 4rem 1.5rem;
+        font-family: 'Poppins', sans-serif;
+        color: #333;
+      }
+      
+      .enterprise-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 2rem;
+      }
+      
+      /* Header Styling */
+      .enterprise-header h1 {
+        font-size: 2.6rem;
+        font-weight: 700;
+        color: #2c3e50; /* Deep greyish blue */
+        margin-bottom: 1rem;
+        text-align: center;
+        line-height: 1.2;
+      }
+      
+      .enterprise-header p {
+        font-size: 1.2rem;
+        color: #34495e; /* Darker grey for the paragraph */
+        line-height: 1.7;
+        text-align: center;
+        margin-bottom: 3rem;
+      }
+      
+      /* Journey Section Styling */
+      .enterprise-journey h2 {
+        font-size: 2.2rem;
+        color: #2980b9; /* Bright Blue */
+        text-align: center;
+        margin-top: 3rem;
+      }
+      
+      .enterprise-journey p {
+        font-size: 1.1rem;
+        color: #34495e; /* Dark grey text */
+        line-height: 1.6;
+        text-align: center;
+        max-width: 800px;
+        margin: 0 auto;
+      }
+      
+      /* Principles Section Styling */
+      .enterprise-principles h3 {
+        font-size: 2rem;
+        color: #2c3e50; /* Deep blue-grey */
+        margin-top: 3rem;
+        text-align: center;
+      }
+      
+      .enterprise-principles ul {
+        list-style: none;
+        padding: 0;
+        font-size: 1.1rem;
+        color: #2c3e50;
+        margin-top: 2rem;
+        max-width: 800px;
+        margin: 0 auto;
+      }
+      
+      .enterprise-principles li {
+        background-color: #ecf0f1; /* Light grey background for each item */
+        padding: 1rem;
+        margin: 1rem 0;
+        border-left: 5px solid #2980b9; /* Blue left border for each item */
+        border-radius: 4px;
+      }
+      
+      .enterprise-principles li strong {
+        color: #2980b9; /* Blue color for the strong text */
+      }
+      
+      /* Hover Effects */
+      .enterprise-principles li:hover {
+        background-color: #d5dbdb; /* Slightly darker grey on hover */
+        cursor: pointer;
+      }
+      
+      /* Mobile View */
+      @media (max-width: 480px) {
+        .enterprise-header h1 {
+          font-size: 2.2rem;
+        }
+      
+        .enterprise-header p {
+          font-size: 1rem;
+        }
+      
+        .enterprise-journey h2 {
+          font-size: 1.8rem;
+        }
+      
+        .enterprise-journey p {
+          font-size: 1rem;
+        }
+      
+        .enterprise-principles h3 {
+          font-size: 1.6rem;
+        }
+      
+        .enterprise-principles ul {
+          font-size: 1rem;
+        }
+      }
+      
+      /* Tablet View */
+      @media (max-width: 768px) {
+        .enterprise-header h1 {
+          font-size: 2.4rem;
+        }
+      
+        .enterprise-header p {
+          font-size: 1.1rem;
+        }
+      
+        .enterprise-journey h2 {
+          font-size: 2rem;
+        }
+      
+        .enterprise-journey p {
+          font-size: 1.1rem;
+        }
+      
+        .enterprise-principles h3 {
+          font-size: 1.8rem;
+        }
+      
+        .enterprise-principles ul {
+          font-size: 1.1rem;
+        }
+      }
+
+
+
+      /* Company Ethics Section */
+.company-ethics-section {
+        background-color: #ecf0f1; /* Light grey background */
+        padding: 4rem 1.5rem;
+        font-family: 'Poppins', sans-serif;
+      }
+      
+      .company-ethics-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 2rem;
+        text-align: center;
+      }
+      
+      /* Title and Description Styling */
+      .section-title {
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: #2c3e50; /* Dark Blue */
+        margin-bottom: 1rem;
+      }
+      
+      .section-description {
+        font-size: 1.2rem;
+        color: #34495e; /* Darker grey */
+        line-height: 1.6;
+        margin-bottom: 3rem;
+      }
+      
+      /* Ethics Icons Styling */
+      .ethics-icons {
+        display: flex;
+        justify-content: space-between;
+        gap: 2rem;
+        flex-wrap: wrap;
+      }
+      
+      .ethics-box {
+        background-color: #fff;
+        border: 2px solid #2980b9; /* Border color */
+        padding: 2rem;
+        border-radius: 8px;
+        text-align: center;
+        width: 30%;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      }
+      
+      .ethics-icon {
+        font-size: 3rem;
+        color: #2980b9; /* Blue color for icons */
+        margin-bottom: 1rem;
+      }
+      
+      .ethics-box h3 {
+        font-size: 1.4rem;
+        font-weight: 600;
+        color: #2c3e50;
+        margin-bottom: 1rem;
+      }
+      
+      .ethics-box p {
+        font-size: 1rem;
+        color: #34495e;
+        line-height: 1.5;
+      }
+      
+      /* Trust Section Styling */
+      .ethics-trust {
+        margin-top: 3rem;
+        background-color: #ffffff;
+        padding: 2rem;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      }
+      
+      .ethics-trust h3 {
+        font-size: 1.6rem;
+        color: #2980b9;
+        margin-bottom: 1rem;
+      }
+      
+      .ethics-trust p {
+        font-size: 1.2rem;
+        color: #34495e;
+        line-height: 1.7;
+      }
+      
+      /* Mobile View */
+      @media (max-width: 480px) {
+        .section-title {
+          font-size: 2rem;
+        }
+      
+        .section-description {
+          font-size: 1rem;
+        }
+      
+        .ethics-icons {
+          flex-direction: column;
+          gap: 1.5rem;
+        }
+      
+        .ethics-box {
+          width: 90%;
+          margin: 0 auto;
+        }
+      
+        .ethics-trust h3 {
+          font-size: 1.4rem;
+        }
+      
+        .ethics-trust p {
+          font-size: 1rem;
+        }
+      }
+      
+      /* Tablet View */
+      @media (max-width: 768px) {
+        .section-title {
+          font-size: 2.2rem;
+        }
+      
+        .section-description {
+          font-size: 1.1rem;
+        }
+      
+        .ethics-icons {
+          flex-direction: row;
+          gap: 2rem;
+        }
+      
+        .ethics-box {
+          width: 45%;
+        }
+      
+        .ethics-trust h3 {
+          font-size: 1.5rem;
+        }
+      
+        .ethics-trust p {
+          font-size: 1.1rem;
+        }
+      }
+      
+
+
+
+
+
+
+      /* What We Do Section */
+.what-we-do-section {
+        background-color: #f9f9f9; /* Light grey background */
+        padding: 4rem 2rem;
+        font-family: 'Poppins', sans-serif;
+      }
+      
+      .what-we-do-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 2rem;
+        text-align: center;
+      }
+      
+      /* Title and Description Styling */
+      .section-title {
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: #2c3e50; /* Dark Blue */
+        margin-bottom: 1rem;
+      }
+      
+      .section-description {
+        font-size: 1.2rem;
+        color: #34495e; /* Darker grey */
+        line-height: 1.6;
+        margin-bottom: 3rem;
+      }
+      
+      /* Ventures Icons Styling */
+      .ventures {
+        display: flex;
+        justify-content: space-between;
+        gap: 2rem;
+        flex-wrap: wrap;
+      }
+      
+      .venture-box {
+        background-color: #fff;
+        border: 2px solid #2980b9; /* Border color */
+        padding: 2rem;
+        border-radius: 8px;
+        text-align: center;
+        width: 30%;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      }
+      
+      .venture-icon {
+        font-size: 3rem;
+        color: #2980b9; /* Blue color for icons */
+        margin-bottom: 1rem;
+      }
+      
+      .venture-box h3 {
+        font-size: 1.4rem;
+        font-weight: 600;
+        color: #2c3e50;
+        margin-bottom: 1rem;
+      }
+      
+      .venture-box p {
+        font-size: 1rem;
+        color: #34495e;
+        line-height: 1.5;
+      }
+      
+      /* Mobile View */
+      @media (max-width: 480px) {
+        .section-title {
+          font-size: 2rem;
+        }
+      
+        .section-description {
+          font-size: 1rem;
+        }
+      
+        .ventures {
+          flex-direction: column;
+          gap: 1.5rem;
+        }
+      
+        .venture-box {
+          width: 90%;
+          margin: 0 auto;
+        }
+      }
+      
+      /* Tablet View */
+      @media (max-width: 768px) {
+        .section-title {
+          font-size: 2.2rem;
+        }
+      
+        .section-description {
+          font-size: 1.1rem;
+        }
+      
+        .ventures {
+          flex-direction: row;
+          gap: 2rem;
+        }
+      
+        .venture-box {
+          width: 45%;
+        }
+      }
+
+      
+
+
+      /* Relationships Section */
+.relationships-section {
+        background-color: #fff;
+        padding: 4rem 2rem;
+        font-family: 'Poppins', sans-serif;
+      }
+      
+      .relationships-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 2rem;
+        text-align: center;
+      }
+      
+      /* Title and Description Styling */
+      .section-title {
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: #2c3e50; /* Dark Blue */
+        margin-bottom: 1rem;
+      }
+      
+      .section-description {
+        font-size: 1.2rem;
+        color: #34495e; /* Darker grey */
+        line-height: 1.6;
+        margin-bottom: 3rem;
+      }
+      
+      /* Foundations Icons Styling */
+      .foundations {
+        display: flex;
+        justify-content: space-between;
+        gap: 2rem;
+        flex-wrap: wrap;
+      }
+      
+      .foundation-box {
+        background-color: #fff;
+        border: 2px solid #2980b9; /* Border color */
+        padding: 2rem;
+        border-radius: 8px;
+        text-align: center;
+        width: 45%;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      }
+      
+      .foundation-icon {
+        font-size: 3rem;
+        color: #2980b9; /* Blue color for icons */
+        margin-bottom: 1rem;
+      }
+      
+      .foundation-box h3 {
+        font-size: 1.4rem;
+        font-weight: 600;
+        color: #2c3e50;
+        margin-bottom: 1rem;
+      }
+      
+      .foundation-box p {
+        font-size: 1rem;
+        color: #34495e;
+        line-height: 1.5;
+      }
+      
+      /* Mobile View */
+      @media (max-width: 480px) {
+        .section-title {
+          font-size: 2rem;
+        }
+      
+        .section-description {
+          font-size: 1rem;
+        }
+      
+        .foundations {
+          flex-direction: column;
+          gap: 1.5rem;
+        }
+      
+        .foundation-box {
+          width: 90%;
+          margin: 0 auto;
+        }
+      }
+      
+      /* Tablet View */
+      @media (max-width: 768px) {
+        .section-title {
+          font-size: 2.2rem;
+        }
+      
+        .section-description {
+          font-size: 1.1rem;
+        }
+      
+        .foundations {
+          flex-direction: row;
+          gap: 2rem;
+        }
+      
+        .foundation-box {
+          width: 45%;
+        }
+      }
+      
+
+
+      /* Society's Future Section */
+.society-future-section {
+        background-color: #f9f9f9;
+        padding: 4rem 2rem;
+        font-family: 'Poppins', sans-serif;
+      }
+      
+      .society-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 2rem;
+        text-align: center;
+      }
+      
+      /* Title and Description Styling */
+      .section-title {
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: #2c3e50; /* Dark Blue */
+        margin-bottom: 1rem;
+      }
+      
+      .section-description {
+        font-size: 1.2rem;
+        color: #34495e; /* Darker grey */
+        line-height: 1.6;
+        margin-bottom: 3rem;
+      }
+      
+      /* Commitment Icons Styling */
+      .commitment {
+        display: flex;
+        justify-content: space-between;
+        gap: 2rem;
+        flex-wrap: wrap;
+      }
+      
+      .commitment-box {
+        background-color: #fff;
+        border: 2px solid #2980b9; /* Border color */
+        padding: 2rem;
+        border-radius: 8px;
+        text-align: center;
+        width: 30%;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      }
+      
+      .commitment-icon {
+        font-size: 3rem;
+        color: #2980b9; /* Blue color for icons */
+        margin-bottom: 1rem;
+      }
+      
+      .commitment-box h3 {
+        font-size: 1.4rem;
+        font-weight: 600;
+        color: #2c3e50;
+        margin-bottom: 1rem;
+      }
+      
+      .commitment-box p {
+        font-size: 1rem;
+        color: #34495e;
+        line-height: 1.5;
+      }
+      
+      /* Mobile View */
+      @media (max-width: 480px) {
+        .section-title {
+          font-size: 2rem;
+        }
+      
+        .section-description {
+          font-size: 1rem;
+        }
+      
+        .commitment {
+          flex-direction: column;
+          gap: 1.5rem;
+        }
+      
+        .commitment-box {
+          width: 90%;
+          margin: 0 auto;
+        }
+      }
+      
+      /* Tablet View */
+      @media (max-width: 768px) {
+        .section-title {
+          font-size: 2.2rem;
+        }
+      
+        .section-description {
+          font-size: 1.1rem;
+        }
+      
+        .commitment {
+          flex-direction: row;
+          gap: 2rem;
+        }
+      
+        .commitment-box {
+          width: 45%;
+        }
+      }
+      
+      

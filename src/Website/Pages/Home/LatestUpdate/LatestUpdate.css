@@ -1,0 +1,209 @@
+/* Base Styles for .LatestUpdate-card */
+.LatestUpdate-card {
+    position: relative;
+    /* background-image: url('./Images/Latest\ News\ &\ Updates.jpg'); */
+    background-size: cover;
+    background-position: center;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    margin: 20px auto;
+    max-width: 90%;
+    text-align: center;
+    transition: transform 0.3s ease;
+    color: #333;
+    overflow: hidden;
+}
+
+/* Overlay effect */
+.LatestUpdate-card::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    border-radius: 8px; 
+    z-index: 0; 
+}
+
+.LatestUpdate-card:hover {
+    transform: translateY(-5px);
+}
+
+/* Styling for the bullet points container */
+.LatestUpdate-points {
+    margin-top: 30px;
+    text-align: left;
+    /* padding-left: 195px; */
+    list-style-type: disc;
+    color: #fff;
+    width: 55%;
+}
+
+/* Styling for individual bullet points */
+.LatestUpdate-points li {
+    margin-bottom: 10px;
+    font-size: 16px;
+    line-height: 1.6;
+    color: #f5f5f5; /* Use a slightly off-white color for better contrast */
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8); /* Add text shadow for better readability */
+}
+
+/* Styling for emphasized text within bullet points */
+.LatestUpdate-points li strong {
+    font-weight: bold;
+    color: #ffd700; /* Use a gold-like color for emphasis */
+}
+
+.Brand-aligment {
+    margin-left: 20px;
+}
+
+.LatestUpdate-paragraph {
+    font-size: 20px;
+    width: 80%;
+    margin: 10px auto;
+    text-align: justify;
+}
+
+/* Text Styles */
+.LatestUpdate-card h2,
+.LatestUpdate-card p {
+    position: relative;
+    z-index: 1; /* Ensure text is above overlay */
+    color: #fff; /* White for contrast against overlay */
+    text-align: center;
+    margin: 0 auto;
+}
+
+.LatestUpdate-card h2 {
+    font-size: 36px;
+    margin-bottom: 10px;
+    text-align: left;
+}
+
+.LatestUpdate-card p {
+    font-size: 18px;
+    margin: 10px auto;
+    text-align: justify; /* Justify text for readability */
+}
+
+
+
+
+/* Desktop View */
+/* @media (min-width: 1025px) {
+    .LatestUpdate-card {
+        max-width: 90%;
+        padding: 30px;
+        margin: 40px auto;
+        height: 268px;
+    }
+
+    .LatestUpdate-card h2 {
+        font-size: 2.6rem;
+        text-align: left;
+    }
+
+    .LatestUpdate-card p {
+        font-size: 18px;
+        width: 80%; 
+        margin: 10px auto;
+        text-align: justify;
+        
+    }
+
+    .LatestUpdate-points {
+        padding-left: 195px;
+        width: 74%;
+    }
+
+    .LatestUpdate-points li {
+        font-size: 16px;
+    }
+
+    .Brand-aligment {
+        margin-left: 20px;
+    }
+
+    .LatestUpdate-paragraph {
+        font-size: 20px;
+    }
+} */
+
+
+/* Mobile View (Extra Small Devices) */
+@media (max-width: 767px) {
+    .LatestUpdate-card {
+        max-width: 83%;
+        padding: 15px;
+        /* margin: 10px auto; */
+        margin-top: -10px;
+    }
+
+    .LatestUpdate-card h2 {
+        font-size: 30px;
+    }
+
+    .LatestUpdate-card p {
+        font-size: 16px;
+        width: 92%;
+        margin-left: -19px;
+    }
+
+    .LatestUpdate-points {
+        padding-left: 20px;
+        width: 100%;
+    }
+
+    .LatestUpdate-points li {
+        font-size: 14px;
+    }
+
+    .Brand-aligment {
+        margin-left: 10px;
+    }
+
+    .LatestUpdate-paragraph {
+        font-size: 16px;
+    }
+    
+}
+
+/* Tablet View (iPad) */
+@media (min-width: 768px) and (max-width: 1024px) {
+    .LatestUpdate-card {
+        max-width: 90%;
+        padding: 25px;
+        margin: 20px auto;
+    }
+
+    .LatestUpdate-card h2 {
+        font-size:32px;
+    }
+
+    .LatestUpdate-card p {
+        font-size: 18px;
+    }
+
+    .LatestUpdate-points {
+        padding-left: 40px;
+        width: 80%;
+    }
+
+    .LatestUpdate-points li {
+        font-size: 16px;
+    }
+
+    .Brand-aligment {
+        margin-left: 15px;
+    }
+
+    .LatestUpdate-paragraph {
+        font-size: 18px;
+    }
+}
+
+

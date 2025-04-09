@@ -36,17 +36,39 @@ import OnholdOrders from "./Components/Modules/Worker/Orders/OnholdOrders";
 import ProfileDetails from "./Components/Modules/Customer/ProfileDetails";
 import Register from "./Components/Pages/Register/Register";
 import OTPVerification from "./Components/Pages/Register/OTPVerification";
+import WebsiteName from "./websiteName";
+import Home from "./Website/Pages/Home/Home";
+import Schemes from "./Website/Pages/OfflineStore/Schemes/Schemes";
+import ContactForm from "./Website/Pages/Contact/Contact";
+import AboutUs from "./Website/Pages/Aboutus/AboutUs";
+import Brands from "./Website/Pages/Brands/Brands";
+import Enterprise from "./Website/Pages/Enterprise/Enterprise";
+import Jewels from "./Website/Pages/Brands/Jewels";
+import Jewelkart from "./Website/Pages/Brands/Jewelkart";
 
 export default function MainApp() {
   return (
     <AuthProvider>
       <Router>
+        <WebsiteName />
         <Routes>
           {/* Public Routes */}
-          <Route path="/" exact element={<NewLogin />} />
+          {/* <Route path="/" exact element={<NewLogin />} /> */}
           <Route path="/login" element={<NewLogin />} />
           <Route path="/c-register" exact element={<Register />} />
           <Route path="/verify-otp" element={<OTPVerification />} />
+
+
+          <Route path="/" exact element={<Home />} />
+        <Route path="/schemes" exact element={<Schemes />} />
+        {/* <Route path="/seller" exact element={<Seller />} /> */}
+        {/* <Route path="/user" exact element={<User />} /> */}
+        <Route path="/contactUs" exact element={<ContactForm />} />
+        <Route path="/AboutUs" exact element={<AboutUs />} />
+        <Route path="/Brands" exact element={<Brands />} />
+        <Route path="/store" exact element={<Jewels />} />
+        <Route path="/sadashri-jewelkart" exact element={<Jewelkart />} />
+        <Route path="/Enterprise" exact element={<Enterprise />} />
 
           {/* Protected Routes */}
           <Route

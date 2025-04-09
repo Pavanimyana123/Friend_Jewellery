@@ -1,0 +1,158 @@
+/* Container for the whole section */
+.introduction-container {
+    display: flex;
+    flex-wrap: wrap; /* Allows content to wrap on smaller screens */
+    justify-content: space-between; /* Ensures image and content are spread out */
+    align-items: center; /* Vertically center the items */
+    padding: 50px;
+  }
+  
+  /* Style for the left side with the image */
+  .introduction-left {
+    flex: 1; /* Takes up 50% of the container */
+    padding-right: 20px; /* Add space between image and content */
+    margin-left:85px;
+  }
+  
+  .introduction-image {
+    width: 97%;
+    border-radius: 10px;
+    height: 360px;
+  }
+  
+  /* Style for the right side with the content */
+  .introduction-right {
+    flex: 1; /* Takes up 50% of the container */
+    padding-left: 20px;
+  }
+  
+  .introduction-title {
+    /* font-size: 32px;
+    font-weight: 700;
+    margin-bottom: 20px; */
+
+    font-size: 2.6rem;
+    font-weight: 700;
+    color: #a36e29;
+    margin-bottom: 20px;
+    text-align: center;
+    line-height: 1.2;
+  }
+  
+  .introduction-text {
+    font-size: 18px;
+    line-height: 1.6;
+    color: #555;
+  }
+  
+  /* Media Queries */
+  
+  /* Mobile View (small screens) */
+  @media screen and (max-width: 767px) {
+    .introduction-container {
+      flex-direction: column; /* Stack items vertically on mobile */
+      padding: 20px;
+      margin-top: -20px;
+    }
+  
+    .introduction-left,
+    .introduction-right {
+      flex: none;
+      width: 100%; /* Both the image and content will take full width */
+    }
+
+    .introduction-container .introduction-left{
+      width: 80%;
+      margin-left: -8px;
+    }
+    .introduction-container  .introduction-right{
+      text-align: justify;
+      margin-left: -28px;
+      margin-top: -40px;
+    }
+  
+    .introduction-container .introduction-left
+    .introduction-image {
+      width: 330px;
+      height: auto;
+      margin-left: 20px;
+      margin-bottom: -33px;
+    }
+  
+    .introduction-title {
+      font-size: 30px; /* Slightly smaller title for mobile */
+    }
+  
+    .introduction-text {
+      font-size: 16px; /* Smaller text for mobile */
+      width: 107%;
+      margin-left: -10px;
+    }
+  }
+  
+  /* Tablet View (medium screens like iPads) */
+  @media screen and (min-width: 768px) and (max-width: 1024px) {
+    .introduction-container {
+      flex-direction: column; /* Side by side on tablet */
+      margin-top: -10px;
+    }
+  
+    .introduction-left,
+    .introduction-right {
+      flex: 1; /* Each takes 50% of the container */
+    }
+  
+
+    .introduction-right{
+      text-align: justify;
+      margin-left: -27px;
+      padding-right: 34px;
+      margin-top: -40px;
+    }
+    .introduction-title {
+      font-size: 36px; /* Adjust title size for tablet */
+    }
+  
+    .introduction-text {
+      font-size: 18px; /* Adjust text size for tablet */
+      margin-left: -10px;
+      width: 106%;
+    }
+    .introduction-image {
+      width: 115%;
+      border-radius: 10px;
+      height: 360px;
+      margin-left: -64px;
+  }
+  }
+  
+  /* Desktop View (large screens) */
+  @media screen and (min-width: 1025px) {
+    .introduction-container {
+      flex-direction: row; /* Side by side on desktop */
+    }
+  
+    .introduction-left,
+    .introduction-right {
+      flex: 1; /* Each takes 50% of the container */
+      width: 50%; /* Ensure they take equal width */
+     
+    }
+  
+    .introduction-title {
+      font-size: 36px;
+      font-weight: 500;
+      color: #a36e29;
+      margin-bottom: 1rem;
+      text-align: center;
+      line-height: 1.2;
+    }
+  
+    .introduction-text {
+        font-size: 18px;
+        text-align: justify;
+        width: 87%;
+        /* margin-left: 15%; */
+    }
+  }
+  

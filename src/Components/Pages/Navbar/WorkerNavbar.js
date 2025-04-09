@@ -30,7 +30,7 @@ function VendorNavbar() {
     };
 
     const handleLogout = () => {
-        navigate("/");
+        navigate("/login");
     };
 
 

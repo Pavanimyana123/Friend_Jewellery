@@ -1,0 +1,240 @@
+/* Section Background */
+.product-quality-section {
+    /* background: linear-gradient(to right, rgba(119, 112, 112, 1) 0%, rgb(129 127 124) 28%, rgb(42 42 41) 100%); */
+    color: #fff;
+    padding: 10px 0;
+  }
+  
+  /* Container */
+  .product-quality-container {
+    padding: 20px;
+    max-width: 1270px;
+    margin: 0 auto;
+    margin-top: -40px;
+    text-align: center;
+  }
+  
+  /* Main Heading */
+  .product-quality-heading {
+    font-size: 2em;
+    margin-bottom: 20px;
+    color: #f8f8f8;
+  }
+  
+  /* Paragraph Styling */
+  .product-quality-para {
+    font-size: 1em;
+    /* color: #ddd; */
+    color: #333;
+    line-height: 1.6;
+  }
+  
+  /* Content Wrapper */
+  .product-quality-content {
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+  }
+  
+  /* Card Styling */
+  .product-quality-content
+  .product-quality-card {
+    padding: 20px;
+    border: 1px solid #444;
+    border-radius: 8px;
+    /* background-color: #222; */
+    text-align: left;
+    height: 140px;
+  }
+ 
+
+  /* Left and Right Layout for Desktop */
+  .product-quality-card .left {
+    align-self: flex-start;
+  }
+  /* .product-quality-card.right {
+    align-self: flex-end;
+  } */
+  .product-quality-card
+  .product-quality-heading-card {
+    text-align: center;
+    font-size: 25px;
+    color: #a36e29;
+    margin-top: -10px;
+}
+
+.product-quality-card 
+  .Read-more {
+      margin-left: 81%;
+      color: #a36e29;
+  }
+
+
+
+  @media (min-width: 992px) {
+    .product-quality-heading {
+      font-size: 36px;
+    font-weight: 500;
+    /* color: white; */
+    color:#a36e29 ;
+    margin-bottom: 20px;
+    text-align: center;
+    line-height: 1.2;
+    }
+  
+    .product-quality-para {
+      font-size: 18px;
+    }
+
+    .product-quality-heading-card {
+      text-align: center;
+      font-size: 25px;
+      color: #a36e29;
+  }
+  
+  .Read-more {
+    margin-left: 80%;
+    color: #a36e29;
+
+}
+  }
+
+
+  @media  (min-width: 768px) and (max-width: 1024px)  {
+
+    .product-quality-content .product-quality-card {
+      padding: 20px;
+      border: 1px solid #444;
+      border-radius: 8px;
+      /* background-color: #222; */
+      text-align: left;
+      height: 130px;
+  }
+  .product-quality-content {
+    flex-direction: column;
+  }
+  }
+
+
+
+   /* Responsive Styling */
+   @media (min-width: 768px) {
+    
+    .product-quality-heading-card {
+      text-align: center;
+      font-size: 18px;
+  }
+  
+  .Read-more {
+    margin-left: 85%;
+    color: #a36e29;
+
+}
+/* .product-quality-card {
+      flex: 1;
+      max-width: 48%;
+      height: 220px;
+    } */
+
+    .product-quality-heading-card {
+      text-align: center;
+      font-size: 28px;
+      color: #a36e29;
+  }
+  }
+
+
+  @media (max-width: 768px) {
+    .product-quality-heading {
+      font-size: 2em;
+      color:#a36e29 ;
+
+    }
+  
+    .product-quality-para {
+      font-size: 18px;
+      text-align: justify;
+    }
+    
+    /* .product-quality-card {
+      text-align: center;
+      padding: 15px;
+    } */
+  }
+  
+
+  @media (max-width: 767px){
+    .product-quality-card 
+    .product-quality-heading-card {
+      text-align: center;
+      font-size: 22px;
+      color: #a36e29;
+
+      
+  }
+
+
+  
+  .product-quality-para {
+    font-size: 16px;
+    text-align: justify;
+}
+
+
+ 
+  .product-quality-card.left {
+    align-self: flex-start;
+    /* height: 200px; */
+  }
+  .product-quality-card.right {
+    align-self: flex-end;
+    /* height: 160px; */
+
+  }
+  .product-quality-card 
+  .Read-more {
+    margin-left: 70%;
+    color: #a36e29;
+}
+
+
+.product-quality-content
+.product-quality-card {
+  padding: 20px;
+  border: 1px solid #444;
+  border-radius: 8px;
+  /* background-color: #222; */
+  text-align: left;
+  height: 190px;
+}
+
+
+.product-quality-container {
+  padding: 20px;
+  max-width: 1270px;
+  margin: 0 auto;
+  margin-top: -12px;
+  text-align: center;
+}
+
+.product-quality-content {
+  display: flex
+;
+  flex-direction: column;
+  gap: 20px;
+}
+
+
+
+  .product-quality-heading {
+      font-size: 30px;
+      color: #a36e29;
+  }
+
+  }
+
+ 
+ 
+  
+
+  

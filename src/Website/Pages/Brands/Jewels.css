@@ -1,0 +1,1227 @@
+.br-brand-title {
+        font-size: 2.5rem;
+        font-weight: 600;
+        color: #a36e29;
+        margin-bottom: 1.5rem;
+        text-align: center;
+      }
+
+
+      .br-brand-description {
+        font-size: 18px;
+        color: #555;
+        margin-bottom: 2rem;
+        line-height: 1.6;
+        text-align: center;
+        padding-left: 20px;
+        padding-right: 20px;
+      }
+
+
+
+      .sec-1-banner-overlay-jewels {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 533px; 
+        background: rgba(0, 0, 0, -7.7); 
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+
+      
+      .strongoffline{
+        font-style: italic;
+        font-size: 30px;
+        color: #a36e29;
+      }
+
+
+
+      .br-detail-icon {
+        font-size: 2rem;
+        color: #a36e29;
+        margin-right: 1rem;
+        justify-content: center;
+
+      }
+
+
+      .div-icon{
+        text-align: center;
+        margin-top: 20px;
+      }
+
+      .div-icon h2{
+        font-size: 36px;
+        color: #a36e29;
+        margin-top: 0px;
+      }
+
+
+
+
+
+      .storebro-experience-section {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 80px;
+        padding: 20px;
+        width: 82%;
+        margin: 0 auto;
+      }
+      
+      .bro-detail-box {
+        flex: 1;
+        text-align: center;
+      }
+      
+      .bro-detail-icon {
+        font-size: 2rem;
+        color: #a36e29;
+        margin-bottom: -40px;
+      }
+      
+      .bro-detail-box h4 {
+        font-size: 2rem;
+        margin-bottom: 10px;
+        color: #a36e29;
+      }
+      
+      .bro-detail-box p {
+        font-size: 18px;
+        color: #555;
+        text-align: justify;
+        width: 94%;
+        margin-left: 16px;
+      }
+      
+      .bro-detail-image {
+        flex: 1;
+        max-width: 50%;
+      }
+      
+      .bro-detail-image img {
+        width: 93%;
+        height: 300px;
+        border-radius: 10px;
+        object-fit: cover;
+        margin-left: 20px;
+      }
+      
+
+
+
+      .category-list {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 20px;
+        padding: 20px;
+      }
+      
+      .category-card {
+        background-color: #fff;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        overflow: hidden;
+        text-align: center;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+      }
+      
+      .category-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 10px rgba(0, 0, 0, 0.2);
+      }
+      
+      .category-image {
+        width: 100%;
+        height: auto;
+        object-fit: cover;
+        border-bottom: 1px solid #ddd;
+      }
+      
+      .category-card h3 {
+        font-size: 25px;
+        margin: 15px 0;
+        color: #333;
+      }
+      
+      .category-card a {
+        display: inline-block;
+        color: #a36e29;
+        text-decoration: none;
+        font-weight: bold;
+        margin-bottom: 15px;
+        transition: color 0.3s ease;
+        font-size: 18px;
+
+      }
+      
+      .category-card a:hover {
+        color: #a36e29;
+        text-decoration: none;
+
+      }
+      
+
+
+
+      /* Zoom Animation */
+.zoom-animation {
+  animation: zoomInOut 5s infinite;
+}
+
+@keyframes zoomInOut {
+  0% {
+    transform: scale(1);
+    opacity: 0;
+  }
+  20% {
+    transform: scale(1.1);
+    opacity: 1;
+  }
+  80% {
+    transform: scale(1.1);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 0;
+  }
+}
+
+@media  (min-width: 1025px) and (max-width: 1920px)  {
+.responsive-image {
+  width: 100%;
+  height: 473px;
+  border-radius: 2px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  margin: 0 auto;
+  display: block;
+  margin-top: 82px;
+}
+}
+
+      @media only screen and (max-width: 1024px) and (min-width: 768px) {
+        .category-list {
+          grid-template-columns: repeat(2, 1fr);
+          /* gap: 15px; */
+          padding: 15px;
+        }
+      
+        .category-card h3 {
+          font-size: 25px;
+        }
+      
+        .category-card a {
+          font-size: 18px;
+        }
+
+        .div-icon h2 {
+          font-size: 32px;
+          color: #a36e29;
+          margin-top: 0px;
+      }
+      }
+      
+
+
+     
+      
+      /* Responsive Styles */
+      @media  (min-width: 768px) and (max-width: 1024px)  {
+        .image-container
+        .responsive-image {
+          width: 100%;
+          height: 270px;
+          border-radius: 1px;
+          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+          margin: 0 auto;
+          display: block;
+          margin-top: 71px;
+      }
+
+        .image-container {
+          max-width: 100%; /* Ensures the container doesn't exceed screen width */
+          overflow: hidden; /* Prevents overflow of the image */
+          text-align: center; /* Aligns the image to the center */
+          margin-top: -1px;
+        }
+
+        .br-brand-title {
+          font-size: 2.5rem;
+          font-weight: 600;
+          color: #a36e29;
+          margin-bottom: 1.5rem;
+          text-align: center;
+          margin-top: 80px;
+        }
+  
+        .storebro-experience-section {
+          flex-direction: column;
+          text-align: center;
+        }
+      
+        .bro-detail-box, .bro-detail-image {
+          max-width: 100%;
+        }
+
+
+        .bro-detail-image img {
+          width: 600px;
+          height: 300px;
+          border-radius: 10px;
+          object-fit: cover;
+          margin-left: -4px;
+      }
+
+
+      .sec-1-banner-overlay-jewels {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 351px;
+        /* background: rgba(0, 0, 0, 0.5); */
+        display: flex
+    ;
+        align-items: center;
+        justify-content: center;
+    }
+      }
+      
+
+
+
+      @media (max-width: 767px) {
+
+
+        .storebro-experience-section {
+          display: flex
+      ;
+          flex-direction: column;
+        
+          padding: 20px;
+          width: 80%;
+          margin: 0 auto;
+          margin-top: -40px;
+          gap: 0px;
+      }
+        .category-list {
+          grid-template-columns: 1fr;
+          gap: 10px;
+          padding: 10px;
+        }
+      
+        .category-card {
+          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+          margin-bottom: 20px;
+        }
+      
+        .category-card h3 {
+          font-size: 1.5rem;
+        }
+      
+        .category-card a {
+          font-size: 18px;
+        }
+        .image-container
+        .responsive-image  {
+          width: 100%;
+          height: 185px;
+          border-radius: 2px;
+          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+          margin: 0 auto;
+          display: block;
+          margin-top: 66px;
+      }
+
+      .storebro-experience-section
+      .bro-detail-box {
+        width: 100%;
+      }
+      .storebro-experience-section
+       .bro-detail-image {
+        width: 100%;
+      }
+
+
+      .category-image {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+        border-bottom: 1px solid #ddd;
+    }
+
+
+
+    .sec-1-banner-overlay-jewels {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 275px;
+      /* background: rgba(0, 0, 0, 0.5); */
+      display: flex
+  ;
+      align-items: center;
+      justify-content: center;
+  }
+
+
+
+  .bexperience-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 30px;
+    padding: 50px;
+    /* background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);  */
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1); /* Soft shadow for a modern touch */
+  }
+  
+  
+  .bexperience-section
+  .bcontent-box {
+    flex: 1 1;
+    height: 320px;
+    padding: 30px;
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease;
+    width: 150%;
+}
+
+
+
+.bcontent-box 
+.bsection-heading {
+    font-size: 30px;
+    font-weight: 600;
+    color: #a36e29;
+    margin-top: 15px;
+    text-align: center;
+}
+
+.carousel-layout 
+.left-box .slide h2 {
+  font-size: 30px;
+  margin-bottom: 10px;
+  color: #a36e29;
+}
+.carousel-layout 
+.left-box .slide p {
+  font-size: 16px;
+  color: #555;
+  text-align: justify;
+}
+
+
+.mainmain
+.carousel-layout {
+  display: flex
+;
+  width: 100%;
+  height: 830px;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  flex-direction: column;
+}
+
+
+.carousel-layout
+.left-box {
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  height: 410px;
+  max-width: 100%;
+  width: 90%;
+  margin-top: 50px;
+  margin-left: 20px;
+  border-radius: 12px;
+}
+
+
+.carousel-layout
+.right-box .image {
+  max-width: 254%;
+  width: 400px;
+  height: 300px;
+  margin-left: 210px;
+  border-radius: 8px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); /* Shadow effect on image */
+  transition: transform 0.3s ease-in-out;
+}
+
+
+
+.bkcontainer {
+  display: flex
+;
+  align-items: flex-start;
+  width: 100%;
+  gap: 10px;
+  height: 70vh;
+  padding-top: 20px;
+  flex-direction: column;
+}
+
+
+.bkcontainer
+.bkcontent-box {
+  max-height: 300px;
+  width: 87%;
+  overflow-y: scroll;
+  padding: 10px;
+  margin-top: 20px;
+  border: 1px solid #ccc;
+  scrollbar-width: thin;
+  scrollbar-color: #888 #f1f1f1;
+  margin-left: 15px;
+  border-radius: 6px;
+}
+
+
+.bkcontainer
+.bkcontent-box
+.bkcard {
+  background-color: #ffffff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  padding: 16px;
+  width: 291px;
+  display: flex
+;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  margin-top: 20px;
+  margin-left: 6px;
+  margin-bottom: 10px;
+}
+
+
+.bkicon {
+  font-size: 40px;
+  color: #a36e29;
+  margin-bottom: -43px;
+}
+.bkcard
+.bksection-heading {
+  font-size: 30px;
+  font-weight: bold;
+  margin-bottom: -15px;
+  color: #a36e29;
+}
+
+
+.mainmain1
+.bkcontainer {
+  display: flex
+;
+  justify-content: space-between;
+  align-items: flex-start;
+  width: 100%;
+  gap: 10px;
+  height: 75vh;
+  padding-top: 20px;
+}
+
+.bkimage-box
+  .bkimage {
+    max-width: 218%;
+        width: 412px;
+        height: 247px;
+        margin-left: 194px;
+      border-radius: 8px;
+      object-fit: cover;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+      transition: transform 0.3s ease-in-out;
+  }
+
+
+
+  .bimage-box {
+    flex: 1 1;
+    display: flex
+;
+    height: 350px;
+    width: 180%;
+    justify-content: center;
+    align-items: center;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    transition: transform 0.3s ease;
+}
+
+.bcontent-box
+.bsection-description {
+  font-size: 16px;
+  color: #555;
+  margin-top: 20px;
+  line-height: 1.8;
+  text-align: justify;
+}
+
+
+
+.div-icon h2 {
+    font-size: 30px;
+    color: #a36e29;
+    margin-top: 0px;
+}
+
+.bkcard
+.bksection-description {
+  font-size: 16px;
+  color: #666;
+  line-height: 2.0;
+}
+
+
+
+      }
+      
+
+
+      @media (max-width: 480px) {
+
+
+        .bro-detail-image img {
+          height: 300px;
+          border-radius: 10px;
+          object-fit: cover;
+          width: 350px;
+          margin-left: -99px;  
+        margin-bottom: 10px;    }
+
+      }
+
+
+
+
+
+
+
+
+
+      .image-container {
+        max-width: 100%; /* Ensures the container doesn't exceed screen width */
+        overflow: hidden; /* Prevents overflow of the image */
+        text-align: center; /* Aligns the image to the center */
+      }
+
+
+
+
+
+
+
+
+
+
+
+
+
+      /* Overall section styling */
+.bexperience-section {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 50px;
+  /* padding: 50px; */
+  padding-left: 100px;
+  padding-right: 100px;
+  padding-top: 50px;
+  padding-bottom: 50px;
+  /* background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);  */
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1); /* Soft shadow for a modern touch */
+}
+
+/* Content box with text */
+.bcontent-box {
+  flex: 1;
+  height: 320px;
+
+  padding: 30px;
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease-in-out, box-shadow 0.3s ease; /* Smooth hover effects */
+}
+
+.bcontent-box:hover {
+  transform: translateY(-10px); /* Slight lift on hover */
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2); /* Deeper shadow on hover */
+}
+
+
+.bicon {
+  font-size: 2.5rem;
+  color: #a36e29;
+  transition: color 0.3s ease;
+  display: block; /* Make the icon a block-level element */
+  margin: 0 auto; /* Center the icon horizontally */
+}
+
+.bicon:hover {
+  color: #a36e29;
+  /* Icon color change on hover */
+}
+
+/* Heading styling */
+.bsection-heading {
+  font-size: 2rem;
+  font-weight: 600;
+  color: #a36e29;
+  margin-top: 15px;
+  text-align: center; /* Center-align heading */
+}
+
+/* Paragraph styling */
+.bsection-description {
+  font-size: 18px;
+  color: #555;
+  margin-top: 20px;
+  line-height: 1.8;
+  text-align: justify; /* Center-align the text */
+}
+
+/* Image box */
+.bimage-box {
+  flex: 1;
+  display: flex;
+  height: 350px;
+
+  justify-content: center;
+  align-items: center;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); /* Shadow effect on image */
+
+  overflow: hidden; /* Ensure no part of the image overflows the container */
+  transition: transform 0.3s ease; /* Smooth hover effect for the image container */
+}
+
+.bimage-box:hover {
+  transform: scale(1.05); /* Slight zoom on hover for the image */
+}
+
+/* Image styling */
+.bexperience-image {
+  max-width: 100%;
+  height: auto;
+  border-radius: 12px; /* Rounded corners */
+  object-fit: cover;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); /* Shadow effect on image */
+  transition: transform 0.3s ease-in-out;
+}
+
+.bexperience-image:hover {
+  transform: scale(1.1); /* Image zooms slightly on hover */
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* Main section container */
+.kexperience-card-section {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 60px 20px;
+  /* background-color: #f5f7fa;  */
+}
+
+/* Card container */
+.kexperience-card {
+  display: flex;
+  flex-direction: row; /* Place content and image side by side */
+  background-color: #ffffff;
+  border-radius: 15px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease; /* Smooth hover effects */
+  max-width: 1100px;
+  width: 100%;
+  padding: 20px;
+}
+
+.kexperience-card:hover {
+  transform: translateY(-10px); /* Lift the card slightly on hover */
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2); /* Deep shadow for hover effect */
+}
+
+/* Content area of the card */
+.kcard-content {
+  flex: 1;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+/* Icon styling */
+.kicon {
+  font-size: 2.5rem;
+  color: #a36e29;
+  transition: color 0.3s ease;
+align-self: center;
+}
+
+.kicon:hover {
+  color: #a36e29;
+  /* Icon color change on hover */
+}
+
+/* Heading styling */
+.ksection-heading {
+  font-size: 2rem;
+  font-weight: 600;
+  color: #a36e29;
+  margin-top: 15px;
+  text-align: center;
+}
+
+/* Description text styling */
+.ksection-description {
+  font-size: 1.1rem;
+  color: #555;
+  margin-top: 15px;
+  line-height: 1.6;
+  text-align: justify;
+}
+
+/* Image area of the card */
+.kcard-image {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Image styling */
+.kexperience-image {
+  width: 100%;
+  height: auto;
+  border-radius: 10px; /* Rounded corners for the image */
+  object-fit: cover;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease-in-out; /* Smooth transition for the image */
+}
+
+.kexperience-image:hover {
+  transform: scale(1.05); /* Slight zoom on image hover */
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.carousel-layout {
+  display: flex;
+  width: 100%;
+  height: 450px;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.left-box,
+.right-box {
+  width: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.right-box {
+  width: 46%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.left-box {
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  height: 350px;
+  max-width: 50%;
+  width: 40%;
+  margin-top: 50px;
+  margin-left: 128px;
+  border-radius: 12px;
+
+
+}
+
+.left-box .slide {
+  max-width: 80%;
+}
+
+.left-box .slide h2 {
+  font-size: 2rem;
+  margin-bottom: 10px;
+  color: #a36e29;
+
+}
+
+.left-box .slide p {
+  font-size: 18px;
+  color: #555;
+  text-align: justify;
+}
+
+/* .right-box {
+  background-color: #e0e0e0;
+} */
+
+.right-box .image {
+  width: 92%;
+  height: 350px;
+  border-radius: 8px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); /* Shadow effect on image */
+  transition: transform 0.3s ease-in-out;
+}
+
+
+
+.right-box .image:hover {
+  transform: scale(1.1); /* Image zooms slightly on hover */
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* Main container styling */
+.bkcontent-box {
+  display: flex;
+  flex-direction: column;
+  gap: 16px; /* Space between cards */
+  justify-content: center;
+  padding: 16px;
+  background-color: #f9f9f9; /* Optional background for container */
+}
+
+/* Individual card styling */
+.bkcard {
+  background-color: #ffffff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  padding: 16px;
+  width: 560px; /* Fixed width for each card */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  margin-top: 20px;
+  margin-left: 20px;
+  margin-bottom: 10px;
+}
+
+/* Icon styling */
+.bkicon {
+  font-size: 40px;
+  color: #a36e29;
+}
+
+/* Heading styling */
+.bksection-heading {
+  font-size: 2rem;
+  font-weight: bold;
+  margin-bottom: 8px;
+  color: #a36e29;
+}
+
+/* Description styling */
+.bksection-description {
+  font-size: 18px;
+  color: #666;
+  line-height: 2.0;
+}
+
+
+
+
+
+
+
+
+.bkcontent-box {
+  max-height: 300px; /* Set the desired height */
+  width: 45%;
+  overflow-y: scroll; /* Enable vertical scrolling */
+  padding: 10px;
+  margin-top: 20px;
+  border: 1px solid #ccc; /* Optional styling */
+  scrollbar-width: thin; /* For Firefox - thin scrollbar */
+  scrollbar-color: #888 #f1f1f1; /* For Firefox - colors */
+  margin-left: 50px;
+  border-radius: 6px;
+}
+
+/* For webkit browsers (Chrome, Edge, Safari) */
+.bkcontent-box::-webkit-scrollbar {
+  width: 8px;
+}
+
+.bkcontent-box::-webkit-scrollbar-thumb {
+  background-color: #888;
+  border-radius: 4px;
+}
+
+.bkcontent-box::-webkit-scrollbar-thumb:hover {
+  background-color: #555;
+}
+
+.bkcontent-box::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+
+
+
+
+/* Image box */
+.bkcontent-box
+.bkimage-box {
+  flex: 1;
+  display: flex;
+  height: 350px;
+
+  justify-content: center;
+  align-items: center;
+  border-radius: 12px;
+  overflow: hidden; /* Ensure no part of the image overflows the container */
+  transition: transform 0.3s ease; /* Smooth hover effect for the image container */
+}
+.bkcontent-box
+.bkimage-box:hover {
+  transform: scale(1.05); /* Slight zoom on hover for the image */
+}
+
+/* Image styling */
+.bkcontent-box
+.bkexperience-image {
+  max-width: 100%;
+  height: auto;
+  border-radius: 12px; /* Rounded corners */
+  object-fit: cover;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); /* Shadow effect on image */
+  transition: transform 0.3s ease-in-out;
+}
+.bkcontent-box
+.bkexperience-image:hover {
+  transform: scale(1.1); /* Image zooms slightly on hover */
+}
+
+
+
+
+
+
+
+.bkcontainer {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  width: 94%;
+  margin: 0 auto;
+  gap: 10px;
+  height: 55vh;
+  padding-top: 20px;
+  
+}
+
+
+
+.bkimage-box {
+  flex: 1;
+  max-width: 50%; /* Ensures it takes up 50% */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 10px;
+  padding: 16px;
+  box-sizing: border-box;
+}
+
+.bkimage {
+  max-width: 90%;
+  max-height: 100%;
+  border-radius: 8px;
+  object-fit: cover;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); /* Shadow effect on image */
+  transition: transform 0.3s ease-in-out;
+}
+
+
+
+
+.bkimage:hover {
+  transform: scale(1.1); /* Image zooms slightly on hover */
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+@media  (min-width: 768px) and (max-width: 1024px)  {
+  .bexperience-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 30px;
+    padding: 50px;
+    /* background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);  */
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1); /* Soft shadow for a modern touch */
+  }
+
+
+
+.carousel-layout {
+    display: flex
+;
+    width: 100%;
+    height: 80vh;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    flex-direction: column;
+}
+.carousel-layout 
+.left-box {
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  height: 350px;
+  width: 88%;
+  max-width: 100%;
+  margin-top: 50px;
+  margin-left: 40px;
+  border-radius: 12px;
+}
+
+
+ .right-box {
+  width: 100%;
+  display: flex
+;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+
+.bkcontainer {
+  display: flex
+;
+  align-items: flex-start;
+  width: 100%;
+  gap: 10px;
+  height: 70vh;
+  padding-top: 20px;
+  flex-direction: column;
+}
+.bkcontent-box {
+  max-height: 300px;
+   width: 87%; 
+  overflow-y: scroll;
+  padding: 10px;
+  margin-top: 20px;
+  border: 1px solid #ccc;
+  scrollbar-width: thin;
+  scrollbar-color: #888 #f1f1f1;
+  margin-left: 42px;
+  border-radius: 6px;
+}
+
+
+.bkimage {
+  max-width: 200%;
+  width: 690px;
+    height: 350px;
+    margin-left: 392px;
+    border-radius: 8px;
+    object-fit: cover;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease-in-out;
+}
+}
+

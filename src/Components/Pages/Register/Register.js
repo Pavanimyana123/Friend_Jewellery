@@ -433,7 +433,7 @@ function Register() {
               {isRegistering ? "Registering..." : "Register"}
             </button>
             <p className="register-login-link ">
-              Already have an account? <Link to="/">Login here</Link>
+              Already have an account? <Link to="/login">Login here</Link>
             </p>
           </div>
         </form>

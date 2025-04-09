@@ -1,0 +1,702 @@
+/* Enterprise Section */
+
+
+
+
+.img12 {
+  width: 100%;
+  height: 473px;
+  margin-top: 60px;
+}
+
+.enterprise-section {
+        background-color: #fff;
+        padding: 0rem 1.5rem;
+        color: #333;
+        margin-left: -20px;
+      }
+      
+      .enterprise-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 2rem;
+      }
+      
+      /* Header Styling */
+      .enterprise-header h1 {
+        font-size: 36px;
+        font-weight: 500;
+        color: #a36e29;
+        margin-bottom: 1rem;
+        text-align: center;
+        line-height: 1.2;
+      }
+      
+      .enterprise-header p {
+        font-size: 18px;
+        color: #34495e; /* Darker grey for the paragraph */
+        line-height: 1.7;
+        text-align: justify;
+        margin-bottom: 3rem;
+      }
+      
+      /* Journey Section Styling */
+      .enterprise-journey h2 {
+        font-size: 36px;
+        color: #a36e29;
+        text-align: center;
+        margin-top: 3rem;
+        font-weight: 500;
+      }
+      
+      .enterprise-journey p {
+        font-size: 18px;
+        color: #34495e; /* Dark grey text */
+        line-height: 1.6;
+        text-align: justify;
+        /* max-width: 800px; */
+        margin: 0 auto;
+      }
+      
+      /* Principles Section Styling */
+      .enterprise-principles h3 {
+        font-size: 36px;
+        color: #a36e29;
+        margin-top: 3rem;
+        text-align: center;
+        font-weight: 500;
+
+      }
+      
+      .enterprise-principles ul {
+        list-style: none;
+        padding: 0;
+        font-size: 18px;
+        color: #2c3e50;
+        margin-top: 2rem;
+        /* max-width: 800px; */
+        margin: 0 auto;
+      }
+      
+      .enterprise-principles li {
+        padding: 1rem;
+        margin: 1rem 0;
+        border-left: 5px solid #a36e29; /* Blue left border for each item */
+        border-top: 1px solid #a36e29;
+        border-right: 1px solid #a36e29;
+        border-bottom: 1px solid #a36e29;
+        border-radius: 4px;
+      }
+      
+      .enterprise-principles li strong {
+        color: #a36e29;
+        font-size: 25px;
+      }
+      
+      /* Hover Effects */
+      .enterprise-principles li:hover {
+        background-color: #fffaf4; /* Slightly darker grey on hover */
+        cursor: pointer;
+      }
+      
+      /* Mobile View */
+      @media (max-width: 480px) {
+        .enterprise-header h1 {
+          font-size: 2.2rem;
+        }
+
+        .enterprise-section {
+          background-color: #fff;
+          padding: 0rem 0rem;
+          color: #333;
+          margin-left: -20px;
+        }
+      
+        .enterprise-header p {
+          font-size: 1rem;
+          margin-top: -10px;
+        }
+      
+        .enterprise-journey h2 {
+          font-size: 1.8rem;
+        }
+      
+        .enterprise-journey p {
+          font-size: 1rem;
+          margin-top: -20px;
+        }
+      
+        .enterprise-principles h3 {
+          font-size: 30px;
+          margin-top: 20px;        }
+      
+        .enterprise-principles ul {
+          font-size: 1rem;
+        }
+      }
+
+      @media (max-width: 767px) {
+        .enterprise-header h1 {
+          font-size: 30px;
+          margin-top: 0px;
+        }
+        .enterprise-journey h2 {
+          font-size:30px;
+          margin-top: -30px;
+
+        }
+        .enterprise-container {
+          max-width: 1200px;
+          margin: 0 auto;
+          padding: 0px 2rem;
+          margin-left: 10px;
+      }
+      }
+
+
+      
+      /* Tablet View */
+      @media  (min-width: 768px) and (max-width: 1024px)  {
+        
+        .enterprise-header h1 {
+          font-size: 32px;
+          font-weight: 600;
+        }
+      
+        .enterprise-header p {
+          font-size: 18px;
+        }
+      
+        .enterprise-journey h2 {
+          font-size: 2rem;
+          font-weight: 600;
+        }
+      
+        .enterprise-journey p {
+          font-size:18px;
+        }
+      
+        .enterprise-principles h3 {
+          font-size: 32px;
+          font-weight: 600;
+        }
+      
+        .enterprise-principles ul {
+          font-size: 18px;
+        }
+
+
+        .img12 {
+          width: 100%;
+          height: 274px;
+          margin-top: 70px;
+      }
+
+      .sec-1-banner-overlay-jewels {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 351px;
+        background: rgba(0, 0, 0, 0.5);
+        display: flex
+    ;
+        align-items: center;
+        justify-content: center;
+    }
+      }
+
+
+
+      /* Company Ethics Section */
+.company-ethics-section {
+        background-color: #ecf0f1; /* Light grey background */
+        padding: 4rem 1.5rem;
+      }
+      
+      .company-ethics-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 2rem;
+        text-align: center;
+      }
+      
+      /* Title and Description Styling */
+      .section-title {
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: #2c3e50; /* Dark Blue */
+        margin-bottom: 1rem;
+      }
+      
+      .section-description {
+        font-size: 18px;
+        color: #34495e; /* Darker grey */
+        line-height: 1.6;
+        margin-bottom: 3rem;
+      }
+      
+      /* Ethics Icons Styling */
+      .ethics-icons {
+        display: flex;
+        justify-content: space-between;
+        gap: 2rem;
+        flex-wrap: wrap;
+      }
+      
+      .ethics-box {
+        background-color: #fff;
+        border: 2px solid #2980b9; /* Border color */
+        padding: 2rem;
+        border-radius: 8px;
+        text-align: center;
+        width: 30%;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      }
+      
+      .ethics-icon {
+        font-size: 3rem;
+        color: #2980b9; /* Blue color for icons */
+        margin-bottom: 1rem;
+      }
+      
+      .ethics-box h3 {
+        font-size: 1.4rem;
+        font-weight: 600;
+        color: #2c3e50;
+        margin-bottom: 1rem;
+      }
+      
+      .ethics-box p {
+        font-size: 18px;
+        color: #34495e;
+        line-height: 1.5;
+      }
+      
+      /* Trust Section Styling */
+      .ethics-trust {
+        margin-top: 3rem;
+        background-color: #ffffff;
+        padding: 2rem;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      }
+      
+      .ethics-trust h3 {
+        font-size: 1.6rem;
+        color: #2980b9;
+        margin-bottom: 1rem;
+      }
+      
+      .ethics-trust p {
+        font-size: 18px;
+        color: #34495e;
+        line-height: 1.7;
+      }
+      
+      /* Mobile View */
+      @media (max-width: 480px) {
+        .section-title {
+          font-size: 2rem;
+        }
+      
+        .section-description {
+          font-size: 1rem;
+        }
+      
+        .ethics-icons {
+          flex-direction: column;
+          gap: 1.5rem;
+        }
+      
+        .ethics-box {
+          width: 90%;
+          margin: 0 auto;
+        }
+      
+        .ethics-trust h3 {
+          font-size: 1.4rem;
+        }
+      
+        .ethics-trust p {
+          font-size: 1rem;
+        }
+        .img12 {
+          width: 100%;
+          height: 187px;
+          margin-top: 68px;
+      }
+
+
+      .sec-1-banner-overlay-jewels {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 275px;
+        background: rgba(0, 0, 0, 0.5);
+        display: flex
+    ;
+        align-items: center;
+        justify-content: center;
+    }
+      }
+      
+      /* Tablet View */
+      @media (max-width: 768px) {
+        .section-title {
+          font-size: 2.2rem;
+        }
+      
+        .section-description {
+          font-size: 1.1rem;
+        }
+      
+        .ethics-icons {
+          flex-direction: row;
+          gap: 2rem;
+        }
+      
+        .ethics-box {
+          width: 45%;
+        }
+      
+        .ethics-trust h3 {
+          font-size: 1.5rem;
+        }
+      
+        .ethics-trust p {
+          font-size: 1.1rem;
+        }
+      }
+      
+
+
+
+
+
+
+      /* What We Do Section */
+.what-we-do-section {
+        background-color: #f9f9f9; /* Light grey background */
+        padding: 4rem 2rem;
+      }
+      
+      .what-we-do-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 2rem;
+        text-align: center;
+      }
+      
+      /* Title and Description Styling */
+      .section-title {
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: #2c3e50; /* Dark Blue */
+        margin-bottom: 1rem;
+      }
+      
+      .section-description {
+        font-size: 18px;
+        color: #34495e; /* Darker grey */
+        line-height: 1.6;
+        margin-bottom: 3rem;
+      }
+      
+      /* Ventures Icons Styling */
+      .ventures {
+        display: flex;
+        justify-content: space-between;
+        gap: 2rem;
+        flex-wrap: wrap;
+      }
+      
+      .venture-box {
+        background-color: #fff;
+        border: 2px solid #2980b9; /* Border color */
+        padding: 2rem;
+        border-radius: 8px;
+        text-align: center;
+        width: 30%;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      }
+      
+      .venture-icon {
+        font-size: 3rem;
+        color: #2980b9; /* Blue color for icons */
+        margin-bottom: 1rem;
+      }
+      
+      .venture-box h3 {
+        font-size: 1.4rem;
+        font-weight: 600;
+        color: #2c3e50;
+        margin-bottom: 1rem;
+      }
+      
+      .venture-box p {
+        font-size: 18px;
+        color: #34495e;
+        line-height: 1.5;
+      }
+      
+      /* Mobile View */
+      @media (max-width: 480px) {
+        .section-title {
+          font-size: 2rem;
+        }
+      
+        .section-description {
+          font-size: 1rem;
+        }
+      
+        .ventures {
+          flex-direction: column;
+          gap: 1.5rem;
+        }
+      
+        .venture-box {
+          width: 90%;
+          margin: 0 auto;
+        }
+      }
+      
+      /* Tablet View */
+      @media (max-width: 768px) {
+        .section-title {
+          font-size: 2.2rem;
+        }
+      
+        .section-description {
+          font-size: 1.1rem;
+        }
+      
+        .ventures {
+          flex-direction: row;
+          gap: 2rem;
+        }
+      
+        .venture-box {
+          width: 45%;
+        }
+      }
+
+      
+
+
+      /* Relationships Section */
+.relationships-section {
+        background-color: #fff;
+        padding: 4rem 2rem;
+      }
+      
+      .relationships-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 2rem;
+        text-align: center;
+      }
+      
+      /* Title and Description Styling */
+      .section-title {
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: #2c3e50; /* Dark Blue */
+        margin-bottom: 1rem;
+      }
+      
+      .section-description {
+        font-size: 18px;
+        color: #34495e; /* Darker grey */
+        line-height: 1.6;
+        margin-bottom: 3rem;
+      }
+      
+      /* Foundations Icons Styling */
+      .foundations {
+        display: flex;
+        justify-content: space-between;
+        gap: 2rem;
+        flex-wrap: wrap;
+      }
+      
+      .foundation-box {
+        background-color: #fff;
+        border: 2px solid #2980b9; /* Border color */
+        padding: 2rem;
+        border-radius: 8px;
+        text-align: center;
+        width: 45%;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      }
+      
+      .foundation-icon {
+        font-size: 3rem;
+        color: #2980b9; /* Blue color for icons */
+        margin-bottom: 1rem;
+      }
+      
+      .foundation-box h3 {
+        font-size: 1.4rem;
+        font-weight: 600;
+        color: #2c3e50;
+        margin-bottom: 1rem;
+      }
+      
+      .foundation-box p {
+        font-size: 18px;
+        color: #34495e;
+        line-height: 1.5;
+      }
+      
+      /* Mobile View */
+      @media (max-width: 480px) {
+        .section-title {
+          font-size: 2rem;
+        }
+      
+        .section-description {
+          font-size: 1rem;
+        }
+      
+        .foundations {
+          flex-direction: column;
+          gap: 1.5rem;
+        }
+      
+        .foundation-box {
+          width: 90%;
+          margin: 0 auto;
+        }
+      }
+      
+      /* Tablet View */
+      @media (max-width: 768px) {
+        .section-title {
+          font-size: 2.2rem;
+        }
+      
+        .section-description {
+          font-size: 1.1rem;
+        }
+      
+        .foundations {
+          flex-direction: row;
+          gap: 2rem;
+        }
+      
+        .foundation-box {
+          width: 45%;
+        }
+      }
+      
+
+
+      /* Society's Future Section */
+.society-future-section {
+        background-color: #f9f9f9;
+        padding: 4rem 2rem;
+      }
+      
+      .society-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 2rem;
+        text-align: center;
+      }
+      
+      /* Title and Description Styling */
+      .section-title {
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: #2c3e50; /* Dark Blue */
+        margin-bottom: 1rem;
+      }
+      
+      .section-description {
+        font-size: 18px;
+        color: #34495e; /* Darker grey */
+        line-height: 1.6;
+        margin-bottom: 3rem;
+      }
+      
+      /* Commitment Icons Styling */
+      .commitment {
+        display: flex;
+        justify-content: space-between;
+        gap: 2rem;
+        flex-wrap: wrap;
+      }
+      
+      .commitment-box {
+        background-color: #fff;
+        border: 2px solid #2980b9; /* Border color */
+        padding: 2rem;
+        border-radius: 8px;
+        text-align: center;
+        width: 30%;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      }
+      
+      .commitment-icon {
+        font-size: 3rem;
+        color: #2980b9; /* Blue color for icons */
+        margin-bottom: 1rem;
+      }
+      
+      .commitment-box h3 {
+        font-size: 1.4rem;
+        font-weight: 600;
+        color: #2c3e50;
+        margin-bottom: 1rem;
+      }
+      
+      .commitment-box p {
+        font-size: 18px;
+        color: #34495e;
+        line-height: 1.5;
+      }
+      
+      /* Mobile View */
+      @media (max-width: 480px) {
+        .section-title {
+          font-size: 2rem;
+        }
+      
+        .section-description {
+          font-size: 1rem;
+        }
+      
+        .commitment {
+          flex-direction: column;
+          gap: 1.5rem;
+        }
+      
+        .commitment-box {
+          width: 90%;
+          margin: 0 auto;
+        }
+      }
+      
+      /* Tablet View */
+      @media (max-width: 768px) {
+        .section-title {
+          font-size: 2.2rem;
+        }
+      
+        .section-description {
+          font-size: 1.1rem;
+        }
+      
+        .commitment {
+          flex-direction: row;
+          gap: 2rem;
+        }
+      
+        .commitment-box {
+          width: 45%;
+        }
+      }
+      
+      
