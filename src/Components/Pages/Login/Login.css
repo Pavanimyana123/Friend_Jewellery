@@ -117,10 +117,10 @@ h3 {
     padding-right: 40px; /* Space for the icon */
   }
   
-  .password-toggle {
+  .login-password-toggle {
     position: absolute;
     right: 17%;
-    top: 51%;
+    top: 53%;
     transform: translateY(-50%);
     cursor: pointer;
     color: #555;
@@ -148,7 +148,7 @@ h3 {
         padding: 20px;
     }
 
-    .password-toggle {
+    .login-password-toggle {
         position: absolute;
         right: 13%;
         top: 54%;
@@ -161,10 +161,10 @@ h3 {
 
 @media (max-width: 600px) {
 
-    .password-toggle {
+    .login-password-toggle {
         position: absolute;
-        right: 16%;
-        top: 50%;
+        right: 20%;
+        top: 52%;
         transform: translateY(-50%);
         cursor: pointer;
         color: #555;

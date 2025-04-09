@@ -109,7 +109,7 @@ function NewLogin() {
                     required
                   />
                 <span
-                  className=" password-toggle"
+                  className="login-password-toggle"
                   style={{ cursor: "pointer" }}
                   onClick={() => setShowPassword(!showPassword)}
                 >
