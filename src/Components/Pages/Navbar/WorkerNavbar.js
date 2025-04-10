@@ -30,6 +30,7 @@ function VendorNavbar() {
     };
 
     const handleLogout = () => {
+        localStorage.removeItem("user");
         navigate("/login");
     };
 
@@ -72,18 +73,18 @@ function VendorNavbar() {
                     className={window.location.pathname === '/w-completed-orders' ? 'active' : ''}
                 >
                     Completed</Link>
-                    <Link
+                <Link
                     to="/w-pending-orders"
                     onClick={handleItemClick}
                     className={window.location.pathname === '/w-pending-orders' ? 'active' : ''}
                 >
                     Pending</Link>
-                    <Link
+                <Link
                     to="/w-hold-orders"
                     onClick={handleItemClick}
                     className={window.location.pathname === '/w-hold-orders' ? 'active' : ''}
                 >
-                    On Hold</Link>      
+                    On Hold</Link>
                 <Link
                     to="/"
                     onClick={handleItemClick}

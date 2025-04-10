@@ -29,8 +29,8 @@ function Navbar() {
     };
 
     const handleLogout = () => {
-        logout(); // Clear user authentication
-        navigate("/login"); // Redirect to login page
+        localStorage.removeItem("user");
+        navigate("/login");
     };
 
     return (

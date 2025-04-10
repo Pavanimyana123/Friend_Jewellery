@@ -589,7 +589,7 @@ function Order() {
                       type="date"
                       value={formData.estimated_delivery_date}
                       min={new Date().toISOString().split("T")[0]}
-                    // onChange={handleEstimatedDateChange} 
+                      onChange={handleChange} 
                     />
                   </Row>
 
@@ -770,7 +770,7 @@ function Order() {
                     value={formData.delivery_date}
                     type="date"
                     min={new Date().toISOString().split("T")[0]}
-                  // onChange={handleDateChange}
+                    onChange={handleChange} 
                   />
                 </Col>
 
