@@ -32,8 +32,32 @@ const CompletedOrders = () => {
       //   },
       // },
       {
+        Header: 'Order No.',
+        accessor: 'order_number',
+      },
+      {
+        Header: 'Sub Category',
+        accessor: 'subcategory',
+      },
+      {
+        Header: 'Purity',
+        accessor: 'purity',
+      },
+      {
         Header: 'Stone Name',
         accessor: 'stone_name',
+      },
+      {
+        Header: 'Length',
+        accessor: 'o_length',
+      },
+      {
+        Header: 'Size',
+        accessor: 'o_size',
+      },
+      {
+        Header: 'Total Wt',
+        accessor: 'total_weight_aw',
       },
       {
         Header: 'Delivery Date',
@@ -41,10 +65,6 @@ const CompletedOrders = () => {
           const date = new Date(row.delivery_date);
           return date.toLocaleDateString('en-GB'); // Formats as dd/mm/yyyy
         },
-      },
-      {
-        Header: 'Order No.',
-        accessor: 'order_number',
       },
       // {
       //   Header: 'Metal',
@@ -58,22 +78,6 @@ const CompletedOrders = () => {
         Header: 'Remarks',
         accessor: 'remarks',
       },
-      {
-        Header: 'Length',
-        accessor: 'o_length',
-      },
-      {
-        Header: 'Size',
-        accessor: 'o_size',
-      },
-      {
-        Header: 'Sub Category',
-        accessor: 'subcategory',
-      },
-      {
-        Header: 'Purity',
-        accessor: 'purity',
-      },
       // {
       //   Header: 'Gross Wt',
       //   accessor: 'gross_weight',
@@ -82,10 +86,6 @@ const CompletedOrders = () => {
       //   Header: 'Stone Wt',
       //   accessor: 'stone_weight',
       // },
-      {
-        Header: 'Total Wt',
-        accessor: 'total_weight_aw',
-      },
       { Header: 'Order Status', accessor: 'order_status', Cell: ({ row }) => row.original.order_status || 'N/A' },
       {
         Header: 'Work Status',

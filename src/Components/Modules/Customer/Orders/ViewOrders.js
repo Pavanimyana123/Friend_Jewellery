@@ -154,6 +154,7 @@ const ViewOrders = () => {
               filteredOrders.map((order, index) => (
                 <div className="order-card" key={index}>
                   <div className="order-header">
+                  <span><strong>Order Date:</strong> <span>{new Date(order.date).toLocaleDateString()}</span></span>
                     <span><strong>Order ID:</strong> <span>{order.order_number}</span></span>
                     {/* <span><strong>Total Amount:</strong> <span>₹{order.total_price}</span></span> */}
                     <span>
@@ -167,7 +168,7 @@ const ViewOrders = () => {
                       </span>
                     </span>
                     <span><strong>Worker Status:</strong> <span>{order.work_status}</span></span>
-                    <span><strong>Order Date:</strong> <span>{new Date(order.date).toLocaleDateString()}</span></span>
+                    <span><strong>Delivery Date:</strong> <span>{new Date(order.delivery_date).toLocaleDateString()}</span></span>
 
                     <div className="order-actions">
                       <button

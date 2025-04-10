@@ -31,6 +31,18 @@ const AssignedOrders = () => {
         Header: 'Sr. No.',
         Cell: ({ row }) => row.index + 1, // Generate a sequential number based on the row index
       },
+      {
+        Header: 'Order No.',
+        accessor: 'order_number',
+      },
+      {
+        Header: 'Sub Category',
+        accessor: 'subcategory',
+      },
+      {
+        Header: 'Purity',
+        accessor: 'purity',
+      },
       // {
       //   Header: 'Order Date',
       //   accessor: row => {
@@ -43,15 +55,23 @@ const AssignedOrders = () => {
         accessor: 'stone_name',
       },
       {
+        Header: 'Length',
+        accessor: 'o_length',
+      },
+      {
+        Header: 'Size',
+        accessor: 'o_size',
+      },
+      {
+        Header: 'Total Wt',
+        accessor: 'total_weight_aw',
+      },
+      {
         Header: 'Delivery Date',
         accessor: row => {
           const date = new Date(row.delivery_date);
           return date.toLocaleDateString('en-GB'); // Formats as dd/mm/yyyy
         },
-      },
-      {
-        Header: 'Order No.',
-        accessor: 'order_number',
       },
       // {
       //   Header: 'Metal',
@@ -65,22 +85,6 @@ const AssignedOrders = () => {
         Header: 'Remarks',
         accessor: 'remarks',
       },
-      {
-        Header: 'Length',
-        accessor: 'o_length',
-      },
-      {
-        Header: 'Size',
-        accessor: 'o_size',
-      },
-      {
-        Header: 'Sub Category',
-        accessor: 'subcategory',
-      },
-      {
-        Header: 'Purity',
-        accessor: 'purity',
-      },
       // {
       //   Header: 'Gross Wt',
       //   accessor: 'gross_weight',
@@ -89,11 +93,6 @@ const AssignedOrders = () => {
       //   Header: 'Stone Wt',
       //   accessor: 'stone_weight',
       // },
-      {
-        Header: 'Total Wt',
-        accessor: 'total_weight_aw',
-      },
-
       {
         Header: "Assigned Status",
         accessor: "assigned_status",
