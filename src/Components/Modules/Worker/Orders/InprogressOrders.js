@@ -24,12 +24,16 @@ const InprogressOrders = () => {
   const columns = React.useMemo(
     () => [
       { Header: 'Sr. No.', Cell: ({ row }) => row.index + 1 },
+      // {
+      //   Header: 'Order Date',
+      //   accessor: row => {
+      //     const date = new Date(row.date);
+      //     return date.toLocaleDateString('en-GB'); // Formats as dd/mm/yyyy
+      //   },
+      // },
       {
-        Header: 'Order Date',
-        accessor: row => {
-          const date = new Date(row.date);
-          return date.toLocaleDateString('en-GB'); // Formats as dd/mm/yyyy
-        },
+        Header: 'Stone Name',
+        accessor: 'stone_name',
       },
       {
         Header: 'Delivery Date',
@@ -42,13 +46,25 @@ const InprogressOrders = () => {
         Header: 'Order No.',
         accessor: 'order_number',
       },
+      // {
+      //   Header: 'Metal',
+      //   accessor: 'metal',
+      // },
+      // {
+      //   Header: 'Category',
+      //   accessor: 'category',
+      // },
       {
-        Header: 'Metal',
-        accessor: 'metal',
+        Header: 'Remarks',
+        accessor: 'remarks',
       },
       {
-        Header: 'Category',
-        accessor: 'category',
+        Header: 'Length',
+        accessor: 'o_length',
+      },
+      {
+        Header: 'Size',
+        accessor: 'o_size',
       },
       {
         Header: 'Sub Category',
@@ -58,14 +74,14 @@ const InprogressOrders = () => {
         Header: 'Purity',
         accessor: 'purity',
       },
-      {
-        Header: 'Gross Wt',
-        accessor: 'gross_weight',
-      },
-      {
-        Header: 'Stone Wt',
-        accessor: 'stone_weight',
-      },
+      // {
+      //   Header: 'Gross Wt',
+      //   accessor: 'gross_weight',
+      // },
+      // {
+      //   Header: 'Stone Wt',
+      //   accessor: 'stone_weight',
+      // },
       {
         Header: 'Total Wt',
         accessor: 'total_weight_aw',

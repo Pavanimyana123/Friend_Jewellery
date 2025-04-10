@@ -229,8 +229,11 @@ const ViewOrders = () => {
                         <p><strong>Design Name:</strong> <span>{order.product_design_name}</span></p>
                         <p><strong>Gross Wt:</strong> <span>{order.gross_weight}</span></p>
                         <p><strong>Purity:</strong> <span>{order.purity}</span></p>
-                        <p><strong>Quantity:</strong> <span>{order.qty}</span></p>
-                        <p><strong>Total Price:</strong> <span>₹{order.total_price}</span></p>
+                        {/* <p><strong>Quantity:</strong> <span>{order.qty}</span></p> */}
+                        {/* <p><strong>Total Price:</strong> <span>₹{order.total_price}</span></p> */}
+                        <p><strong>Advance Gold:</strong> <span>{order.qty}</span></p>
+                        <p><strong>Advance Payment:</strong> <span>{order.qty}</span></p>
+                        <p><strong>Gold Rate:</strong> <span>{order.rate}</span></p>
                       </div>
 
                     </div>
