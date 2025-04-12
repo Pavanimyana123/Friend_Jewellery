@@ -201,7 +201,7 @@ const DesignReq = () => {
           {loading ? (
             <div>Loading...</div>
           ) : (
-            <DataTable columns={columns} data={mergedData} />
+            <DataTable columns={columns} data={[...mergedData].reverse()} />
           )}
         </div>
       </div>

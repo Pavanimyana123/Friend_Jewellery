@@ -76,6 +76,9 @@ function Order() {
         image_url: null, // Image URL after upload
         order_status: "Placed",
         qty: 1,
+        // o_size,
+        // o_length,
+        // stone_name,
     });
     const [rates, setRates] = useState({ rate_24crt: "", rate_22crt: "", rate_18crt: "", rate_16crt: "", silver_rate: "" });
 
@@ -583,16 +586,25 @@ function Order() {
                                         ]}
                                     />
                                 </Col>
-                                <Col xs={12} md={2}>
+                                <Col xs={12} md={1}>
+                                    <InputField label="Size" name="o_size" value={formData.o_size} type="text" onChange={handleChange} />
+                                </Col>
+                                <Col xs={12} md={1}>
+                                    <InputField label="Length" name="o_length" value={formData.o_length} type="text" onChange={handleChange} />
+                                </Col>
+                                <Col xs={12} md={1}>
                                     <InputField label="Gross Wt" name="gross_weight" value={formData.gross_weight} type="text" onChange={handleChange} />
                                 </Col>
-                                <Col xs={12} md={2}>
+                                <Col xs={12} md={1}>
                                     <InputField label="Stone Wt" name="stone_weight" value={formData.stone_weight} type="text" onChange={handleChange} />
                                 </Col>
                                 <Col xs={12} md={2}>
+                                    <InputField label="Stone name" name="stone_name" value={formData.stone_name} type="text" onChange={handleChange} />
+                                </Col>
+                                <Col xs={12} md={1}>
                                     <InputField label="St Price" name="stone_price" value={formData.stone_price} type="text" onChange={handleChange} />
                                 </Col>
-                                <Col xs={12} md={2}>
+                                <Col xs={12} md={1}>
                                     <InputField label="Weight BW" name="weight_bw" value={formData.weight_bw} type="text" onChange={handleChange} readOnly />
                                 </Col>
                                 <Col xs={12} md={2}>

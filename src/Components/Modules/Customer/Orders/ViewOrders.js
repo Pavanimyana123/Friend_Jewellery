@@ -47,20 +47,36 @@ const ViewOrders = () => {
           throw new Error('Failed to fetch data');
         }
         const result = await response.json();
-        const filteredData = result.filter(order => order.account_id === user?.id);
-        setData(filteredData);
-        console.log("Filtered Orders =", filteredData);
+        const filteredByUser = result.filter(order => order.account_id === user?.id);
+  
+        // Prioritize "Actual Order" in case of duplicates
+        const uniqueOrdersMap = new Map();
+  
+        filteredByUser.forEach(order => {
+          const key = `${order.order_number}_${order.actual_order_id}`;
+          const existing = uniqueOrdersMap.get(key);
+  
+          // Prefer "Actual Order"
+          if (!existing || order.status === "Actual Order") {
+            uniqueOrdersMap.set(key, order);
+          }
+        });
+  
+        const finalFilteredOrders = Array.from(uniqueOrdersMap.values());
+        setData(finalFilteredOrders);
       } catch (error) {
         console.error('Error fetching data:', error);
       } finally {
         setLoading(false);
       }
     };
-
+  
     if (user) {
       fetchData();
     }
   }, [baseURL, user]);
+  
+  
 
   useEffect(() => {
     const fetchDesignRequests = async () => {
@@ -110,8 +126,9 @@ const ViewOrders = () => {
       order.gross_weight?.toString().toLowerCase().includes(lowerSearchTerm) ||
       order.purity?.toLowerCase().includes(lowerSearchTerm)
     );
-  });
-
+  })
+  .sort((a, b) => new Date(b.date) - new Date(a.date)); // Sort by date in descending order
+  
 
   const handleImageClick = (order) => {
     if (order.image_url) {
@@ -154,7 +171,7 @@ const ViewOrders = () => {
               filteredOrders.map((order, index) => (
                 <div className="order-card" key={index}>
                   <div className="order-header">
-                  <span><strong>Order Date:</strong> <span>{new Date(order.date).toLocaleDateString()}</span></span>
+                  <span><strong>Order Date:</strong><span>{new Date(order.date).toLocaleDateString('en-GB')}</span></span>
                     <span><strong>Order ID:</strong> <span>{order.order_number}</span></span>
                     {/* <span><strong>Total Amount:</strong> <span>₹{order.total_price}</span></span> */}
                     <span>
@@ -168,7 +185,7 @@ const ViewOrders = () => {
                       </span>
                     </span>
                     <span><strong>Worker Status:</strong> <span>{order.work_status}</span></span>
-                    <span><strong>Delivery Date:</strong> <span>{new Date(order.delivery_date).toLocaleDateString()}</span></span>
+                    <span><strong>Delivery Date:</strong> <span>{new Date(order.delivery_date).toLocaleDateString('en-GB')}</span></span>
 
                     <div className="order-actions">
                       <button
