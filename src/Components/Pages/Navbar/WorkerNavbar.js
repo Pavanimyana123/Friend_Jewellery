@@ -60,8 +60,8 @@ function VendorNavbar() {
                     onClick={handleItemClick}
                     className={window.location.pathname === '/w-assigned-orders' ? 'active' : ''}
                 >
-                    Assigned</Link>
-                <Link
+                    Orders</Link>
+                {/* <Link
                     to="/w-inprogress-orders"
                     onClick={handleItemClick}
                     className={window.location.pathname === '/w-inprogress-orders' ? 'active' : ''}
@@ -84,7 +84,7 @@ function VendorNavbar() {
                     onClick={handleItemClick}
                     className={window.location.pathname === '/w-hold-orders' ? 'active' : ''}
                 >
-                    On Hold</Link>
+                    On Hold</Link> */}
                 <Link
                     to="/"
                     onClick={handleItemClick}
