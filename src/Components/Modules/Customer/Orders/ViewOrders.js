@@ -174,7 +174,7 @@ const ViewOrders = () => {
                   <span><strong>Order Date:</strong><span>{new Date(order.date).toLocaleDateString('en-GB')}</span></span>
                     <span><strong>Order ID:</strong> <span>{order.order_number}</span></span>
                     {/* <span><strong>Total Amount:</strong> <span>₹{order.total_price}</span></span> */}
-                    <span>
+                    {/* <span>
                       <strong>Status:</strong>
                       <span>
                         {order.cancel_req_status === "Pending"
@@ -183,8 +183,8 @@ const ViewOrders = () => {
                             ? "Cancel Rejected"
                             : order.order_status}
                       </span>
-                    </span>
-                    <span><strong>Worker Status:</strong> <span>{order.work_status}</span></span>
+                    </span> */}
+                    {/* <span><strong>Worker Status:</strong> <span>{order.work_status}</span></span> */}
                     <span><strong>Delivery Date:</strong> <span>{new Date(order.delivery_date).toLocaleDateString('en-GB')}</span></span>
 
                     <div className="order-actions">
@@ -252,6 +252,7 @@ const ViewOrders = () => {
                         <p><strong>Gold Rate:</strong> <span>{order.rate}</span></p>
                         <p><strong>Advance Gold:</strong> <span>{order.advance_gross_wt}</span></p>
                         <p><strong>Advance Amount:</strong> <span>{order.advance_amount}</span></p>
+                        <p><strong>Worker Status:</strong> <span>{order.work_status}</span></p>
                         
                       </div>
 
