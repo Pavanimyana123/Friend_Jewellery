@@ -28,6 +28,7 @@ body {
 }
 
 .main-section h3 {
+  margin-top: 36px;
   font-size: 25px;
   color: #a36e29;
   margin-bottom: 20px;
@@ -59,7 +60,7 @@ body {
   margin-bottom: 15px;
   font-weight: 500;
   margin-top: 81px;
-  margin-left: 30%;
+  /* margin-left: 30%; */
 
 }
 
@@ -85,7 +86,7 @@ body {
   color: #a36e29;
   margin-bottom: 20px;
   font-weight: 500;
-  margin-left: 28%;
+  /* margin-left: 28%; */
 
 }
 
@@ -101,7 +102,7 @@ body {
   border-radius: 10px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
   /* flex: 1; */
-  width: 333px;
+  width: 370px;
 }
 
 .portfolio-card h3 {
@@ -130,7 +131,7 @@ body {
 .statistics-section h2 {
   font-size: 36px;
   color: #a36e29;
-  margin-bottom: 20px;
+  margin-bottom: 25px;
   font-weight: 500;
 
 }
@@ -151,6 +152,7 @@ body {
   border-radius: 10px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
   min-width: 200px;
+  height: 25vh;
 }
 
 .stats-card h4 {
@@ -158,11 +160,13 @@ body {
   /* color: #a36e29; */
   color: #2c3e50;
   margin-bottom: 10px;
+  margin-top: 20px;
 }
 
 .stats-card p {
   color: #2c3e50;
   font-size: 18px;
+  margin-top: 21px;
 }
 
 
@@ -252,7 +256,7 @@ body {
     color: #a36e29;
     margin-bottom: 10px;
     font-weight: 500;
-    margin-top: 40px;
+    margin-top: 47px;
 }
 
 
@@ -292,6 +296,7 @@ body {
   font-size: 25px;
   margin-bottom: 10px;
   font-weight: 500;
+  margin-top: 18px;
 }
 
 

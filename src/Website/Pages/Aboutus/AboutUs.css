@@ -340,7 +340,7 @@ font-size: 18px;
           font-size: 36px;
             color: #a36e29;
           text-align: center;
-          margin-top: 10px;
+          /* margin-top: 10px; */
           font-weight: 500;
 
         }
@@ -349,7 +349,7 @@ font-size: 18px;
           font-size: 25px;
           color: #444;
           text-align: center;
-          margin-top: -30px;
+          margin-top: -4px;
         }
       
         .sec-2-wisdom-quote {
@@ -357,7 +357,7 @@ font-size: 18px;
           font-style: italic;
           color: #b76e79;
           text-align: center;
-          margin-top: -10px;
+          /* margin-top: -10px; */
           padding: 0 1rem;
         }
       
@@ -721,6 +721,7 @@ font-size: 18px;
   color: #a36e29;
   margin-bottom: 0.8rem;
   font-weight: 500;
+  margin-top: 40px;
 }
 
 .sec-4-pillar p {
@@ -742,6 +743,7 @@ font-size: 18px;
 /* Tablet View */
 @media (max-width: 768px) {
   .sec-4-pillars {
+    margin-right: -26px;
     flex-direction: column;
     gap: 1rem;
   }

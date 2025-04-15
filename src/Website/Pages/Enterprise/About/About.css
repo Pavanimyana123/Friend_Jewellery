@@ -30,6 +30,7 @@
         margin-bottom: 1rem;
         text-align: center;
         line-height: 1.2;
+        margin-top: 40px;
       }
       
       .enterprise-header p {
@@ -138,7 +139,7 @@
       @media (max-width: 767px) {
         .enterprise-header h1 {
           font-size: 30px;
-          margin-top: 0px;
+          margin-top: 10px;
         }
         .enterprise-journey h2 {
           font-size:30px;

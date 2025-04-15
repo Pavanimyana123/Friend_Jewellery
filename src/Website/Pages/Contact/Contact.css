@@ -38,9 +38,10 @@
 }
 
 .contact-form p {
-  font-size: 18px;
+  font-size: 17px;
   color: #333;
   line-height: 1.5;
+  margin-top: 12px;
 }
 
 .contact-info p {
@@ -316,7 +317,7 @@ h1 {
 
 
   .contact-form {
-    width: 90%;
+    width: 102%;
     padding: 20px;
     background-color: #fafafa;
     border-right: 1px solid #ddd;
@@ -333,7 +334,7 @@ h1 {
 
 
   .form-wrapper {
-    width: 92%;
+    width: 103%;
     padding: 20px;
   }
 
@@ -691,7 +692,7 @@ form{
 
 @media (max-width: 767px) {
   .contact-container {
-    width: 80%;
+    width: 101%;
     margin-top: 10px;
     margin-bottom: 20px;
   }

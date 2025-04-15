@@ -162,7 +162,7 @@
         font-size: 17px;
         color:white;
         font-weight: 500;
-        /* margin-top: 10px; */
+        margin-top: 10px;
         padding-bottom: 1px;
       }
     
@@ -267,7 +267,7 @@
         height: 64px;
         width: 100px;
         margin-top: 23px;
-        margin-bottom: -18px;
+        /* margin-bottom: -18px; */
 
       
     

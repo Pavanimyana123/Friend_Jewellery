@@ -23,6 +23,7 @@
   }
   
   .why-choose-us h4 {
+    margin-top: 60px;
     font-size: 36px;
     color: #a36e29;
     margin-bottom: 10px;
@@ -36,7 +37,7 @@
     margin-bottom: 20px;
     color: #a36e29;
     font-weight: 500;
-    margin-left: -84px;
+    margin-left: -56px;
 
   }
   
@@ -70,6 +71,7 @@
   
   .choose-feature-item h3 {
     font-size: 30px;
+    margin-top: 50px;
     color: #a36e29;
     margin-bottom: 8px;
     font-weight: 500;
@@ -119,6 +121,7 @@
   
     .choose-feature-item p {
       font-size: 18px;
+      margin-top: 30px;
     }
 
   
@@ -202,6 +205,7 @@
   
     .choose-feature-item p {
       font-size: 16px;
+      margin-top: 35px;
     }
 
 
