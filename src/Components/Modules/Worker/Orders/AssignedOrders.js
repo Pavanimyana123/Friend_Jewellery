@@ -91,19 +91,19 @@ const AssignedOrders = () => {
         <>
             <WorkerNavbar />
             <div className="main-container">
-                <h2 className="order-title">Assigned Orders</h2>
-                <div className="search-bar-container">
+                <h2 className="order-title">Assigned Orders</h2> 
+                <div className="Worker-search-bar-container">
                     <input
                         type="text"
                         placeholder="Search Orders..."
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
-                        className="search-bar"
+                        className="worker-search-bar"
                     />
                      {["All", "Pending", "In Progress", "Hold", "Completed"].map(status => (
                         <button
                             key={status}
-                            className={`tab-button ${activeTab === status ? 'active' : ''}`}
+                            className={`worker-tab-button ${activeTab === status ? 'active' : ''}`}
                             onClick={() => setActiveTab(status)}
                         >
                             {status}
@@ -113,86 +113,91 @@ const AssignedOrders = () => {
                 {loading ? (
                     <div>Loading...</div>
                 ) : (
-                    <div className="orders-container">
+                    <div className="worker-orders-container">
                         {filteredOrders.length > 0 ? (
                             filteredOrders.map((order, index) => (
-                                <div className="order-card" key={index}>
-                                    <div className="order-header">
-                                        <span><strong>Order No:</strong> {order.order_number}</span>
-                                        <span><strong>Delivery Date:</strong> {new Date(order.delivery_date).toLocaleDateString('en-GB')}</span>
-                                        <p><strong>Assigned Status:</strong>
-                                            <select
-                                                value={order.assigned_status}
-                                                onChange={async (event) => {
-                                                    const newStatus = event.target.value;
-                                                    try {
-                                                        const response = await axios.put(`${baseURL}/api/orders/assign-status/${order.id}`, {
-                                                            assigned_status: newStatus,
-                                                            worker_id: order.worker_id,
-                                                            worker_name: order.worker_name,
-                                                        });
-                                                        console.log("Assigned status updated:", response.data);
-                                                        fetchData();
-                                                        alert("Assigned status updated successfully!");
-                                                    } catch (error) {
-                                                        console.error("Error updating assigned status:", error);
-                                                        alert("Failed to update assigned status.");
-                                                    }
-                                                }}
-                                                disabled={order.assigned_status === "Accepted"}
-                                            >
-                                                <option value="Assigned">Assigned</option>
-                                                <option value="Accepted">Accepted</option>
-                                                <option value="Rejected">Rejected</option>
-                                            </select>
-                                        </p>
-                                        <p><strong>Work Status:</strong>
-                                            <select
-                                                value={order.work_status}
-                                                onChange={(event) => {
-                                                    setNewWorkStatus(event.target.value);
-                                                    setCurrentRow(order);
-                                                    setIsModalOpen(true);
-                                                }}
-                                                disabled={order.assigned_status !== "Accepted"}
-                                            >
-                                                <option value="Pending">Pending</option>
-                                                <option value="In Progress">In Progress</option>
-                                                <option value="Completed">Completed</option>
-                                                <option value="Hold">Hold</option>
-                                            </select>
-                                        </p>
-                                    </div>
+                                <div className="worker-order-card" key={index}>
+                                    <div className="worker-order-header">
+    <span><strong>Order No:</strong> {order.order_number}</span>
+    <span><strong>Delivery Date:</strong> {new Date(order.delivery_date).toLocaleDateString('en-GB')}</span>
+
+    <span>
+        <strong>Assigned Status:</strong>
+        <select
+            value={order.assigned_status}
+            onChange={async (event) => {
+                const newStatus = event.target.value;
+                try {
+                    const response = await axios.put(`${baseURL}/api/orders/assign-status/${order.id}`, {
+                        assigned_status: newStatus,
+                        worker_id: order.worker_id,
+                        worker_name: order.worker_name,
+                    });
+                    console.log("Assigned status updated:", response.data);
+                    fetchData();
+                    alert("Assigned status updated successfully!");
+                } catch (error) {
+                    console.error("Error updating assigned status:", error);
+                    alert("Failed to update assigned status.");
+                }
+            }}
+            disabled={order.assigned_status === "Accepted"}
+        >
+            <option value="Assigned">Assigned</option>
+            <option value="Accepted">Accepted</option>
+            <option value="Rejected">Rejected</option>
+        </select>
+    </span>
+
+    <span>
+        <strong>Work Status:</strong>
+        <select
+            value={order.work_status}
+            onChange={(event) => {
+                setNewWorkStatus(event.target.value);
+                setCurrentRow(order);
+                setIsModalOpen(true);
+            }}
+            disabled={order.assigned_status !== "Accepted"}
+        >
+            <option value="Pending">Pending</option>
+            <option value="In Progress">In Progress</option>
+            <option value="Completed">Completed</option>
+            <option value="Hold">Hold</option>
+        </select>
+    </span>
+</div>
+
                                     <hr />
-                                    <div className="order-body">
-                                        <div className="order-content">
+                                    <div className="worker-order-body">
+                                        <div className="worker-order-content">
                                             <img
                                                 src={order.image_url ? `${baseURL}${order.image_url}` : 'default-image.jpg'}
                                                 alt="Product"
-                                                className="product-image"
+                                                className="worker-product-image"
                                                 onClick={() => handleImageClick(`${baseURL}${order.image_url}`)}
                                             />
-                                            <div className="product-details">
-                                                <p><strong>Sub Category:</strong> {order.subcategory}</p>
-                                                <p><strong>Purity:</strong> {order.purity}</p>
-                                                <p><strong>Stone Name:</strong> {order.stone_name}</p>
-                                                <p><strong>Length:</strong> {order.o_length}</p>
-                                                <p><strong>Size:</strong> {order.o_size}</p>
-                                                <p><strong>Total Weight:</strong> {order.total_weight_aw}</p>
-                                                <p><strong>Remarks:</strong> {order.remarks}</p>
+                                            <div className="worker-product-details">
+                                                <p><strong>Sub Category:</strong> <span>{order.subcategory}</span></p>
+                                                <p><strong>Purity:</strong> <span>{order.purity}</span></p>
+                                                <p><strong>Stone Name:</strong> <span>{order.stone_name}</span></p>
+                                                <p><strong>Length:</strong> <span>{order.o_length}</span></p>
+                                                <p><strong>Size:</strong> <span>{order.o_size}</span></p>
+                                                <p><strong>Total Weight:</strong> <span>{order.total_weight_aw}</span></p>
+                                                <p><strong>Remarks:</strong> <span>{order.remarks}</span></p>
                                             </div>
-                                            <div className="order-tracker">
+                                            <div className="worker-order-tracker">
                                                 {orderStatusSteps.map((step, idx) => (
                                                     <div
                                                         key={idx}
-                                                        className={`tracker-step ${(order.cancel_req_status === "Pending" && step === "Cancel Requested") ||
+                                                        className={`worker-tracker-step ${(order.cancel_req_status === "Pending" && step === "Cancel Requested") ||
                                                             (order.cancel_req_status !== "Pending" && step === order.order_status)
                                                             ? 'statusactive'
                                                             : ''
                                                             }`}
                                                     >
                                                         <p>{step.replace('_', ' ')}</p>
-                                                        <div className="circle"></div>
+                                                        <div className="worker-circle"></div>
                                                     </div>
                                                 ))}
                                             </div>

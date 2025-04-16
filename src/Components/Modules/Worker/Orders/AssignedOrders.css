@@ -1,12 +1,4 @@
-/* .worker-assigned-order-container {
-    padding-top: 80px; Adjust based on navbar height 
-    text-align: center;
-    font-size: 20px;
-    font-weight: bold;
-  }
-   */
-
-.customer-view-order-container {
+.worker-view-order-container {
   padding-top: 80px;
   text-align: center;
   font-size: 20px;
@@ -24,14 +16,14 @@ h2 {
   color: #555;
 }
 
-.orders-grid {
+.worker-orders-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
   gap: 20px;
   justify-content: center;
 }
 
-.order-card {
+.worker-order-card {
   background-color: rgba(163, 110, 41, 0.08);
   border-radius: 10px;
   padding: 20px;
@@ -42,28 +34,41 @@ h2 {
   flex-direction: column;
 }
 
-.order-header {
+.worker-order-header {
   display: flex;
   justify-content: space-between;
   flex-wrap: wrap;
   font-size: 17px;
 }
 
-.order-body {
+.worker-order-header span {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.worker-order-header select {
+  padding: 6px 10px;
+  border-radius: 6px;
+  font-size: 15px;
+}
+
+.worker-order-body {
   display: flex;
   justify-content: space-between;
   align-items: center;
   flex-wrap: wrap;
 }
 
-.order-content {
+.worker-order-content {
   display: flex;
   gap: 20px;
   align-items: center;
   flex: 1;
 }
 
-.product-image {
+.worker-product-image {
   width: 250px;
   height: auto;
   border-radius: 5px;
@@ -71,13 +76,13 @@ h2 {
   cursor: pointer;
 }
 
-.product-details p {
+.worker-product-details p {
   margin: 5px 0;
   font-size: 17px;
 }
 
 /* Order Tracker */
-.order-tracker {
+.worker-order-tracker {
   display: flex;
   justify-content: space-around;
   align-items: center;
@@ -86,7 +91,7 @@ h2 {
   width: 100%;
 }
 
-.tracker-step {
+.worker-tracker-step {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -95,7 +100,7 @@ h2 {
   white-space: nowrap;
 }
 
-.tracker-step .circle {
+.worker-tracker-step .worker-circle {
   width: 18px;
   height: 18px;
   border-radius: 50%;
@@ -103,12 +108,12 @@ h2 {
   z-index: 1;
 }
 
-.tracker-step.statusactive .circle {
+.worker-tracker-step.statusactive .worker-circle {
   background: green;
 }
 
 /* Connector Line */
-.order-tracker::before {
+.worker-order-tracker::before {
   content: "";
   position: absolute;
   bottom: 7px;
@@ -119,18 +124,19 @@ h2 {
   z-index: 0;
 }
 
-.search-bar-container {
+.Worker-search-bar-container {
   display: flex;
-  flex-wrap: wrap;
-  align-items: center;
+  justify-content: left;
+  align-items: flex-start;
+  margin-bottom: 20px;
+  margin-left: 25px;
+  flex-wrap: wrap; /* Ensure elements can wrap if needed */
   gap: 10px;
-  margin: 20px 25px;
 }
 
-/* Search input */
-.search-bar {
-  flex: 1 1 200px;
-  min-width: 160px;
+.worker-search-bar {
+  width: 100%;
+  max-width: 200px;
   padding: 10px 15px;
   font-size: 16px;
   border: 1px solid #ccc;
@@ -138,54 +144,34 @@ h2 {
   transition: all 0.3s ease;
 }
 
-.search-bar:focus {
+.worker-search-bar:focus {
   outline: none;
   border-color: #d7bc0e;
-  box-shadow: 0 0 5px rgba(215, 188, 14, 0.5);
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
 }
 
-/* Tab buttons */
-.tab-button {
-  padding: 8px 16px;
+.worker-tab-button {
+  background-color: #f2f2f2;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 8px 12px;
   font-size: 14px;
-  background-color: #f0f0f0;
-  border: none;
-  border-radius: 20px;
   cursor: pointer;
   transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
-.tab-button:hover {
+.worker-tab-button:hover {
   background-color: #e0e0e0;
-  transform: scale(1.03);
+  transform: translateY(-2px);
 }
 
-.tab-button.active {
+.worker-tab-button.active {
   background-color: #d7bc0e;
   color: white;
-  font-weight: bold;
+  border-color: #d7bc0e;
 }
 
-/* Responsive tweaks */
-@media (max-width: 768px) {
-  .search-bar-container {
-    justify-content: center;
-    margin: 15px;
-  }
-
-  .tab-button {
-    padding: 6px 12px;
-    font-size: 13px;
-  }
-
-  .search-bar {
-    flex: 1 1 100%;
-    max-width: 100%;
-  }
-}
-
-
-.change-design-button {
+.worker-change-design-button {
   background-color: rgb(62, 115, 247);
   color: white;
   border: none;
@@ -196,7 +182,7 @@ h2 {
 
 @media screen and (min-width: 768px) and (max-width: 1024px) {
   /* Order Tracker */
-  .order-tracker {
+  .worker-order-tracker {
     display: flex;
     justify-content: space-around;
     align-items: center;
@@ -206,14 +192,19 @@ h2 {
     margin-left: 90px;
   }
 
-  .search-bar {
-    width: 100%;
+  .worker-search-bar {
     max-width: 220px;
+  }
+
+  .worker-tab-button {
+    font-size: 13px;
+    padding: 7px 10px;
+    /* margin-left: 8px; */
   }
 }
 
 @media screen and (max-width: 767px) {
-  .order-card {
+  .worker-order-card {
     background-color: rgba(163, 110, 41, 0.08);
     border-radius: 10px;
     padding: 20px;
@@ -239,29 +230,30 @@ h2 {
     position: relative;
     width: 100%;
 } */
-  .order-card .order-header {
-    display: flex;
+  .worker-order-card .worker-order-header {
+    /* display: flex; */
     flex-direction: column;
     font-size: 15px;
   }
 
-  .order-header span {
-    display: flex;
+  .worker-order-header span {
+    /* display: flex; */
     justify-content: space-between;
-    align-items: center;
-    /* width: 100%; */
+    /* align-items: center; */
+    width: 100%;
   }
 
-  .order-header strong {
+  .worker-order-header strong {
     text-align: left;
   }
 
-  .order-header span:last-child {
-    display: flex;
-    justify-content: flex-start;
+  .worker-order-header select {
+    width: 150px; /* or 100% if you want full-width */
   }
 
-  .order-content {
+
+
+  .worker-order-content {
     display: flex;
     flex-direction: column;
     gap: 20px;
@@ -279,26 +271,35 @@ h2 {
   z-index: -1;
 } */
 
-  .tracker-step {
+  .worker-tracker-step {
     display: flex;
     flex-direction: column;
     align-items: center;
     flex: 1 1;
     font-size: 15px;
   }
-  .product-details p {
+  .worker-product-details p {
     font-size: 15px;
     display: flex;
     justify-content: space-between;
     align-items: center;
   }
+  .worker-tab-button {
+    font-size: 12px;
+    padding: 6px 8px;
+    margin: 5px 5px 0 0;
+    display: inline-block;
+  }
 
-  .product-details strong {
+  
+
+
+  .worker-product-details strong {
     margin-left: -110px;
     text-align: left;
   }
 
-  .product-details span {
+  .worker-product-details span {
     margin-right: -100px;
     text-align: right;
   }
@@ -310,7 +311,7 @@ h2 {
     font-size: 36px;
   }
 
-  .order-tracker {
+  .worker-order-tracker {
     display: flex;
     justify-content: space-around;
     align-items: center;
@@ -319,7 +320,7 @@ h2 {
     width: 100%;
     gap: 26px;
   }
-  .order-tracker::before {
+  .worker-order-tracker::before {
     content: "";
     position: absolute;
     bottom: 7px;
@@ -330,7 +331,7 @@ h2 {
     z-index: 0;
   }
 
-  .tracker-step .circle {
+  .worker-tracker-step .worker-circle {
     width: 18px;
     height: 18px;
     border-radius: 50%;
@@ -339,23 +340,35 @@ h2 {
     margin-left: -5px;
   }
 
-  .tracker-step p {
+  .worker-tracker-step p {
     margin-left: -13px;
     font-size: 10px;
   }
 
-  .search-bar {
-    width: 100%;
-    max-width: 220px;
-    margin-left: -10px;
+  .Worker-search-bar-container {
+    /* flex-direction: column; */
+    align-items: flex-start;
+    margin-left: 15px;
+    gap: 10px;
   }
 
-  .cancel-button {
+  .worker-search-bar {
+    max-width: 100%;
+    margin-left: 0;
+  }
+
+  .worker-tab-button {
+    font-size: 10px;
+    padding: 7px 12px;
+    margin-right: 8px;
+  }
+
+  .worker-cancel-button {
     margin-bottom: 10px;
   }
 }
 
-.cancel-button {
+.worker-cancel-button {
   background-color: red;
   color: white;
   border: none;
@@ -365,26 +378,26 @@ h2 {
   margin-right: 10px;
 }
 
-.cancel-button:disabled {
+.worker-cancel-button:disabled {
   background-color: gray;
   cursor: not-allowed;
 }
 
 @media screen and (max-width: 739px) {
-  .order-actions {
+  .worker-order-actions {
     display: flex;
     justify-content: space-between;
     gap: 10px;
     width: 100%;
   }
 
-  .order-actions button {
+  .worker-order-actions button {
     flex: 1; /* Make buttons evenly sized */
     text-align: center;
     padding: 5px;
   }
 
-  .cancel-button {
+  .worker-cancel-button {
     background-color: red;
     font-size: 12px;
     color: white;
