@@ -6,6 +6,7 @@ import baseURL from '../../../../Url/NodeBaseURL';
 import './ViewOrders.css';
 import axios from 'axios';
 import ModalPopup from '../Design/Modalpopup';
+import { Rating } from 'react-simple-star-rating';
 
 const ViewOrders = () => {
   const { user } = useContext(AuthContext);
@@ -17,6 +18,12 @@ const ViewOrders = () => {
   const [showModal, setShowModal] = useState(false);
   const [selectedOrder, setSelectedOrder] = useState(null);
 
+  const [ratingModal, setRatingModal] = useState(false);
+  const [currentRating, setCurrentRating] = useState(0);
+  const [orderToRate, setOrderToRate] = useState(null);
+  const [reviewText, setReviewText] = useState('');
+
+
   const handleShowModal = (order) => {
     setSelectedOrder(order);
     setShowModal(true);
@@ -25,8 +32,6 @@ const ViewOrders = () => {
   const handleCloseModal = () => {
     setShowModal(false);
   };
-
-
 
 
   const orderStatusSteps = ["Placed",
@@ -149,6 +154,63 @@ const ViewOrders = () => {
     }
   };
 
+  
+  // const handleRating = async () => {
+  //   try {
+  //     const response = await axios.put(`${baseURL}/api/rate/${orderToRate.id}`, {
+  //       rating: currentRating
+  //     });
+      
+  //     if (response.status === 200) {
+  //       // Update the local state to reflect the new rating
+  //       setData(prevOrders => 
+  //         prevOrders.map(order => 
+  //           order.id === orderToRate.id 
+  //             ? { ...order, customer_rating: currentRating } 
+  //             : order
+  //         )
+  //       );
+  //       setRatingModal(false);
+  //       alert('Thank you for your rating!');
+  //     }
+  //   } catch (error) {
+  //     console.error('Error submitting rating:', error);
+  //     alert(error.response?.data?.error || 'Failed to submit rating. Please try again.');
+  //   }
+  // };
+
+  const handleRating = async () => {
+    try {
+      const response = await axios.put(`${baseURL}/api/rate/${orderToRate.id}`, {
+        rating: currentRating,
+        reviewText: reviewText // Send the review text as well
+      });
+  
+      if (response.status === 200) {
+        setData(prevOrders => 
+          prevOrders.map(order => 
+            order.id === orderToRate.id 
+              ? { ...order, customer_rating: currentRating, review_text: reviewText } 
+              : order
+          )
+        );
+        setRatingModal(false);
+        setReviewText(''); // Reset
+        alert('Thank you for your rating and feedback!');
+      }
+    } catch (error) {
+      console.error('Error submitting rating:', error);
+      alert(error.response?.data?.error || 'Failed to submit rating. Please try again.');
+    }
+  };
+  
+  
+  const openRatingModal = (order) => {
+    setOrderToRate(order);
+    setCurrentRating(order.rating || 0);
+    setRatingModal(true);
+  };
+
   return (
     <>
       <CustomerNavbar />
@@ -257,7 +319,7 @@ const ViewOrders = () => {
                       </div>
 
                     </div>
-                    <div className="order-tracker">
+                    <div className="order-tracker mt-3">
                       {orderStatusSteps.map((step, idx) => (
                         <div
                           key={idx}
@@ -272,7 +334,28 @@ const ViewOrders = () => {
                         </div>
                       ))}
                     </div>
-
+                    <div className="order-rating-section">
+                      {order.rating ? (
+                        <div className="rating-display">
+                          <span>Your Rating: </span>
+                          <Rating 
+                            initialValue={order.rating} 
+                            readonly 
+                            size={20} 
+                            allowHalfIcon 
+                          />
+                          <span>({order.rating})</span>
+                        </div>
+                      ) : (
+                        <button 
+                          onClick={() => openRatingModal(order)}
+                          className="rate-button"
+                          disabled={order.order_status !== 'Delivered'}
+                        >
+                          Rate This Order
+                        </button>
+                      )}
+                    </div>
 
                   </div>
 
@@ -288,6 +371,34 @@ const ViewOrders = () => {
           handleClose={handleCloseModal}
           order={selectedOrder}
         />
+        {ratingModal && (
+  <div className="rating-modal-overlay">
+    <div className="rating-modal">
+      <h3>Rate Your Order #{orderToRate?.order_number}</h3>
+      <Rating
+        onClick={(rate) => setCurrentRating(rate)}
+        initialValue={currentRating}
+        size={30}
+        allowHalfIcon
+      />
+
+      <textarea
+        value={reviewText}
+        onChange={(e) => setReviewText(e.target.value)}
+        placeholder="Leave your review here..."
+        className="review-textarea"
+        rows={4}
+        style={{ width: '100%', marginTop: '1rem', padding: '0.5rem' }}
+      />
+
+      <div className="rating-modal-buttons">
+        <button onClick={() => setRatingModal(false)}>Cancel</button>
+        <button onClick={handleRating}>Submit Rating</button>
+      </div>
+    </div>
+  </div>
+)}
+
       </div>
     </>
   );
