@@ -349,12 +349,12 @@ h2 {
     /* flex-direction: column; */
     align-items: flex-start;
     margin-left: 15px;
-    gap: 10px;
+    gap: 2px;
   }
 
   .worker-search-bar {
     max-width: 100%;
-    margin-left: 0;
+    margin-left: -6px;
   }
 
   .worker-tab-button {
