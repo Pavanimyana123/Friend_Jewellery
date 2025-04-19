@@ -6,23 +6,16 @@ import baseURL from '../../../../Url/NodeBaseURL';
 import './ViewOrders.css';
 import axios from 'axios';
 import ModalPopup from '../Design/Modalpopup';
-import { Rating } from 'react-simple-star-rating';
+import OrderRating from './RatingOrder'; // Updated import for OrderRating
 
 const ViewOrders = () => {
   const { user } = useContext(AuthContext);
-  console.log("user=", user?.id)
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [designRequests, setDesignRequests] = useState();
   const [searchTerm, setSearchTerm] = useState("");
   const [showModal, setShowModal] = useState(false);
   const [selectedOrder, setSelectedOrder] = useState(null);
-
-  const [ratingModal, setRatingModal] = useState(false);
-  const [currentRating, setCurrentRating] = useState(0);
-  const [orderToRate, setOrderToRate] = useState(null);
-  const [reviewText, setReviewText] = useState('');
-
 
   const handleShowModal = (order) => {
     setSelectedOrder(order);
@@ -33,15 +26,12 @@ const ViewOrders = () => {
     setShowModal(false);
   };
 
-
-  const orderStatusSteps = ["Placed",
+  const orderStatusSteps = [
+    "Placed",
     "Processing",
     "Ready for Delivery",
-    //  "Dispatched", 
     "Shipped",
-    //  "Out for Delivery", 
     "Delivered",
-    // "Cancel Requested"
   ];
 
   useEffect(() => {
@@ -52,21 +42,21 @@ const ViewOrders = () => {
           throw new Error('Failed to fetch data');
         }
         const result = await response.json();
-        const filteredByUser = result.filter(order => order.account_id === user?.id);
-  
+        const filteredByUser  = result.filter(order => order.account_id === user?.id);
+
         // Prioritize "Actual Order" in case of duplicates
         const uniqueOrdersMap = new Map();
-  
-        filteredByUser.forEach(order => {
+
+        filteredByUser .forEach(order => {
           const key = `${order.order_number}_${order.actual_order_id}`;
           const existing = uniqueOrdersMap.get(key);
-  
+
           // Prefer "Actual Order"
           if (!existing || order.status === "Actual Order") {
             uniqueOrdersMap.set(key, order);
           }
         });
-  
+
         const finalFilteredOrders = Array.from(uniqueOrdersMap.values());
         setData(finalFilteredOrders);
       } catch (error) {
@@ -75,27 +65,24 @@ const ViewOrders = () => {
         setLoading(false);
       }
     };
-  
+
     if (user) {
       fetchData();
     }
   }, [baseURL, user]);
-  
-  
 
   useEffect(() => {
     const fetchDesignRequests = async () => {
       try {
         const response = await axios.get(`${baseURL}/api/designs`);
         setDesignRequests(response.data);
-        console.log("designs", response.data)
       } catch (error) {
         console.error("Error fetching design requests:", error);
       }
     };
 
     fetchDesignRequests();
-  });
+  }, []);
 
   const handleCancelOrder = async (orderId) => {
     if (!window.confirm("Are you sure you want to request cancellation for this order?")) return;
@@ -133,10 +120,9 @@ const ViewOrders = () => {
     );
   })
   .sort((a, b) => new Date(b.date) - new Date(a.date)); // Sort by date in descending order
-  
 
   const handleImageClick = (order) => {
-    if (order.image_url) {
+ if (order.image_url) {
       const newWindow = window.open();
       if (newWindow) {
         newWindow.document.write(`
@@ -154,61 +140,12 @@ const ViewOrders = () => {
     }
   };
 
-  
-  // const handleRating = async () => {
-  //   try {
-  //     const response = await axios.put(`${baseURL}/api/rate/${orderToRate.id}`, {
-  //       rating: currentRating
-  //     });
-      
-  //     if (response.status === 200) {
-  //       // Update the local state to reflect the new rating
-  //       setData(prevOrders => 
-  //         prevOrders.map(order => 
-  //           order.id === orderToRate.id 
-  //             ? { ...order, customer_rating: currentRating } 
-  //             : order
-  //         )
-  //       );
-  //       setRatingModal(false);
-  //       alert('Thank you for your rating!');
-  //     }
-  //   } catch (error) {
-  //     console.error('Error submitting rating:', error);
-  //     alert(error.response?.data?.error || 'Failed to submit rating. Please try again.');
-  //   }
-  // };
-
-  const handleRating = async () => {
-    try {
-      const response = await axios.put(`${baseURL}/api/rate/${orderToRate.id}`, {
-        rating: currentRating,
-        reviewText: reviewText // Send the review text as well
-      });
-  
-      if (response.status === 200) {
-        setData(prevOrders => 
-          prevOrders.map(order => 
-            order.id === orderToRate.id 
-              ? { ...order, customer_rating: currentRating, review_text: reviewText } 
-              : order
-          )
-        );
-        setRatingModal(false);
-        setReviewText(''); // Reset
-        alert('Thank you for your rating and feedback!');
-      }
-    } catch (error) {
-      console.error('Error submitting rating:', error);
-      alert(error.response?.data?.error || 'Failed to submit rating. Please try again.');
-    }
-  };
-  
-  
-  const openRatingModal = (order) => {
-    setOrderToRate(order);
-    setCurrentRating(order.rating || 0);
-    setRatingModal(true);
+  const handleRatingSubmitted = (orderId, rating, reviewText) => {
+    setData(prevOrders =>
+      prevOrders.map(order =>
+        order.id === orderId ? { ...order, customer_rating: rating, review_text: reviewText } : order
+      )
+    );
   };
 
   return (
@@ -233,20 +170,8 @@ const ViewOrders = () => {
               filteredOrders.map((order, index) => (
                 <div className="order-card" key={index}>
                   <div className="order-header">
-                  <span><strong>Order Date:</strong><span>{new Date(order.date).toLocaleDateString('en-GB')}</span></span>
+                    <span><strong>Order Date:</strong> <span>{new Date(order.date).toLocaleDateString('en-GB')}</span></span>
                     <span><strong>Order ID:</strong> <span>{order.order_number}</span></span>
-                    {/* <span><strong>Total Amount:</strong> <span>₹{order.total_price}</span></span> */}
-                    {/* <span>
-                      <strong>Status:</strong>
-                      <span>
-                        {order.cancel_req_status === "Pending"
-                          ? "Cancel Requested"
-                          : order.cancel_req_status === "Rejected"
-                            ? "Cancel Rejected"
-                            : order.order_status}
-                      </span>
-                    </span> */}
-                    {/* <span><strong>Worker Status:</strong> <span>{order.work_status}</span></span> */}
                     <span><strong>Delivery Date:</strong> <span>{new Date(order.delivery_date).toLocaleDateString('en-GB')}</span></span>
 
                     <div className="order-actions">
@@ -291,7 +216,6 @@ const ViewOrders = () => {
                         )}
                       </button>
                     </div>
-
                   </div>
 
                   <hr />
@@ -301,7 +225,6 @@ const ViewOrders = () => {
                         src={order.image_url ? `${baseURL}${order.image_url}` : 'default-image.jpg'}
                         alt="Product"
                         className="product-image"
-                        // style={{ width: 'auto', height: '70px', borderRadius: '5px', objectFit: 'cover', cursor: 'pointer' }}
                         onClick={() => handleImageClick(order)}
                       />
                       <div className="product-details">
@@ -309,15 +232,11 @@ const ViewOrders = () => {
                         <p><strong>Design Name:</strong> <span>{order.product_design_name}</span></p>
                         <p><strong>Gross Wt:</strong> <span>{order.gross_weight}</span></p>
                         <p><strong>Purity:</strong> <span>{order.purity}</span></p>
-                        {/* <p><strong>Quantity:</strong> <span>{order.qty}</span></p> */}
-                        {/* <p><strong>Total Price:</strong> <span>₹{order.total_price}</span></p> */}
                         <p><strong>Gold Rate:</strong> <span>{order.rate}</span></p>
                         <p><strong>Advance Gold:</strong> <span>{order.advance_gross_wt}</span></p>
                         <p><strong>Advance Amount:</strong> <span>{order.advance_amount}</span></p>
                         <p><strong>Worker Status:</strong> <span>{order.work_status}</span></p>
-                        
                       </div>
-
                     </div>
                     <div className="order-tracker mt-3">
                       {orderStatusSteps.map((step, idx) => (
@@ -334,31 +253,8 @@ const ViewOrders = () => {
                         </div>
                       ))}
                     </div>
-                    <div className="order-rating-section">
-                      {order.rating ? (
-                        <div className="rating-display">
-                          <span>Your Rating: </span>
-                          <Rating 
-                            initialValue={order.rating} 
-                            readonly 
-                            size={20} 
-                            allowHalfIcon 
-                          />
-                          <span>({order.rating})</span>
-                        </div>
-                      ) : (
-                        <button 
-                          onClick={() => openRatingModal(order)}
-                          className="rate-button"
-                          disabled={order.order_status !== 'Delivered'}
-                        >
-                          Rate This Order
-                        </button>
-                      )}
-                    </div>
-
+                    <OrderRating order={order} onRatingSubmitted={handleRatingSubmitted} />
                   </div>
-
                 </div>
               ))
             ) : (
@@ -371,34 +267,6 @@ const ViewOrders = () => {
           handleClose={handleCloseModal}
           order={selectedOrder}
         />
-        {ratingModal && (
-  <div className="rating-modal-overlay">
-    <div className="rating-modal">
-      <h3>Rate Your Order #{orderToRate?.order_number}</h3>
-      <Rating
-        onClick={(rate) => setCurrentRating(rate)}
-        initialValue={currentRating}
-        size={30}
-        allowHalfIcon
-      />
-
-      <textarea
-        value={reviewText}
-        onChange={(e) => setReviewText(e.target.value)}
-        placeholder="Leave your review here..."
-        className="review-textarea"
-        rows={4}
-        style={{ width: '100%', marginTop: '1rem', padding: '0.5rem' }}
-      />
-
-      <div className="rating-modal-buttons">
-        <button onClick={() => setRatingModal(false)}>Cancel</button>
-        <button onClick={handleRating}>Submit Rating</button>
-      </div>
-    </div>
-  </div>
-)}
-
       </div>
     </>
   );

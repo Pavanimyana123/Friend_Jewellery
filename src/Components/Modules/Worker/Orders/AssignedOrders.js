@@ -186,7 +186,7 @@ const AssignedOrders = () => {
                                                 <p><strong>Total Weight:</strong> <span>{order.total_weight_aw}</span></p>
                                                 <p><strong>Remarks:</strong> <span>{order.remarks}</span></p>
                                             </div>
-                                            <div className="worker-order-tracker">
+                                            {/* <div className="worker-order-tracker">
                                                 {orderStatusSteps.map((step, idx) => (
                                                     <div
                                                         key={idx}
@@ -200,7 +200,7 @@ const AssignedOrders = () => {
                                                         <div className="worker-circle"></div>
                                                     </div>
                                                 ))}
-                                            </div>
+                                            </div> */}
                                         </div>
                                     </div>
                                 </div>
