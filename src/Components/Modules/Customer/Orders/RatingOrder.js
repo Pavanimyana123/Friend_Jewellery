@@ -3,10 +3,11 @@ import React, { useState } from 'react';
 import { Rating } from 'react-simple-star-rating';
 import axios from 'axios';
 import baseURL from '../../../../Url/NodeBaseURL';
+import './RatingOrder.css';
 
 const OrderRating = ({ order, onRatingSubmitted }) => {
   const [ratingModal, setRatingModal] = useState(false);
-  const [currentRating, setCurrentRating] = useState(order.rating || 0);
+  const [currentRating, setCurrentRating] = useState(order.customer_rating || 0);
   const [reviewText, setReviewText] = useState('');
 
   const handleRating = async () => {
@@ -29,26 +30,42 @@ const OrderRating = ({ order, onRatingSubmitted }) => {
   };
 
   const openRatingModal = () => {
-    setCurrentRating(order.rating || 0);
+    // Pre-fill the rating and review text if editing
+    setCurrentRating(order.customer_rating || 0);
+    setReviewText(order.review_text || ''); // Pre-fill review text
     setRatingModal(true);
   };
+  const getStarColor = (rating) => {
+    if (rating >= 4) return 'green';
+    if (rating >= 2) return 'orange';
+    return 'red';
+  };
+  
 
   return (
     <>
       <div className="order-rating-section">
-        {order.rating ? (
+        {order.customer_rating ? (
           <div className="rating-display">
             <span>Your Rating: </span>
-            <Rating 
-              initialValue={order.rating} 
-              readonly 
-              size={20} 
-              allowHalfIcon 
+            <Rating
+              initialValue={order.customer_rating}
+              readonly
+              size={20}
+              allowHalfIcon
+              fillColor={getStarColor(order.customer_rating)}
+              emptyColor="#ccc"
             />
-            <span>({order.rating})</span>
+            {/* <span>({order.customer_rating})</span> */}
+            <button
+              onClick={openRatingModal}
+              className="edit-rating-button"
+            >
+              Edit Rating
+            </button>
           </div>
         ) : (
-          <button 
+          <button
             onClick={openRatingModal}
             className="rate-button"
             disabled={order.order_status !== 'Delivered'}
@@ -61,12 +78,14 @@ const OrderRating = ({ order, onRatingSubmitted }) => {
       {ratingModal && (
         <div className="rating-modal-overlay">
           <div className="rating-modal">
-            <h3>Rate Your Order #{order.order_number}</h3>
+            <h3>{order.customer_rating ? `Edit Your Rating for Order #${order.order_number}` : `Rate Your Order #${order.order_number}`}</h3>
             <Rating
               onClick={(rate) => setCurrentRating(rate)}
               initialValue={currentRating}
               size={30}
               allowHalfIcon
+              fillColor={getStarColor(currentRating)}
+              emptyColor="#ccc"
             />
 
             <textarea
@@ -80,7 +99,7 @@ const OrderRating = ({ order, onRatingSubmitted }) => {
 
             <div className="rating-modal-buttons">
               <button onClick={() => setRatingModal(false)}>Cancel</button>
-              <button onClick={handleRating}>Submit Rating</button>
+              <button onClick={handleRating}>{order.customer_rating ? 'Update Rating' : 'Submit Rating'}</button>
             </div>
           </div>
         </div>
