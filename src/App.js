@@ -45,6 +45,7 @@ import Brands from "./Website/Pages/Brands/Brands";
 import Enterprise from "./Website/Pages/Enterprise/Enterprise";
 import Jewels from "./Website/Pages/Brands/Jewels";
 import Jewelkart from "./Website/Pages/Brands/Jewelkart";
+import ViewRatings from "./Components/Modules/Admin/Ratings/ViewRatings";
 
 export default function MainApp() {
   return (
@@ -122,6 +123,15 @@ export default function MainApp() {
             element={
               <ProtectedRoute>
                 <AdminOrder />
+              </ProtectedRoute>
+            }
+          />
+           <Route
+            path="/a-ratings-reviews"
+            exact
+            element={
+              <ProtectedRoute>
+                <ViewRatings />
               </ProtectedRoute>
             }
           />
