@@ -175,47 +175,60 @@ const ViewOrders = () => {
                     <span><strong>Delivery Date:</strong> <span>{new Date(order.delivery_date).toLocaleDateString('en-GB')}</span></span>
 
                     <div className="order-actions">
-                      <button
-                        onClick={() => handleCancelOrder(order.id)}
-                        className="cancel-button"
-                        disabled={order.cancel_req_status === "Pending" || order.cancel_req_status === "Rejected" || order.order_status === "Canceled"}
-                      >
-                        {order.cancel_req_status === "Pending"
-                          ? "Cancel Requested"
-                          : order.cancel_req_status === "Rejected"
-                            ? "Cancel Rejected"
-                            : order.order_status === "Canceled"
-                              ? "Order Canceled"
-                              : "Cancel Order"}
-                      </button>
+  <button
+    onClick={() => handleCancelOrder(order.id)}
+    className="cancel-button"
+    disabled={
+      order.cancel_req_status === "Pending" ||
+      order.cancel_req_status === "Rejected" ||
+      order.order_status === "Canceled" ||
+      order.order_status === "Delivered"
+    }
+  >
+    {order.cancel_req_status === "Pending"
+      ? "Cancel Requested"
+      : order.cancel_req_status === "Rejected"
+        ? "Cancel Rejected"
+        : order.order_status === "Canceled"
+          ? "Order Canceled"
+          : order.order_status === "Delivered"
+            ? "Delivered"
+            : "Cancel Order"}
+  </button>
 
-                      <button
-                        className="cancel-button"
-                        onClick={() => handleShowModal(order)}
-                        disabled={(designRequests ?? []).some(
-                          (design) => design.order_id === order.id && ["Requested", "Approved", "Rejected"].includes(design.approve_status)
-                        )}
-                        style={{
-                          backgroundColor: (designRequests ?? []).some((design) => design.order_id === order.id)
-                            ? designRequests.find((design) => design.order_id === order.id)?.approve_status === "Requested"
-                              ? "orange"
-                              : designRequests.find((design) => design.order_id === order.id)?.approve_status === "Approved"
-                                ? "green"
-                                : "red"
-                            : "rgb(62, 115, 247)",
-                        }}
-                      >
-                        {(designRequests ?? []).some((design) => design.order_id === order.id) ? (
-                          designRequests.find((design) => design.order_id === order.id)?.approve_status === "Requested"
-                            ? "Design Requested"
-                            : designRequests.find((design) => design.order_id === order.id)?.approve_status === "Approved"
-                              ? "Approved"
-                              : "Rejected"
-                        ) : (
-                          "Design Request"
-                        )}
-                      </button>
-                    </div>
+  <button
+    className="cancel-button"
+    onClick={() => handleShowModal(order)}
+    disabled={
+      order.order_status === "Delivered" ||
+      (designRequests ?? []).some(
+        (design) =>
+          design.order_id === order.id &&
+          ["Requested", "Approved", "Rejected"].includes(design.approve_status)
+      )
+    }
+    style={{
+      backgroundColor: (designRequests ?? []).some((design) => design.order_id === order.id)
+        ? designRequests.find((design) => design.order_id === order.id)?.approve_status === "Requested"
+          ? "orange"
+          : designRequests.find((design) => design.order_id === order.id)?.approve_status === "Approved"
+            ? "green"
+            : "red"
+        : "rgb(62, 115, 247)",
+    }}
+  >
+    {(designRequests ?? []).some((design) => design.order_id === order.id) ? (
+      designRequests.find((design) => design.order_id === order.id)?.approve_status === "Requested"
+        ? "Design Requested"
+        : designRequests.find((design) => design.order_id === order.id)?.approve_status === "Approved"
+          ? "Approved"
+          : "Rejected"
+    ) : (
+      "Design Request"
+    )}
+  </button>
+</div>
+
                   </div>
 
                   <hr />

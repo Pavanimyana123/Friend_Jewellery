@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect, useContext } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import './Dashboard.css';
 import { Bar, Pie, Line } from 'react-chartjs-2';
 import WorkerNavbar from '../../../Pages/Navbar/WorkerNavbar';
@@ -73,12 +73,13 @@ function Dashboard() {
   }, [baseURL, user]);
 
   const cards = [
-    { title: "Assigned", link: "/w-assigned-orders", count: data.length }, // Total assigned orders
-    { title: "Pending", link: "/w-pending-orders", count: pendingCount }, // Pending count
-    { title: "In Progress", link: "/w-inprogress-orders", count: inProgressCount }, // In Progress count
-    { title: "Completed", link: "/w-completed-orders", count: completedCount }, // Completed count
-    { title: "On Hold", link: "/w-hold-orders", count: holdCount }, // On Hold count   
-];
+    { title: "Assigned", tab: "All", count: data.length },
+    { title: "Pending", tab: "Pending", count: pendingCount },
+    { title: "In Progress", tab: "In Progress", count: inProgressCount },
+    { title: "Completed", tab: "Completed", count: completedCount },
+    { title: "On Hold", tab: "Hold", count: holdCount }
+  ];
+  
 
   // const barData = {
   //   labels: ['Sales', 'Repairs', 'Orders'],
@@ -133,14 +134,22 @@ function Dashboard() {
           {/* <CustomerDashboard onSelectCustomer={setSelectedMobile} /> */}
         </div>
         <div className="dashboard-container">
-          <div className="row-cards" style={{ marginTop: '15px', marginBottom: '15px' }}>
-            {cards.map((card, index) => (
-              <div key={index} className="metric-card">
-                <h3>{card.title}</h3>
-                <p style={{fontSize:'25px', color:'black', marginTop:'20px'}}>{card.count}</p>
-              </div>
-            ))}
-          </div>
+
+
+<div className="row-cards" style={{ marginTop: '15px', marginBottom: '15px' }}>
+  {cards.map((card, index) => (
+    <div
+      key={index}
+      className="metric-card"
+      onClick={() => navigate("/w-assigned-orders", { state: { tab: card.tab } })}
+      style={{ cursor: 'pointer' }}
+    >
+      <h3>{card.title}</h3>
+      <p style={{ fontSize: '25px', color: 'black', marginTop: '20px' }}>{card.count}</p>
+    </div>
+  ))}
+</div>
+
           <div className="row-cards" style={{ marginTop: '15px', marginBottom: '15px' }}>
             {/* <div className="metric-card">
               <Bar data={barData} options={{ responsive: true, maintainAspectRatio: false }} />

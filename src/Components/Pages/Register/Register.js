@@ -110,13 +110,14 @@ function Register() {
     return firstErrorField; // Return the first error field
   };
 
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     setIsRegistering(true); // Disable button and show 'Registering...'
-    
+
     const firstErrorField = validateForm();
-  
+
     if (firstErrorField) {
       // Scroll to the first error field
       const inputElement = inputRefs.current[firstErrorField];
@@ -124,16 +125,16 @@ function Register() {
         inputElement.scrollIntoView({ behavior: "smooth", block: "center" });
         inputElement.focus(); // Optionally focus the input
       }
-      
+
       setIsRegistering(false); // Re-enable button since validation failed
       return;
     }
-  
+
     try {
       const otpResponse = await axios.post(`${baseURL}/api/send-otp`, {
         email: formData.email
       });
-  
+
       if (otpResponse.status === 200) {
         navigate('/verify-otp', {
           state: {
@@ -148,7 +149,7 @@ function Register() {
       setIsRegistering(false); // Re-enable button after API response
     }
   };
-  
+
 
   return (
     <div className="register-page-container">
@@ -399,8 +400,14 @@ function Register() {
                   <input
                     type="text"
                     name="gst_in"
+                    maxLength="15"
                     value={formData.gst_in}
-                    onChange={handleChange}
+                    onChange={(e) => {
+                      const value = e.target.value.toUpperCase();
+                      if (/^[0-9A-Z]{0,15}$/.test(value)) {
+                        handleChange(e);
+                      }
+                    }}
                   />
                 </div>
                 <div className="register-form-group">
@@ -408,8 +415,14 @@ function Register() {
                   <input
                     type="text"
                     name="aadhar_card"
+                    maxLength="12"
                     value={formData.aadhar_card}
-                    onChange={handleChange}
+                    onChange={(e) => {
+                      const value = e.target.value;
+                      if (/^\d{0,12}$/.test(value)) {
+                        handleChange(e);
+                      }
+                    }}
                   />
                 </div>
               </div>
@@ -419,8 +432,14 @@ function Register() {
                 <input
                   type="text"
                   name="pan_card"
+                  maxLength="10"
                   value={formData.pan_card}
-                  onChange={handleChange}
+                  onChange={(e) => {
+                    const value = e.target.value.toUpperCase();
+                    if (/^[A-Z0-9]{0,10}$/.test(value)) {
+                      handleChange(e);
+                    }
+                  }}
                 />
               </div>
             </div>
