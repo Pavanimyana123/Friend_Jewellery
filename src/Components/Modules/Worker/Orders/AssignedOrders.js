@@ -82,7 +82,8 @@ const AssignedOrders = () => {
     };
 
     // Filter orders based on search term and active tab
-    const filteredOrders = data.filter(order => {
+    const filteredOrders = data
+    .filter(order => {
         const lowerSearchTerm = searchTerm.toLowerCase();
         const matchesSearchTerm = (
             order.order_number?.toString().toLowerCase().includes(lowerSearchTerm) ||
@@ -93,13 +94,15 @@ const AssignedOrders = () => {
         const matchesActiveTab = activeTab === "All" || order.work_status === activeTab;
 
         return matchesSearchTerm && matchesActiveTab;
-    });
+    })
+    .sort((a, b) => new Date(b.date) - new Date(a.date)); // Sorts by date descending (newest first)
+
 
     return (
         <>
             <WorkerNavbar />
             <div className="main-container">
-                <h2 className="order-title">Assigned Orders</h2> 
+                <h2 className="order-title">Assigned Orders</h2>
                 <div className="Worker-search-bar-container">
                     <input
                         type="text"
@@ -108,7 +111,7 @@ const AssignedOrders = () => {
                         onChange={(e) => setSearchTerm(e.target.value)}
                         className="worker-search-bar"
                     />
-                     {["All", "Pending", "In Progress", "Hold", "Completed"].map(status => (
+                    {["All", "Pending", "In Progress", "Hold", "Completed"].map(status => (
                         <button
                             key={status}
                             className={`worker-tab-button ${activeTab === status ? 'active' : ''}`}
@@ -126,55 +129,55 @@ const AssignedOrders = () => {
                             filteredOrders.map((order, index) => (
                                 <div className="worker-order-card" key={index}>
                                     <div className="worker-order-header">
-    <span><strong>Order No:</strong> {order.order_number}</span>
-    <span><strong>Delivery Date:</strong> {new Date(order.delivery_date).toLocaleDateString('en-GB')}</span>
+                                        <span><strong>Order No:</strong> {order.order_number}</span>
+                                        <span><strong>Delivery Date:</strong> {new Date(order.delivery_date).toLocaleDateString('en-GB')}</span>
 
-    <span>
-        <strong>Assigned Status:</strong>
-        <select
-            value={order.assigned_status}
-            onChange={async (event) => {
-                const newStatus = event.target.value;
-                try {
-                    const response = await axios.put(`${baseURL}/api/orders/assign-status/${order.id}`, {
-                        assigned_status: newStatus,
-                        worker_id: order.worker_id,
-                        worker_name: order.worker_name,
-                    });
-                    console.log("Assigned status updated:", response.data);
-                    fetchData();
-                    alert("Assigned status updated successfully!");
-                } catch (error) {
-                    console.error("Error updating assigned status:", error);
-                    alert("Failed to update assigned status.");
-                }
-            }}
-            disabled={order.assigned_status === "Accepted"}
-        >
-            <option value="Assigned">Assigned</option>
-            <option value="Accepted">Accepted</option>
-            <option value="Rejected">Rejected</option>
-        </select>
-    </span>
+                                        <span>
+                                            <strong>Assigned Status:</strong>
+                                            <select
+                                                value={order.assigned_status}
+                                                onChange={async (event) => {
+                                                    const newStatus = event.target.value;
+                                                    try {
+                                                        const response = await axios.put(`${baseURL}/api/orders/assign-status/${order.id}`, {
+                                                            assigned_status: newStatus,
+                                                            worker_id: order.worker_id,
+                                                            worker_name: order.worker_name,
+                                                        });
+                                                        console.log("Assigned status updated:", response.data);
+                                                        fetchData();
+                                                        alert("Assigned status updated successfully!");
+                                                    } catch (error) {
+                                                        console.error("Error updating assigned status:", error);
+                                                        alert("Failed to update assigned status.");
+                                                    }
+                                                }}
+                                                disabled={order.assigned_status === "Accepted"}
+                                            >
+                                                <option value="Assigned">Assigned</option>
+                                                <option value="Accepted">Accepted</option>
+                                                <option value="Rejected">Rejected</option>
+                                            </select>
+                                        </span>
 
-    <span>
-        <strong>Work Status:</strong>
-        <select
-            value={order.work_status}
-            onChange={(event) => {
-                setNewWorkStatus(event.target.value);
-                setCurrentRow(order);
-                setIsModalOpen(true);
-            }}
-            disabled={order.assigned_status !== "Accepted"}
-        >
-            <option value="Pending">Pending</option>
-            <option value="In Progress">In Progress</option>
-            <option value="Completed">Completed</option>
-            <option value="Hold">Hold</option>
-        </select>
-    </span>
-</div>
+                                        <span>
+                                            <strong>Work Status:</strong>
+                                            <select
+                                                value={order.work_status}
+                                                onChange={(event) => {
+                                                    setNewWorkStatus(event.target.value);
+                                                    setCurrentRow(order);
+                                                    setIsModalOpen(true);
+                                                }}
+                                                disabled={order.assigned_status !== "Accepted"}
+                                            >
+                                                <option value="Pending">Pending</option>
+                                                <option value="In Progress">In Progress</option>
+                                                <option value="Completed">Completed</option>
+                                                <option value="Hold">Hold</option>
+                                            </select>
+                                        </span>
+                                    </div>
 
                                     <hr />
                                     <div className="worker-order-body">
