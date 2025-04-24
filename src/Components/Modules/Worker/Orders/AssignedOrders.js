@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { Row, Col, Modal } from 'react-bootstrap';
 import axios from "axios";
+import { useLocation } from "react-router-dom";
 import baseURL from '../../../../Url/NodeBaseURL';
 import WorkerNavbar from '../../../Pages/Navbar/WorkerNavbar';
 import { AuthContext } from "../../../AuthContext/ContextApi";
@@ -19,6 +20,7 @@ const AssignedOrders = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [searchTerm, setSearchTerm] = useState("");
     const [activeTab, setActiveTab] = useState("All"); // State for active tab
+    const location = useLocation();
 
     const orderStatusSteps = ["Placed", "Processing", "Ready for Delivery", "Shipped", "Delivered"];
 
@@ -42,6 +44,12 @@ const AssignedOrders = () => {
     useEffect(() => {
         fetchData();
     }, []);
+
+    useEffect(() => {
+        if (location.state?.tab) {
+          setActiveTab(location.state.tab);
+        }
+      }, [location.state]);
 
     const handleModalSubmit = async () => {
         if (!currentRow) return;

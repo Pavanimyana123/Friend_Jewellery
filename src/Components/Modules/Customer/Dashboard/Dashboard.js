@@ -2,6 +2,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Dashboard.css';
+import { Link } from 'react-router-dom';
 import { Bar, Pie, Line } from 'react-chartjs-2';
 import CustomerNavbar from '../../../Pages/Navbar/CustomerNavbar';
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend, ArcElement, PointElement, LineElement, } from 'chart.js';
@@ -82,8 +83,7 @@ function Dashboard() {
     { title: "Orders", link: "/c-vieworders", count: orderCount },
     { title: "Cancelled", link: "/c-cancelorders", count: cancelledOrderCount },
     { title: "Delivered", link: "/c-vieworders", count: deliveredOrderCount },
-    { title: "Order History", link: "/c-orderhistory", count: orderCount },
-    
+    { title: "Order History", link: "/c-vieworders", count: orderCount },
   ];
 
   // const barData = {
@@ -139,14 +139,16 @@ function Dashboard() {
           {/* <CustomerDashboard onSelectCustomer={setSelectedMobile} /> */}
         </div>
         <div className="dashboard-container">
-          <div className="row-cards" style={{ marginTop: '15px', marginBottom: '15px' }}>
-            {cards.map((card, index) => (
-              <div key={index} className="metric-card">
-                <h3>{card.title}</h3>
-                <p style={{fontSize:'25px', color:'black', marginTop:'20px'}}>{card.count}</p>
-              </div>
-            ))}
-          </div>
+        <div className="row-cards" style={{ marginTop: '15px', marginBottom: '15px' }}>
+  {cards.map((card, index) => (
+    <Link to={card.link} key={index} style={{ textDecoration: 'none' }}>
+      <div className="metric-card" style={{ cursor: 'pointer' }}>
+        <h3>{card.title}</h3>
+        <p style={{ fontSize: '25px', color: 'black', marginTop: '20px' }}>{card.count}</p>
+      </div>
+    </Link>
+  ))}
+</div>
           <div className="row-cards" style={{ marginTop: '15px', marginBottom: '15px' }}>
             {/* <div className="metric-card">
               <Bar data={barData} options={{ responsive: true, maintainAspectRatio: false }} />
