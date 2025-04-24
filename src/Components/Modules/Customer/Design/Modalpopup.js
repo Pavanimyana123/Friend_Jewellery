@@ -1,10 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { Modal, Button, Form } from 'react-bootstrap';
 import axios from 'axios';
 import baseURL from '../../../../Url/NodeBaseURL';
+import { AuthContext } from "../../../AuthContext/ContextApi";
+
 
 const ModalPopup = ({ show, handleClose, order }) => {
   const [newDesign, setNewDesign] = useState(order?.product_design_name || '');
+  const { user } = useContext(AuthContext);
 
   const handleSave = async () => {
     if (!newDesign) {
@@ -16,7 +19,8 @@ const ModalPopup = ({ show, handleClose, order }) => {
       order_id: order?.id,
       account_name: order?.account_name,
       requested_design_name: newDesign,
-      approve_status: "Requested"
+      approve_status: "Requested",
+      customerEmail: user?.email
     };
 
     try {

@@ -84,18 +84,24 @@ const ViewOrders = () => {
     fetchDesignRequests();
   }, []);
 
-  const handleCancelOrder = async (orderId) => {
+  const handleCancelOrder = async (order) => {
     if (!window.confirm("Are you sure you want to request cancellation for this order?")) return;
 
     try {
-      const response = await axios.put(`${baseURL}/api/orders/cancel/${orderId}`);
+      const response = await axios.put(`${baseURL}/api/orders/cancel/${order.id}`, {
+        customerEmail: user.email,
+        category: order.category,
+        subcategory: order.subcategory,
+        orderNumber: order.order_number
+      });
+      
 
       if (response.status === 200) {
         alert("Order cancel request sent successfully.");
         // Update UI by setting cancel_req_status to "Pending"
         setData((prevOrders) =>
           prevOrders.map(order =>
-            order.id === orderId ? { ...order, cancel_req_status: "Pending" } : order
+            order.id === order.id ? { ...order, cancel_req_status: "Pending" } : order
           )
         );
       }
@@ -176,7 +182,7 @@ const ViewOrders = () => {
 
                     <div className="order-actions">
   <button
-    onClick={() => handleCancelOrder(order.id)}
+    onClick={() => handleCancelOrder(order)}
     className="cancel-button"
     disabled={
       order.cancel_req_status === "Pending" ||
