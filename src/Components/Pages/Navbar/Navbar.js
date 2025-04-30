@@ -58,7 +58,7 @@ function Navbar() {
                     to="/rates"
                     onClick={handleItemClick}
                     className={window.location.pathname === '/rates' ? 'active' : ''}
-                
+
                 >
                     Rates</Link>
                 <Link
@@ -87,7 +87,7 @@ function Navbar() {
                 <Link
                     to="/a-view-orders"
                     onClick={handleItemClick}
-                    className={window.location.pathname === '/a-view-orders' || location.pathname === '/a-orders' || location.pathname === '/a-edit-order/:id'  ? 'active' : ''}
+                    className={window.location.pathname === '/a-view-orders' || location.pathname === '/a-orders' || location.pathname === '/a-edit-order/:id' ? 'active' : ''}
                 >
                     Orders</Link>
                 <Link
@@ -108,12 +108,24 @@ function Navbar() {
                     className={window.location.pathname === '/a-design-requests' ? 'active' : ''}
                 >
                     Design Requests</Link>
-                    <Link
+                <Link
                     to="/a-ratings-reviews"
                     onClick={handleItemClick}
                     className={window.location.pathname === '/a-ratings-reviews' ? 'active' : ''}
                 >
-                    Rating & Reviews</Link>    
+                    Reviews</Link>
+                <Link
+                    to="/a-gallerytable"
+                    onClick={handleItemClick}
+                    className={
+                        window.location.pathname === '/a-gallerytable' || window.location.pathname === '/a-gallery'
+                            ? 'active'
+                            : ''
+                    }
+                >
+                    Gallery
+                </Link>
+
                 <Link
                     to="/"
                     onClick={handleItemClick}

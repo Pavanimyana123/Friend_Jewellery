@@ -46,6 +46,8 @@ import Enterprise from "./Website/Pages/Enterprise/Enterprise";
 import Jewels from "./Website/Pages/Brands/Jewels";
 import Jewelkart from "./Website/Pages/Brands/Jewelkart";
 import ViewRatings from "./Components/Modules/Admin/Ratings/ViewRatings";
+import GalleryForm from "./Components/Modules/Admin/Gallery/GalleryForm";
+import GalleryDisplay from "./Components/Modules/Admin/Gallery/GalleryTable";
 
 export default function MainApp() {
   return (
@@ -87,6 +89,15 @@ export default function MainApp() {
             element={
               <ProtectedRoute>
                 <AdminCustomer />
+              </ProtectedRoute>
+            }
+          />
+           <Route
+            path="/a-gallerytable"
+            exact
+            element={
+              <ProtectedRoute>
+                <GalleryDisplay />
               </ProtectedRoute>
             }
           />
@@ -132,6 +143,15 @@ export default function MainApp() {
             element={
               <ProtectedRoute>
                 <ViewRatings />
+              </ProtectedRoute>
+            }
+          />
+           <Route
+            path="/a-gallery"
+            exact
+            element={
+              <ProtectedRoute>
+                <GalleryForm />
               </ProtectedRoute>
             }
           />
