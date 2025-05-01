@@ -28,20 +28,20 @@ const GalleryDisplay = () => {
     <>
       <Navbar />
       <Container fluid className="gallery-main-container">
-      <div className="gallery-table-container d-flex justify-content-between align-items-center">
-  <h3 className="mb-0">Gallery</h3>
-  <Button variant="outline-primary" className="add-gallery-btn" onClick={handleAddGallery}>
-    + Add Gallery
-  </Button>
-</div>
+        <div className="gallery-table-container d-flex justify-content-between align-items-center">
+          <h3 className="mb-0">Gallery</h3>
+          <Button variant="outline-primary" className="add-gallery-btn" onClick={handleAddGallery}>
+            + Add Gallery
+          </Button>
+        </div>
 
         <Row>
           {products.map((product, index) => (
-            <Col md={2} sm={4} xs={6} key={index} className="mb-4">
+            <Col md={2} sm={4} xs={6} key={index} className="mb-4 mt-4">
               <Card className="h-100 text-center">
                 <Card.Img
                   variant="top"
-                  src={`http://localhost:5001/uploads/gallery/${product.image}`} // Adjust path as per your backend
+                  src={`${baseURL}/uploads/gallery/${product.image}`} // Adjust path as per your backend
                   className="gallery-img"
                 />
                 <Card.Body>

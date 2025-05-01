@@ -1,14 +1,15 @@
 .gallery-main-container {
     padding: 20px;
-    background-color: #f9f9f9;
+    background-color: rgba(163, 110, 41, 0.08);
     min-height: 100vh;
+    /* margin: 20px; */
   }
   
   .gallery-table-container {
-    background-color: #fff;
+    /* background-color: #fff; */
     padding: 20px 30px;
-    border-radius: 12px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    /* border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05); */
     margin-top: 70px;
     display: flex;
     justify-content: space-between;

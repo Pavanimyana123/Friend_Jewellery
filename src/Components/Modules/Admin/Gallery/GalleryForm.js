@@ -52,6 +52,12 @@ const GalleryForm = () => {
     }
   };
 
+
+  const handleBack = () => {
+    const from = "/a-gallerytable";
+    navigate(from);
+  };
+
   return (
     <>
       <Navbar />
@@ -122,6 +128,7 @@ const GalleryForm = () => {
               </Col>
             </Row>
             <div className='justify-content-center'>
+            <button type="submit" className=" btn btn-secondary mt-3 " onClick={handleBack} style={{marginRight:'5px'}}>Cancel</button>
             <button type="submit" className=" btn btn-primary mt-3">Submit</button>
             </div>
           </form>
