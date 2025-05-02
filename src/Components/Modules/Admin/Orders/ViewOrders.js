@@ -525,9 +525,9 @@ const ViewOrders = () => {
               <option value="Placed">Placed</option>
               <option value="Processing" disabled={isPending}>Processing</option>
               <option value="Ready for Delivery" disabled={isPending}>Ready for Delivery</option>
-              <option value="Dispatched" disabled={isPending}>Dispatched</option>
+              {/* <option value="Dispatched" disabled={isPending}>Dispatched</option>
               <option value="Shipped" disabled={isPending}>Shipped</option>
-              <option value="Out for Delivery" disabled={isPending}>Out for Delivery</option>
+              <option value="Out for Delivery" disabled={isPending}>Out for Delivery</option> */}
               <option value="Delivered" disabled={isPending}>Delivered</option>
               <option value="Canceled" disabled={isPending}>Cancel</option>
             </select>

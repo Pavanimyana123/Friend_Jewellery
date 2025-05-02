@@ -150,6 +150,7 @@ import footerlogo from "../Footer/Images/friends_logo.jpeg";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHeart } from "@fortawesome/free-solid-svg-icons";
 import { faFacebookF } from "@fortawesome/free-brands-svg-icons";
+import qrImage from '../../Components/Pages/Images/qrcode.jpg'; // adjust the path as needed
 import { QRCodeCanvas } from "qrcode.react"; // ← Import QR code component
 
 const Footer = () => {
@@ -192,7 +193,7 @@ const Footer = () => {
             </div>
 
             {/* ✅ QR Code Section */}
-            <div className="footer-section">
+            {/* <div className="footer-section">
               <p style={{ color: "white", fontSize: "22px" }} className="footer-heading">
                 Scan & Visit
               </p>
@@ -204,7 +205,15 @@ const Footer = () => {
                 level="H"
                 includeMargin={true}
               />
-            </div>
+            </div> */}
+
+<div className="footer-section">
+  <p style={{ color: "white", fontSize: "22px" }} className="footer-heading">
+    Scan & Visit
+  </p>
+  <img src={qrImage} alt="QR Code" width={110} height={110} />
+</div>
+
           </div>
         </div>
 

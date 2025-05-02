@@ -73,18 +73,41 @@ function Navbar() {
                     className={window.location.pathname === '/a-workertable' || location.pathname === '/a-workers' ? 'active' : ''}
                 >
                     Workers</Link>
-                {/* <div className="navbar-dropdown" onMouseEnter={toggleDropdown} onMouseLeave={toggleDropdown}>
+                <div className="navbar-dropdown" onMouseEnter={toggleDropdown} onMouseLeave={toggleDropdown}>
                     <span className="navbar-dropdown-title">
                         Orders <FontAwesomeIcon icon={ordersDropdownOpen ? faChevronUp : faChevronDown} className="dropdown-arrow-icon" />
                     </span>
                     {ordersDropdownOpen && (
                         <div className="navbar-dropdown-content">
-                            <Link to="/a-view-orders" onClick={handleItemClick} className={isActive('/a-orders')}>View Orders</Link>
-                            <Link to="/a-cancel-orders" onClick={handleItemClick} className={isActive('/a-cancel-orders')}>Cancel Order</Link>
+                            <Link
+                    to="/a-view-orders"
+                    onClick={handleItemClick}
+                    className={window.location.pathname === '/a-view-orders' || location.pathname === '/a-orders' || location.pathname === '/a-edit-order/:id' ? 'active' : ''}
+                >
+                    Orders</Link>
+                           
+                            <Link
+                    to="/a-cancel-orders"
+                    onClick={handleItemClick}
+                    className={window.location.pathname === '/a-cancel-orders' ? 'active' : ''}
+                >
+                    Cancelled Orders</Link>
+                <Link
+                    to="/a-cancel-requests"
+                    onClick={handleItemClick}
+                    className={window.location.pathname === '/a-cancel-requests' ? 'active' : ''}
+                >
+                    Cancel Requests</Link>
+                <Link
+                    to="/a-design-requests"
+                    onClick={handleItemClick}
+                    className={window.location.pathname === '/a-design-requests' ? 'active' : ''}
+                >
+                    Design Requests</Link>
                         </div>
                     )}
-                </div> */}
-                <Link
+                </div>
+                {/* <Link
                     to="/a-view-orders"
                     onClick={handleItemClick}
                     className={window.location.pathname === '/a-view-orders' || location.pathname === '/a-orders' || location.pathname === '/a-edit-order/:id' ? 'active' : ''}
@@ -107,7 +130,7 @@ function Navbar() {
                     onClick={handleItemClick}
                     className={window.location.pathname === '/a-design-requests' ? 'active' : ''}
                 >
-                    Design Requests</Link>
+                    Design Requests</Link> */}
                 <Link
                     to="/a-ratings-reviews"
                     onClick={handleItemClick}

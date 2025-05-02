@@ -71,6 +71,7 @@
   display: flex;
   align-items: center;
   cursor: pointer;
+  color: white;
 }
 
 /* Logo styles */
@@ -98,7 +99,7 @@
 
 .navbar-links a,
 .navbar-links span {
-  color: #333;
+  /* color: #333; */
   text-decoration: none;
   font-size: 20px;
   font-weight: 500;
@@ -120,8 +121,8 @@
 .navbar-dropdown-content {
   display: none;
   position: absolute; /* Ensures it is positioned relative to the dropdown container */
-  background-color: #fff;
-  color: #333;
+  background-color: black;
+  color: red;
   padding: 0.5rem 1rem; /* Reduce padding for better appearance */
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
   z-index: 1000; /* High z-index to ensure dropdown appears on top */
