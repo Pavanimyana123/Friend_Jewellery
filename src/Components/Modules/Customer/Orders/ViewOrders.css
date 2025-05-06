@@ -82,7 +82,7 @@ h2 {
   display: flex;
   flex-direction: column;
   align-items: center;
-  flex: 1;
+  
   font-size: 13px;
   white-space: nowrap;
 }
@@ -104,8 +104,8 @@ h2 {
   content: "";
   position: absolute;
   bottom: 7px;
-  left: 9%;
-  width: 82%;
+  left: 10%;
+  width: 79%;
   height: 3px;
   background: #ddd;
   z-index: 0;
@@ -311,8 +311,8 @@ h2 {
     content: "";
     position: absolute;
     bottom: 7px;
-    left: 2%;
-    width: 94%;
+    left: 6%;
+    width: 86%;
     height: 3px;
     background: #ddd;
     z-index: 0;

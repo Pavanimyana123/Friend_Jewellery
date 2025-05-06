@@ -16,6 +16,8 @@ const ViewOrders = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [showModal, setShowModal] = useState(false);
   const [selectedOrder, setSelectedOrder] = useState(null);
+  const [modificationCounts, setModificationCounts] = useState({});
+  const [error, setError] = useState(null);
 
   const handleShowModal = (order) => {
     setSelectedOrder(order);
@@ -30,7 +32,7 @@ const ViewOrders = () => {
     "Placed",
     "Processing",
     "Ready for Delivery",
-    "Shipped",
+    // "Shipped",
     "Delivered",
   ];
 
@@ -154,6 +156,36 @@ const ViewOrders = () => {
     );
   };
 
+  useEffect(() => {
+    fetch(`${baseURL}/api/orders`)
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error('Failed to fetch orders');
+        }
+        return response.json();
+      })
+      .then((data) => {
+        const counts = {};
+
+        data.forEach(order => {
+          const { actual_order_id, status } = order;
+
+          if (status === "Modified Order") {
+            if (!counts[actual_order_id]) {
+              counts[actual_order_id] = 0;
+            }
+            counts[actual_order_id]++;
+          }
+        });
+
+        setModificationCounts(counts);
+      })
+      .catch((err) => {
+        console.error(err);
+        setError('Error fetching data');
+      });
+  }, []);
+
   return (
     <>
       <CustomerNavbar />
@@ -179,60 +211,66 @@ const ViewOrders = () => {
                     <span><strong>Order Date:</strong> <span>{new Date(order.date).toLocaleDateString('en-GB')}</span></span>
                     <span><strong>Order ID:</strong> <span>{order.order_number}</span></span>
                     <span><strong>Delivery Date:</strong> <span>{new Date(order.delivery_date).toLocaleDateString('en-GB')}</span></span>
+                    <span>
+    Designed Modified {modificationCounts[order.actual_order_id] || 0} time(s).</span>
 
                     <div className="order-actions">
-  <button
-    onClick={() => handleCancelOrder(order)}
-    className="cancel-button"
-    disabled={
-      order.cancel_req_status === "Pending" ||
-      order.cancel_req_status === "Rejected" ||
-      order.order_status === "Canceled" ||
-      order.order_status === "Delivered"
-    }
-  >
-    {order.cancel_req_status === "Pending"
-      ? "Cancel Requested"
-      : order.cancel_req_status === "Rejected"
-        ? "Cancel Rejected"
-        : order.order_status === "Canceled"
-          ? "Order Canceled"
-          : order.order_status === "Delivered"
-            ? "Delivered"
-            : "Cancel Order"}
-  </button>
+                    <button
+  onClick={() => handleCancelOrder(order)}
+  className="cancel-button rate-button"
+  disabled={
+    order.cancel_req_status === "Pending" ||
+    order.cancel_req_status === "Rejected" ||
+    order.order_status === "Canceled" ||
+    order.order_status === "Delivered"
+  }
+>
+  {order.cancel_req_status === "Pending"
+    ? "Cancel Requested"
+    : order.cancel_req_status === "Rejected"
+      ? "Cancel Rejected"
+      : order.order_status === "Canceled"
+        ? "Order Canceled"
+        : order.order_status === "Delivered"
+          ? "Delivered"
+          : "Cancel Order"}
+</button>
 
   <button
-    className="cancel-button"
-    onClick={() => handleShowModal(order)}
-    disabled={
-      order.order_status === "Delivered" ||
-      (designRequests ?? []).some(
-        (design) =>
-          design.order_id === order.id &&
-          ["Requested", "Approved", "Rejected"].includes(design.approve_status)
-      )
-    }
-    style={{
-      backgroundColor: (designRequests ?? []).some((design) => design.order_id === order.id)
+  className="cancel-button rate-button"
+  onClick={() => handleShowModal(order)}
+  disabled={
+    order.order_status === "Delivered" ||
+    order.order_status === "Canceled" ||
+    (designRequests ?? []).some(
+      (design) =>
+        design.order_id === order.id &&
+        ["Requested", "Approved", "Rejected"].includes(design.approve_status)
+    )
+  }
+  style={{
+    backgroundColor:
+      order.order_status === "Delivered" || order.order_status === "Canceled"
+        ? "#b0bec5"
+        : (designRequests ?? []).some((design) => design.order_id === order.id)
         ? designRequests.find((design) => design.order_id === order.id)?.approve_status === "Requested"
           ? "orange"
           : designRequests.find((design) => design.order_id === order.id)?.approve_status === "Approved"
             ? "green"
             : "red"
         : "rgb(62, 115, 247)",
-    }}
-  >
-    {(designRequests ?? []).some((design) => design.order_id === order.id) ? (
-      designRequests.find((design) => design.order_id === order.id)?.approve_status === "Requested"
-        ? "Design Requested"
-        : designRequests.find((design) => design.order_id === order.id)?.approve_status === "Approved"
-          ? "Approved"
-          : "Rejected"
-    ) : (
-      "Design Request"
-    )}
-  </button>
+  }}
+>
+  {(designRequests ?? []).some((design) => design.order_id === order.id) ? (
+    designRequests.find((design) => design.order_id === order.id)?.approve_status === "Requested"
+      ? "Design Requested"
+      : designRequests.find((design) => design.order_id === order.id)?.approve_status === "Approved"
+        ? "Approved"
+        : "Rejected"
+  ) : (
+    "Design Request"
+  )}
+</button>
 </div>
 
                   </div>
@@ -274,6 +312,7 @@ const ViewOrders = () => {
                     </div>
                     <OrderRating order={order} onRatingSubmitted={handleRatingSubmitted} />
                   </div>
+   
                 </div>
               ))
             ) : (

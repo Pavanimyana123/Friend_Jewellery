@@ -150,6 +150,18 @@ function Navbar() {
                 </Link>
 
                 <Link
+                    to="/a-broucher"
+                    onClick={handleItemClick}
+                    className={
+                        window.location.pathname === '/a-broucher' || window.location.pathname === '/a-broucher'
+                            ? 'active'
+                            : ''
+                    }
+                >
+                    Broucher/Catalog
+                </Link>
+
+                <Link
                     to="/"
                     onClick={handleItemClick}
                     className='logout-desktop'

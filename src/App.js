@@ -48,6 +48,7 @@ import Jewelkart from "./Website/Pages/Brands/Jewelkart";
 import ViewRatings from "./Components/Modules/Admin/Ratings/ViewRatings";
 import GalleryForm from "./Components/Modules/Admin/Gallery/GalleryForm";
 import GalleryDisplay from "./Components/Modules/Admin/Gallery/GalleryTable";
+import Broucher from "./Components/Modules/Admin/Broucher/Broucher";
 
 export default function MainApp() {
   return (
@@ -125,6 +126,15 @@ export default function MainApp() {
             element={
               <ProtectedRoute>
                 <AdminDashboard />
+              </ProtectedRoute>
+            }
+          />
+           <Route
+            path="/a-broucher"
+            exact
+            element={
+              <ProtectedRoute>
+                <Broucher />
               </ProtectedRoute>
             }
           />
