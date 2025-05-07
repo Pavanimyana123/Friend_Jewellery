@@ -49,6 +49,8 @@ import ViewRatings from "./Components/Modules/Admin/Ratings/ViewRatings";
 import GalleryForm from "./Components/Modules/Admin/Gallery/GalleryForm";
 import GalleryDisplay from "./Components/Modules/Admin/Gallery/GalleryTable";
 import Broucher from "./Components/Modules/Admin/Broucher/Broucher";
+import C_GalleryDisplay from "./Components/Modules/Customer/Gallery/Gallery";
+import C_Broucher from "./Components/Modules/Customer/Broucher/Broucher";
 
 export default function MainApp() {
   return (
@@ -252,6 +254,24 @@ export default function MainApp() {
             element={
               <ProtectedRoute>
                 <ViewOrders />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/c-gallery"
+            exact
+            element={
+              <ProtectedRoute>
+                <C_GalleryDisplay />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/c-broucher"
+            exact
+            element={
+              <ProtectedRoute>
+                <C_Broucher />
               </ProtectedRoute>
             }
           />
