@@ -29,7 +29,7 @@ const formatDate = (dateString) => {
 function Dashboard() {
   const navigate = useNavigate();
   const { user } = useContext(AuthContext);
-  
+
   const [orderCount, setOrderCount] = useState(0);
   const [cancelledOrderCount, setCancelledOrderCount] = useState(0);
   const [deliveredOrderCount, setDeliveredOrderCount] = useState(0);
@@ -43,13 +43,24 @@ function Dashboard() {
           throw new Error('Failed to fetch orders');
         }
         const result = await response.json();
-        
-        // Filter orders based on user ID
+  
+        // Filter orders belonging to the current user
         const userOrders = result.filter(order => order.account_id === user?.id);
-        setOrderCount(userOrders.length);
-
-        const cancelledOrders = userOrders.filter(order => order.order_status === "Canceled");
-        const deliveredOrders = userOrders.filter(order => order.order_status === "Delivered");
+  
+        // Filter only "ACTUAL ORDER" (case-insensitive)
+        const actualOrders = userOrders.filter(order =>
+          order.status?.toLowerCase() === 'actual order'
+        );
+  
+        setOrderCount(actualOrders.length);
+  
+        const cancelledOrders = actualOrders.filter(order =>
+          order.order_status === "Canceled"
+        );
+        const deliveredOrders = actualOrders.filter(order =>
+          order.order_status === "Delivered"
+        );
+  
         setCancelledOrderCount(cancelledOrders.length);
         setDeliveredOrderCount(deliveredOrders.length);
       } catch (error) {
@@ -58,11 +69,12 @@ function Dashboard() {
         setLoading(false);
       }
     };
-
+  
     if (user) {
       fetchOrders();
     }
   }, [baseURL, user]);
+  
 
   const handleCardClick = (title) => {
     const routes = {
@@ -75,7 +87,7 @@ function Dashboard() {
       // "Completed Orders": "/orders/completed",
     };
 
-    const path = routes[title] || "/a-dashboard"; 
+    const path = routes[title] || "/a-dashboard";
     navigate(path);
   };
 
@@ -133,22 +145,22 @@ function Dashboard() {
   return (
     <>
       <CustomerNavbar />
-      <div className="main-container" style={{ backgroundColor: '#b7721834', minHeight:'100vh' }}>
+      <div className="main-container" style={{ backgroundColor: '#b7721834', minHeight: '100vh' }}>
         <div className="dashboard-header">
           <h2 style={{ marginTop: "25px", marginLeft: "15px" }}>Dashboard</h2>
           {/* <CustomerDashboard onSelectCustomer={setSelectedMobile} /> */}
         </div>
         <div className="dashboard-container">
-        <div className="row-cards" style={{ marginTop: '15px', marginBottom: '15px' }}>
-  {cards.map((card, index) => (
-    <Link to={card.link} key={index} style={{ textDecoration: 'none' }}>
-      <div className="metric-card" style={{ cursor: 'pointer' }}>
-        <h3>{card.title}</h3>
-        <p style={{ fontSize: '25px', color: 'black', marginTop: '20px' }}>{card.count}</p>
-      </div>
-    </Link>
-  ))}
-</div>
+          <div className="row-cards" style={{ marginTop: '15px', marginBottom: '15px' }}>
+            {cards.map((card, index) => (
+              <Link to={card.link} key={index} style={{ textDecoration: 'none' }}>
+                <div className="metric-card" style={{ cursor: 'pointer' }}>
+                  <h3>{card.title}</h3>
+                  <p style={{ fontSize: '25px', color: 'black', marginTop: '20px' }}>{card.count}</p>
+                </div>
+              </Link>
+            ))}
+          </div>
           <div className="row-cards" style={{ marginTop: '15px', marginBottom: '15px' }}>
             {/* <div className="metric-card">
               <Bar data={barData} options={{ responsive: true, maintainAspectRatio: false }} />

@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import './Dashboard.css';
 import { Bar, Pie, Line } from 'react-chartjs-2';
 import Navbar from '../../../Pages/Navbar/Navbar';
@@ -155,20 +155,20 @@ function Dashboard() {
       // "Completed Orders": "/orders/completed",
     };
 
-    const path = routes[title] || "/a-dashboard"; 
+    const path = routes[title] || "/a-dashboard";
     navigate(path);
   };
 
   const cards = [
-    { title: "Customers", count: customerCount },
-    { title: "Workers", count: workerCount },
-    { title: "Orders", count: orderCount },
-    { title: "Cancelled", count: cancelOrderCount },
-    { title: "Delivered", count: deliveredOrderCount },
-    { title: "Pending", count: pendingOrderCount },
-    { title: "In progress", count: inProgressOrderCount },
-    { title: "Completed", count: completedOrderCount },
-    { title: "On Hold", count: holdOrderCount },
+    { title: "Customers", count: customerCount, path: "/a-customertable" },
+    { title: "Workers", count: workerCount, path: "/a-workertable" },
+    { title: "Orders", count: orderCount, path: "/a-view-orders" },
+    { title: "Cancelled", count: cancelOrderCount, path: "/a-cancel-orders" },
+    { title: "Delivered", count: deliveredOrderCount, path: "/a-view-orders" },
+    { title: "Pending", count: pendingOrderCount, path: "/a-view-orders" },
+    { title: "In progress", count: inProgressOrderCount, path: "/a-view-orders" },
+    { title: "Completed", count: completedOrderCount, path: "/a-view-orders" },
+    { title: "On Hold", count: holdOrderCount, path: "/a-view-orders" },
   ];
 
   // const barData = {
@@ -218,19 +218,29 @@ function Dashboard() {
   return (
     <>
       <Navbar />
-      <div className="main-container" style={{ backgroundColor: '#b7721834', minHeight:'100vh' }}>
+      <div className="main-container" style={{ backgroundColor: '#b7721834', minHeight: '100vh' }}>
         <div className="dashboard-header">
           <h2 style={{ marginTop: "25px", marginLeft: "15px" }}>Dashboard</h2>
           {/* <CustomerDashboard onSelectCustomer={setSelectedMobile} /> */}
         </div>
         <div className="dashboard-container">
           <div className="row-cards" style={{ marginTop: '15px', marginBottom: '15px' }}>
-            {cards.map((card, index) => (
-              <div key={index} className="metric-card">
-                <h3>{card.title}</h3>
-                <p style={{fontSize:'25px', color:'black', marginTop:'20px'}}>{card.count}</p>
-              </div>
-            ))}
+            {cards.map((card, index) => {
+              const CardContent = (
+                <div key={index} className="metric-card" style={{ cursor: card.path ? 'pointer' : 'default' }}>
+                  <h3>{card.title}</h3>
+                  <p style={{ fontSize: '25px', color: 'black', marginTop: '20px' }}>{card.count}</p>
+                </div>
+              );
+
+              return card.path ? (
+                <Link to={card.path} key={index} style={{ textDecoration: 'none', color: 'inherit' }}>
+                  {CardContent}
+                </Link>
+              ) : (
+                CardContent
+              );
+            })}
           </div>
           <div className="row-cards" style={{ marginTop: '15px', marginBottom: '15px' }}>
             {/* <div className="metric-card">

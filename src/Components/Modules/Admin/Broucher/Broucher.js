@@ -45,6 +45,7 @@ const Broucher = () => {
                 file_path: file.name
             }]);
             handleClose();
+            alert("Broucher/Catalog uploaded successfully")
             fetchBrouchers();
         } catch (error) {
             console.error(error);
