@@ -30,11 +30,12 @@
   
   
   .gallery-img {
-    height: 160px;
+    height: 250px;
+    width: auto;
     object-fit: cover;
-    border-top-left-radius: 12px;
-    border-top-right-radius: 12px;
+    border-radius: 12px; /* Curved on all four corners */
   }
+  
 
   /* .gallery-img {
     width: 100%;

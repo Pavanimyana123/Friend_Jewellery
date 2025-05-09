@@ -64,7 +64,7 @@
 // export default C_Broucher;
 
 import React, { useEffect, useState } from 'react';
-import { Container, Row, Col, Card } from 'react-bootstrap';
+import { Container, Row, Col, Card, Modal, Button } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import CustomerNavbar from '../../../Pages/Navbar/CustomerNavbar';
@@ -89,6 +89,16 @@ const C_Broucher = () => {
         fetchBrouchers();
     }, []);
 
+    const [showDescriptionModal, setShowDescriptionModal] = useState(false);
+    const [selectedDescription, setSelectedDescription] = useState('');
+    const [selectedTitle, setSelectedTitle] = useState('');
+
+    const handleReadMore = (title, description) => {
+        setSelectedTitle(title);
+        setSelectedDescription(description);
+        setShowDescriptionModal(true);
+    };
+
     return (
         <>
             <CustomerNavbar />
@@ -98,31 +108,53 @@ const C_Broucher = () => {
                 </div>
 
                 <Row>
-                    {brouchers.map((product, index) => (
-                        <Col md={4} sm={6} xs={12} key={index} className="mb-4 mt-4">
-                            <Card className="h-100 text-center customer-gallery-card">
-                                <Card.Img
-                                    variant="top"
-                                    src={`${baseURL}/uploads/broucher/${product.file_path}`}
-                                    className="customer-gallery-img"
-                                />
+                    {brouchers.map((item, index) => (
+                        <Col md={3} xs={12} lg={2} key={index} className="mb-4 mt-4">
+                            <Card className="h-100 text-center shadow-sm">
                                 <Card.Body>
-                                    <Card.Title>{product.broucher_name}</Card.Title>
-                                    <Card.Text>
-                                        <a
-                                            href={`${baseURL}/uploads/broucher/${product.file_path}`}
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                            className="btn btn-link" style={{ textDecoration: 'none' }}
-                                        >
-                                            View File
-                                        </a>
+                                    <Card.Title className="fw-semibold text-truncate" title={item.broucher_name}>
+                                        {item.broucher_name}
+                                    </Card.Title>
+                                    <Card.Text className="small text-muted description-box">
+                                        {item.description.length > 150
+                                            ? <>
+                                                {item.description.slice(0, 140)}...{' '}
+                                                <span
+                                                    onClick={() => handleReadMore(item.broucher_name, item.description)}
+                                                    style={{ color: '#007bff', cursor: 'pointer' }}
+                                                >
+                                                    Read more
+                                                </span>
+                                            </>
+                                            : item.description}
                                     </Card.Text>
+                                    <a
+                                        href={`${baseURL}/uploads/broucher/${item.file_path}`}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="btn btn-sm btn-outline-primary mt-2"
+                                    >
+                                        View File
+                                    </a>
                                 </Card.Body>
                             </Card>
                         </Col>
                     ))}
                 </Row>
+
+                <Modal show={showDescriptionModal} onHide={() => setShowDescriptionModal(false)} centered>
+                    <Modal.Header closeButton>
+                        <Modal.Title>{selectedTitle}</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                        <p>{selectedDescription}</p>
+                    </Modal.Body>
+                    <Modal.Footer>
+                        <Button variant="secondary" onClick={() => setShowDescriptionModal(false)}>
+                            Close
+                        </Button>
+                    </Modal.Footer>
+                </Modal>
             </Container>
         </>
     );

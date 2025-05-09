@@ -43,6 +43,18 @@
     transform: translateY(-1px);
 }
 
+
+.description-box {
+    overflow: hidden;
+    position: relative;
+  }
+  @media (min-width: 577px) {
+    .description-box {
+      height: 135px;
+    }
+  }
+
+
 /* Responsive adjustments */
 @media (max-width: 576px) {
     .broucher-custom-modal {
@@ -52,4 +64,8 @@
     .broucher-modal-body-custom {
         padding: 1rem;
     }
+
+    .description-box {
+        height: 85px;
+      }
 }

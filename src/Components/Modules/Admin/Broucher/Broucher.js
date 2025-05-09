@@ -9,6 +9,7 @@ const Broucher = () => {
     const [brouchers, setBrouchers] = useState([]);
     const [showModal, setShowModal] = useState(false);
     const [broucherName, setBroucherName] = useState('');
+    const [description, setDescription] = useState('');
     const [file, setFile] = useState(null);
 
     // Open/Close Modal
@@ -16,19 +17,21 @@ const Broucher = () => {
     const handleClose = () => {
         setShowModal(false);
         setBroucherName('');
+        setDescription('');
         setFile(null);
     };
 
     // ✅ Submit the new broucher
     const handleSubmit = async (e) => {
         e.preventDefault();
-        if (!broucherName || !file) {
-            alert('Please provide a name and file.');
+        if (!broucherName || !description || !file) {
+            alert('Please provide a name, description and file.');
             return;
         }
 
         const formData = new FormData();
         formData.append('broucher_name', broucherName);
+        formData.append('description', description);
         formData.append('file', file);
 
         try {
@@ -42,6 +45,7 @@ const Broucher = () => {
             setBrouchers(prev => [...prev, {
                 id: response.data.id,
                 broucher_name: broucherName,
+                description: description,
                 file_path: file.name
             }]);
             handleClose();
@@ -55,16 +59,27 @@ const Broucher = () => {
 
     const fetchBrouchers = async () => {
         try {
-          const res = await axios.get(`${baseURL}/api/broucher-items`);
-          setBrouchers(res.data);
+            const res = await axios.get(`${baseURL}/api/broucher-items`);
+            setBrouchers(res.data);
         } catch (err) {
-          console.error("Error fetching brouchers:", err);
+            console.error("Error fetching brouchers:", err);
         }
-      };
-    
-      useEffect(() => {
+    };
+
+    useEffect(() => {
         fetchBrouchers();
-      }, []);
+    }, []);
+
+    const [showDescriptionModal, setShowDescriptionModal] = useState(false);
+    const [selectedDescription, setSelectedDescription] = useState('');
+    const [selectedTitle, setSelectedTitle] = useState('');
+    
+
+    const handleReadMore = (title, description) => {
+        setSelectedTitle(title);
+        setSelectedDescription(description);
+        setShowDescriptionModal(true);
+    };
 
     return (
         <>
@@ -80,34 +95,43 @@ const Broucher = () => {
 
                 <Row>
                     {brouchers.map((item, index) => (
-                        <Col md={2} sm={4} xs={6} key={index} className="mb-4 mt-4">
-                            <Card className="h-100 text-center">
-                                <Card.Img
-                                    variant="top"
-                                    src={`${baseURL}/uploads/broucher/${item.file_path}`}
-                                    className="gallery-img"
-                                />
+                        <Col md={3} xs={12} lg={2} key={index} className="mb-4 mt-4">
+                            <Card className="h-100 text-center shadow-sm">
                                 <Card.Body>
-                                    <Card.Title>{item.broucher_name}</Card.Title>
-                                    <Card.Text>
-                                        <a
-                                            href={`${baseURL}/uploads/broucher/${item.file_path}`}
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                            className="btn btn-link" style={{textDecoration:'none'}}
-                                        >
-                                            View File
-                                        </a>
+                                    <Card.Title className="fw-semibold text-truncate" title={item.broucher_name}>
+                                        {item.broucher_name}
+                                    </Card.Title>
+                                    <Card.Text className="small text-muted description-box">
+                                        {item.description.length > 150
+                                            ? <>
+                                                {item.description.slice(0, 140)}...{' '}
+                                                <span
+                                                    onClick={() => handleReadMore(item.broucher_name, item.description)}
+                                                    style={{ color: '#007bff', cursor: 'pointer' }}
+                                                >
+                                                    Read more
+                                                </span>
+                                            </>
+                                            : item.description}
                                     </Card.Text>
+                                    <a
+                                        href={`${baseURL}/uploads/broucher/${item.file_path}`}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="btn btn-sm btn-outline-primary mt-2"
+                                    >
+                                        View File
+                                    </a>
                                 </Card.Body>
                             </Card>
                         </Col>
                     ))}
                 </Row>
 
+
                 {/* Add Broucher Modal */}
-                <Modal 
-                    show={showModal} 
+                <Modal
+                    show={showModal}
                     onHide={handleClose}
                     centered // This centers the modal vertically
                     dialogClassName="broucher-custom-modal" // Custom class for additional styling
@@ -117,7 +141,7 @@ const Broucher = () => {
                     </Modal.Header>
                     <Modal.Body className="broucher-modal-body-custom">
                         <Form onSubmit={handleSubmit}>
-                            <Form.Group controlId="broucherName" className="mb-3">
+                            <Form.Group controlId="broucherName" className="mb-3" style={{ marginTop: '-35px' }}>
                                 <Form.Label>Catalog/Broucher Name</Form.Label>
                                 <Form.Control
                                     type="text"
@@ -127,6 +151,18 @@ const Broucher = () => {
                                     className="broucher-form-control-custom"
                                 />
                             </Form.Group>
+                            <Form.Group controlId="broucherName" className="mb-3">
+                                <Form.Label>Description</Form.Label>
+                                <Form.Control
+                                    as="textarea"
+                                    rows={4}
+                                    value={description}
+                                    onChange={(e) => setDescription(e.target.value)}
+                                    placeholder="Enter description"
+                                    className="broucher-form-control-custom"
+                                />
+                            </Form.Group>
+
 
                             <Form.Group controlId="formFile" className="mb-4">
                                 <Form.Label>Upload File</Form.Label>
@@ -151,6 +187,21 @@ const Broucher = () => {
                             </div>
                         </Form>
                     </Modal.Body>
+                </Modal>
+
+
+                <Modal show={showDescriptionModal} onHide={() => setShowDescriptionModal(false)} centered>
+                    <Modal.Header closeButton>
+                        <Modal.Title>{selectedTitle}</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                        <p>{selectedDescription}</p>
+                    </Modal.Body>
+                    <Modal.Footer>
+                        <Button variant="secondary" onClick={() => setShowDescriptionModal(false)}>
+                            Close
+                        </Button>
+                    </Modal.Footer>
                 </Modal>
             </Container>
         </>

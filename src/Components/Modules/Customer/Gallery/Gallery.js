@@ -29,12 +29,13 @@ const C_GalleryDisplay = () => {
         </div>
 
         <Row>
-          {products.map((product, index) => (
-            <Col md={4} sm={6} xs={12} key={index} className="mb-4 mt-4">
-              <Card className="h-100 text-center customer-gallery-card">
+          {/* {products.map((product, index) => (
+            <Col md={3}  xs={6} lg={2} key={index} className="mb-4 mt-4">
+
+              <Card className="h-100 text-center">
                 <Card.Img
                   variant="top"
-                  src={`${baseURL}/uploads/gallery/${product.image}`}
+                  src={`${baseURL}/uploads/gallery/${product.image}`} // Adjust path as per your backend
                   className="customer-gallery-img"
                 />
                 <Card.Body>
@@ -44,6 +45,18 @@ const C_GalleryDisplay = () => {
                     <strong>Design:</strong> {product.design_name}<br />
                   </Card.Text>
                 </Card.Body>
+              </Card>
+            </Col>
+          ))} */}
+
+          {products.map((product, index) => (
+            <Col md={3} xs={12} lg={2}  key={index} className="mb-4 mt-4">
+              <Card className="h-100 text-center">
+                <Card.Img
+                  variant="top"
+                  src={`${baseURL}/uploads/gallery/${product.image}`}
+                  className="customer-gallery-img rounded"
+                />
               </Card>
             </Col>
           ))}
