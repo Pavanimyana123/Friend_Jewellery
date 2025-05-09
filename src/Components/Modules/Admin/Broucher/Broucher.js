@@ -11,6 +11,13 @@ const Broucher = () => {
     const [broucherName, setBroucherName] = useState('');
     const [description, setDescription] = useState('');
     const [file, setFile] = useState(null);
+    const [selectedIds, setSelectedIds] = useState([]);
+    
+      const handleCheckboxChange = (id) => {
+        setSelectedIds((prev) =>
+          prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
+        );
+      };
 
     // Open/Close Modal
     const handleShow = () => setShowModal(true);
@@ -73,6 +80,32 @@ const Broucher = () => {
     const [showDescriptionModal, setShowDescriptionModal] = useState(false);
     const [selectedDescription, setSelectedDescription] = useState('');
     const [selectedTitle, setSelectedTitle] = useState('');
+
+    const handleDeleteSelected = async () => {
+        if (selectedIds.length === 0) return alert("Please select items to delete");
+      
+        try {
+          const response = await fetch(`${baseURL}/api/delete-broucher-items`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ ids: selectedIds }),
+          });
+      
+          const data = await response.json();
+          if (response.ok) {
+            alert("Selected items deleted successfully");
+            setSelectedIds([]);
+            fetchBrouchers();
+          } else {
+            alert("Error: " + data.error);
+          }
+        } catch (error) {
+          console.error("Deletion error:", error);
+          alert("Server error during deletion");
+        }
+      };
     
 
     const handleReadMore = (title, description) => {
@@ -91,42 +124,63 @@ const Broucher = () => {
                     <Button variant="outline-primary" className="add-gallery-btn" onClick={handleShow}>
                         + Add Broucher/Catalog
                     </Button>
+                      <Button
+                                  variant="danger"
+                                  disabled={selectedIds.length === 0}
+                                  onClick={handleDeleteSelected}
+                                >
+                                  Delete Selected
+                                </Button>
                 </div>
 
                 <Row>
-                    {brouchers.map((item, index) => (
-                        <Col md={3} xs={12} lg={2} key={index} className="mb-4 mt-4">
-                            <Card className="h-100 text-center shadow-sm">
-                                <Card.Body>
-                                    <Card.Title className="fw-semibold text-truncate" title={item.broucher_name}>
-                                        {item.broucher_name}
-                                    </Card.Title>
-                                    <Card.Text className="small text-muted description-box">
-                                        {item.description.length > 150
-                                            ? <>
-                                                {item.description.slice(0, 140)}...{' '}
-                                                <span
-                                                    onClick={() => handleReadMore(item.broucher_name, item.description)}
-                                                    style={{ color: '#007bff', cursor: 'pointer' }}
-                                                >
-                                                    Read more
-                                                </span>
-                                            </>
-                                            : item.description}
-                                    </Card.Text>
-                                    <a
-                                        href={`${baseURL}/uploads/broucher/${item.file_path}`}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className="btn btn-sm btn-outline-primary mt-2"
-                                    >
-                                        View File
-                                    </a>
-                                </Card.Body>
-                            </Card>
-                        </Col>
-                    ))}
-                </Row>
+  {brouchers.map((item, index) => (
+    <Col md={3} xs={12} lg={2} key={index} className="mb-4 mt-4">
+      <Card className="h-100 text-center shadow-sm position-relative">
+        <input
+          type="checkbox"
+          className="form-check-input position-absolute"
+          style={{ top: '10px', left: '10px', zIndex: 2 }}
+          checked={selectedIds.includes(item.id)}
+          onChange={() => handleCheckboxChange(item.id)}
+        />
+        <Card.Body>
+          <Card.Title
+            className="fw-semibold text-truncate"
+            title={item.broucher_name}
+          >
+            {item.broucher_name}
+          </Card.Title>
+          <Card.Text className="small text-muted description-box">
+            {item.description && item.description.length > 150 ? (
+              <>
+                {item.description.slice(0, 140)}...{' '}
+                <span
+                  onClick={() =>
+                    handleReadMore(item.broucher_name, item.description)
+                  }
+                  style={{ color: '#007bff', cursor: 'pointer' }}
+                >
+                  Read more
+                </span>
+              </>
+            ) : (
+              item.description || 'No description available'
+            )}
+          </Card.Text>
+          <a
+            href={`${baseURL}/uploads/broucher/${item.file_path}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="btn btn-sm btn-outline-primary mt-2"
+          >
+            View File
+          </a>
+        </Card.Body>
+      </Card>
+    </Col>
+  ))}
+</Row>
 
 
                 {/* Add Broucher Modal */}

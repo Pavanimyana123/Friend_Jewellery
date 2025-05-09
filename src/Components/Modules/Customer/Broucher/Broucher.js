@@ -116,18 +116,20 @@ const C_Broucher = () => {
                                         {item.broucher_name}
                                     </Card.Title>
                                     <Card.Text className="small text-muted description-box">
-                                        {item.description.length > 150
-                                            ? <>
-                                                {item.description.slice(0, 140)}...{' '}
-                                                <span
-                                                    onClick={() => handleReadMore(item.broucher_name, item.description)}
-                                                    style={{ color: '#007bff', cursor: 'pointer' }}
-                                                >
-                                                    Read more
-                                                </span>
-                                            </>
-                                            : item.description}
-                                    </Card.Text>
+                                          {item.description && item.description.length > 150 ? (
+                                              <>
+                                                  {item.description.slice(0, 140)}...{' '} 
+                                                  <span
+                                                      onClick={() => handleReadMore(item.broucher_name, item.description)}
+                                                      style={{ color: '#007bff', cursor: 'pointer' }}
+                                                  >
+                                                      Read more
+                                                  </span>
+                                              </>
+                                          ) : (
+                                              item.description || 'No description available'
+                                          )}
+                                      </Card.Text>
                                     <a
                                         href={`${baseURL}/uploads/broucher/${item.file_path}`}
                                         target="_blank"

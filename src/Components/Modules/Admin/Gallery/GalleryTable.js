@@ -16,11 +16,26 @@ const GalleryDisplay = () => {
     catalog_name: '',
     design_name: '',
     weight: '',
-    image: null,
+    image: [],
   });
+
+  const [selectedImages, setSelectedImages] = useState([]);
+  const [selectedIds, setSelectedIds] = useState([]);
+
+  const handleCheckboxChange = (id) => {
+    setSelectedIds((prev) =>
+      prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
+    );
+  };
+  
 
   useEffect(() => {
     fetchGalleryItems();
+    
+    // Cleanup function to revoke object URLs
+    return () => {
+      selectedImages.forEach(image => URL.revokeObjectURL(image));
+    };
   }, []);
 
   const fetchGalleryItems = () => {
@@ -29,25 +44,84 @@ const GalleryDisplay = () => {
       .catch((err) => console.error('Error fetching gallery items:', err));
   };
 
-  const handleShowModal = () => setShowModal(true);
-  const handleCloseModal = () => setShowModal(false);
+  const handleDeleteSelected = async () => {
+    if (selectedIds.length === 0) return alert("Please select items to delete");
+  
+    try {
+      const response = await fetch(`${baseURL}/api/delete-gallery-items`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ ids: selectedIds }),
+      });
+  
+      const data = await response.json();
+      if (response.ok) {
+        alert("Selected items deleted successfully");
+        setSelectedIds([]);
+        // Refresh the product list
+        fetchGalleryItems();
+      } else {
+        alert("Error: " + data.error);
+      }
+    } catch (error) {
+      console.error("Deletion error:", error);
+      alert("Server error during deletion");
+    }
+  };
+  
 
-  const [selectedImages, setSelectedImages] = useState([]);
+  const handleShowModal = () => setShowModal(true);
+  const handleCloseModal = () => {
+    // Revoke all object URLs before closing
+    selectedImages.forEach(image => URL.revokeObjectURL(image));
+    setSelectedImages([]);
+    setFormData({
+      product_name: '',
+      catalog_reference: '',
+      catalog_name: '',
+      design_name: '',
+      weight: '',
+      image: [],
+    });
+    setShowModal(false);
+  };
 
   const handleChange = (e) => {
     const { name, value, type, files } = e.target;
 
     if (name === "image" && files) {
       const imageFiles = Array.from(files);
-      setFormData((prev) => ({ ...prev, image: imageFiles }));
-      const previews = imageFiles.map((file) => URL.createObjectURL(file));
-      setSelectedImages(previews);
+      
+      // Append new files to existing ones instead of replacing
+      const updatedFiles = [...formData.image, ...imageFiles];
+      
+      setFormData((prev) => ({ ...prev, image: updatedFiles }));
+      
+      // Create previews for new files and combine with existing previews
+      const newPreviews = imageFiles.map((file) => URL.createObjectURL(file));
+      setSelectedImages((prev) => [...prev, ...newPreviews]);
     } else {
       setFormData((prevData) => ({
         ...prevData,
         [name]: value,
       }));
     }
+  };
+
+  const handleImageDelete = (index) => {
+    const updatedPreviews = [...selectedImages];
+    const updatedFiles = [...formData.image];
+
+    // Revoke the object URL before removing it
+    URL.revokeObjectURL(updatedPreviews[index]);
+    
+    updatedPreviews.splice(index, 1);
+    updatedFiles.splice(index, 1);
+
+    setSelectedImages(updatedPreviews);
+    setFormData((prev) => ({ ...prev, image: updatedFiles }));
   };
 
   const handleSubmit = async (e) => {
@@ -61,7 +135,7 @@ const GalleryDisplay = () => {
         form.append("catalog_name", formData.catalog_name);
         form.append("design_name", formData.design_name);
         form.append("weight", formData.weight);
-        form.append("image", image); // each image one by one
+        form.append("image", image);
 
         await axios.post(`${baseURL}/api/add-gallery-item`, form, {
           headers: { "Content-Type": "multipart/form-data" },
@@ -69,7 +143,10 @@ const GalleryDisplay = () => {
       }
 
       fetchGalleryItems();
-      handleCloseModal();
+      
+      // Revoke all object URLs before clearing
+      selectedImages.forEach(image => URL.revokeObjectURL(image));
+      
       setFormData({
         product_name: '',
         catalog_reference: '',
@@ -79,23 +156,11 @@ const GalleryDisplay = () => {
         image: [],
       });
       setSelectedImages([]);
+      handleCloseModal();
     } catch (error) {
       console.error('Error submitting form:', error);
     }
   };
-
-  const handleImageDelete = (index) => {
-    const updatedPreviews = [...selectedImages];
-    const updatedFiles = [...formData.image];
-
-    updatedPreviews.splice(index, 1);
-    updatedFiles.splice(index, 1);
-
-    setSelectedImages(updatedPreviews);
-    setFormData((prev) => ({ ...prev, image: updatedFiles }));
-  };
-
-
 
   return (
     <>
@@ -103,42 +168,40 @@ const GalleryDisplay = () => {
       <Container fluid className="gallery-main-container">
         <div className="gallery-table-container d-flex justify-content-between align-items-center">
           <h3 className="mb-0">Gallery</h3>
-          <Button variant="outline-primary" className="add-gallery-btn" onClick={handleShowModal}>
-            + Add Gallery
-          </Button>
+          <div>
+            <Button variant="outline-primary" className="add-gallery-btn me-2" onClick={handleShowModal}>
+              + Add Gallery
+            </Button>
+            <Button
+              variant="danger"
+              disabled={selectedIds.length === 0}
+              onClick={handleDeleteSelected}
+            >
+              Delete Selected
+            </Button>
+          </div>
         </div>
 
         <Row>
-          {/* {products.map((product, index) => (
-            <Col md={3} xs={6} lg={2} key={index} className="mb-4 mt-4">
-              <Card className="h-100 text-center">
-                <Card.Img
-                  variant="top"
-                  src={`${baseURL}/uploads/gallery/${product.image}`}
-                  className="gallery-img"
-                />
-                <Card.Body>
-                  <Card.Title>{product.product_name}</Card.Title>
-                  <Card.Text>
-                    <strong>Weight:</strong> {product.weight}<br />
-                    <strong>Design:</strong> {product.design_name}<br />
-                  </Card.Text>
-                </Card.Body>
-              </Card>
-            </Col>
-          ))} */}
           {products.map((product, index) => (
-            <Col md={3} xs={12} lg={2} key={index} className="mb-4 mt-4">
-              <Card className="h-100 text-center">
+            <Col md={3} xs={6} lg={2} key={index} className="mb-4 mt-4">
+              <Card className="h-100 text-center position-relative">
+                <input
+                  type="checkbox"
+                  className="form-check-input position-absolute"
+                  style={{ top: "10px", left: "10px", zIndex: 2 }}
+                  checked={selectedIds.includes(product.id)}
+                  onChange={() => handleCheckboxChange(product.id)}
+                />
                 <Card.Img
                   variant="top"
                   src={`${baseURL}/uploads/gallery/${product.image}`}
                   className="gallery-img rounded"
                 />
+              
               </Card>
             </Col>
           ))}
-
         </Row>
 
         {/* Modal Form */}
@@ -188,15 +251,12 @@ const GalleryDisplay = () => {
                             zIndex: 10,
                           }}
                         >
-                          {/* &times; */}
                           <FaTrash />
                         </button>
                       </div>
                     ))}
                   </div>
                 </Col>
-
-
               </Row>
               <div className='d-flex justify-content-end mt-3'>
                 <Button variant="secondary" onClick={handleCloseModal} className="me-2">Cancel</Button>
