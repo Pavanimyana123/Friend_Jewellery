@@ -289,8 +289,13 @@ const ViewOrders = () => {
                         <p><strong>Design Name:</strong> <span>{order.product_design_name}</span></p>
                         <p><strong>Gross Wt:</strong> <span>{order.gross_weight}</span></p>
                         <p><strong>Purity:</strong> <span>{order.purity}</span></p>
-                        <p><strong>Gold Rate:</strong> <span>{order.rate}</span></p>
-                        <p><strong>Advance Gold:</strong> <span>{order.advance_gross_wt}</span></p>
+                       {order.order_status !== 'Delivered' && (
+  <>
+    <p><strong>Gold Rate:</strong> <span>{order.rate}</span></p>
+    <p><strong>Advance Gold:</strong> <span>{order.fine_wt}</span></p>
+  </>
+)}
+
                         <p><strong>Advance Amount:</strong> <span>{order.advance_amount}</span></p>
                         <p><strong>Worker Status:</strong> <span>{order.work_status}</span></p>
                       </div>

@@ -76,6 +76,8 @@ function Order() {
         image_url: null, // Image URL after upload
         order_status: "Placed",
         qty: 1,
+        fine_wt: "",
+        advance_amount: "",
         // o_size,
         // o_length,
         // stone_name,
@@ -764,12 +766,38 @@ function Order() {
                                             >
                                                 <FaTrash />
                                             </button>
+                                            
                                         </div>
                                     )}
                                 </Col>
                             </Row>
                         </div>
-                        <div className="form-buttons">
+                                            <div className="order-form-section mt-1">
+  <h4>Summary</h4>
+  <Row>
+    <Col xs={5} className="text-left fw-bold">Fine Weight:</Col> 
+    <Col xs={2}>
+      <InputField
+        name="fine_wt"
+        type="text"
+        value={formData.fine_wt}
+        onChange={handleChange}
+      />
+    </Col>
+  </Row>
+  <Row>
+    <Col xs={5} className="text-left fw-bold">Advance Amount:</Col>
+    <Col xs={2}>
+      <InputField
+        name="advance_amount"
+        type="text"
+        value={formData.advance_amount}
+        onChange={handleChange}
+      />
+    </Col>
+  </Row>
+</div>
+      <div className="form-buttons">
                         <Button
                             variant="secondary"
                             onClick={handleBack} style={{ backgroundColor: 'gray', }}
@@ -787,8 +815,10 @@ function Order() {
                     </div>
                     </Form>
 
-                    
+
+
                 </div>
+                
             </div>
         </>
     );
