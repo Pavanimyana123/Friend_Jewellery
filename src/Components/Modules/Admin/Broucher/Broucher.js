@@ -4,8 +4,9 @@ import axios from 'axios';
 import Navbar from '../../../Pages/Navbar/Navbar';
 import baseURL from '../../../../Url/NodeBaseURL';
 import './Broucher.css'; // Create this CSS file for custom styles
+import { useLocation } from "react-router-dom";
 
-const Broucher = () => {
+const Broucher = () => { 
   const [brouchers, setBrouchers] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [broucherName, setBroucherName] = useState('');
@@ -13,6 +14,9 @@ const Broucher = () => {
   const [purity, setPurity] = useState('');
   const [file, setFile] = useState(null);
   const [selectedIds, setSelectedIds] = useState([]);
+  const [activeTab, setActiveTab] = useState("All"); // State for active tab
+  const [filteredBrouchers, setFilteredBrouchers] = useState([]);
+  const location = useLocation();
 
   const handleCheckboxChange = (id) => {
     setSelectedIds((prev) =>
@@ -72,6 +76,7 @@ const Broucher = () => {
     try {
       const res = await axios.get(`${baseURL}/api/broucher-items`);
       setBrouchers(res.data);
+       setFilteredBrouchers(res.data);
     } catch (err) {
       console.error("Error fetching brouchers:", err);
     }
@@ -118,6 +123,22 @@ const Broucher = () => {
     setShowDescriptionModal(true);
   };
 
+  useEffect(() => {
+          if (location.state?.tab) {
+              setActiveTab(location.state.tab);
+          }
+      }, [location.state]);
+  
+      // Filter brouchers based on active tab
+      useEffect(() => {
+          if (activeTab === "All") {
+              setFilteredBrouchers(brouchers);
+          } else {
+              const filtered = brouchers.filter(broucher => broucher.purity === activeTab);
+              setFilteredBrouchers(filtered);
+          }
+      }, [activeTab, brouchers]);
+
   return (
     <>
       <Navbar />
@@ -138,9 +159,29 @@ const Broucher = () => {
             </Button>
           </div>
         </div>
+         <div className="d-flex justify-content-center">
+                        {["All", "22C", "24C"].map(status => (
+                            <button
+                                key={status}
+                                className={`worker-tab-button ${activeTab === status ? 'active' : ''}`}
+                                onClick={() => setActiveTab(status)}
+                                style={{
+                                    marginLeft: '10px',
+                                    padding: '5px 15px',
+                                    border: '1px solid #ddd',
+                                    borderRadius: '4px',
+                                    backgroundColor: activeTab === status ? '#007bff' : 'white',
+                                    color: activeTab === status ? 'white' : 'black',
+                                    cursor: 'pointer'
+                                }}
+                            >
+                                {status}
+                            </button>
+                        ))}
+                    </div>
 
         <Row>
-          {brouchers.map((item, index) => (
+          {filteredBrouchers.map((item, index) => (
             <Col md={3} xs={12} lg={2} key={index} className="mb-4 mt-4">
               <Card className="h-100 text-center shadow-sm position-relative">
                 <input
