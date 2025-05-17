@@ -120,6 +120,79 @@
     background-color: #388e3c;
   }
   
+  /* Rating Suggestions Styles */
+.rating-suggestions {
+  margin: 1rem 0;
+  padding: 1rem;
+  background: #f8f9fa;
+  border-radius: 8px;
+  border: 1px solid #e9ecef;
+}
+
+.rating-suggestions p {
+  margin-bottom: 0.5rem;
+  font-size: 0.9rem;
+  color: #495057;
+}
+
+.suggestion-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.suggestion-button {
+  background: #ffffff;
+  border: 1px solid #dee2e6;
+  border-radius: 20px;
+  padding: 0.4rem 0.8rem;
+  font-size: 0.8rem;
+  color: #495057;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.suggestion-button:hover {
+  background: #e9ecef;
+  border-color: #ced4da;
+}
+
+/* Textarea improvements */
+.review-textarea {
+  width: 100%;
+  margin-top: 1rem;
+  padding: 0.8rem;
+  border: 1px solid #dee2e6;
+  border-radius: 8px;
+  resize: vertical;
+  min-height: 100px;
+  font-family: inherit;
+}
+
+/* Button states */
+.disabled-button {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Responsive adjustments */
+@media (max-width: 480px) {
+  .suggestion-buttons {
+    flex-direction: column;
+  }
+  
+  .suggestion-button {
+    width: 100%;
+    text-align: left;
+  }
+  
+  .rating-modal {
+    width: 95%;
+    padding: 1rem;
+  }
+}
+  
   /* Responsive adjustments */
   @media (max-width: 600px) {
     .rating-modal {

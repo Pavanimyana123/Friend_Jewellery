@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Dashboard.css';
@@ -8,6 +7,8 @@ import CustomerNavbar from '../../../Pages/Navbar/CustomerNavbar';
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend, ArcElement, PointElement, LineElement, } from 'chart.js';
 import baseURL from '../../../../Url/NodeBaseURL';
 import { AuthContext } from "../../../AuthContext/ContextApi";
+import OrderRating from '../Orders/RatingOrder'; // Import the rating component
+import axios from 'axios';
 
 ChartJS.register(
   CategoryScale,
@@ -21,11 +22,6 @@ ChartJS.register(
   LineElement
 );
 
-const formatDate = (dateString) => {
-  const date = new Date(dateString);
-  return date.toLocaleDateString();
-};
-
 function Dashboard() {
   const navigate = useNavigate();
   const { user } = useContext(AuthContext);
@@ -34,6 +30,9 @@ function Dashboard() {
   const [cancelledOrderCount, setCancelledOrderCount] = useState(0);
   const [deliveredOrderCount, setDeliveredOrderCount] = useState(0);
   const [loading, setLoading] = useState(true);
+  const [unratedOrders, setUnratedOrders] = useState([]);
+  const [currentRatingIndex, setCurrentRatingIndex] = useState(0);
+  const [showRatingModal, setShowRatingModal] = useState(false);
 
   useEffect(() => {
     const fetchOrders = async () => {
@@ -63,6 +62,15 @@ function Dashboard() {
   
         setCancelledOrderCount(cancelledOrders.length);
         setDeliveredOrderCount(deliveredOrders.length);
+
+        // Find unrated delivered orders
+        const unrated = deliveredOrders.filter(order => !order.customer_rating);
+        setUnratedOrders(unrated);
+
+        // Show rating modal if there are unrated orders
+        if (unrated.length > 0) {
+          setShowRatingModal(true);
+        }
       } catch (error) {
         console.error('Error fetching orders:', error);
       } finally {
@@ -74,20 +82,41 @@ function Dashboard() {
       fetchOrders();
     }
   }, [baseURL, user]);
-  
+
+  const handleRatingSubmit = async (orderId, rating, reviewText) => {
+    try {
+      await axios.put(`${baseURL}/api/rate/${orderId}`, {
+        rating,
+        reviewText
+      });
+
+      // Move to next unrated order or close modal if done
+      if (currentRatingIndex < unratedOrders.length - 1) {
+        setCurrentRatingIndex(currentRatingIndex + 1);
+      } else {
+        setShowRatingModal(false);
+        setUnratedOrders([]);
+      }
+    } catch (error) {
+      console.error('Error submitting rating:', error);
+    }
+  };
 
   const handleCardClick = (title) => {
-    const routes = {
-      "Customers": "/a-customertable",
-      "Workers": "/a-workertable",
-      "Orders": "/a-view-orders",
-      // "Pending Orders": "/orders/pending",
-      // "In progress Orders": "/orders/in-progress",
-      "Cancel Orders": "/a-cancel-orders",
-      // "Completed Orders": "/orders/completed",
-    };
+    // Prevent navigation if there are unrated orders
+    if (unratedOrders.length > 0) {
+      alert('Please rate all delivered orders before navigating');
+      return;
+    }
 
-    const path = routes[title] || "/a-dashboard";
+    // const routes = {
+    //   "Customers": "/a-customertable",
+    //   "Workers": "/a-workertable",
+    //   "Orders": "/a-view-orders",
+    //   "Cancel Orders": "/a-cancel-orders",
+    // };
+
+    const path = "/c-dashboard";
     navigate(path);
   };
 
@@ -98,7 +127,7 @@ function Dashboard() {
     { title: "Order History", link: "/c-vieworders", count: orderCount },
   ];
 
-  // const barData = {
+   // const barData = {
   //   labels: ['Sales', 'Repairs', 'Orders'],
   //   datasets: [
   //     {
@@ -141,30 +170,49 @@ function Dashboard() {
       },
     ],
   };
-
   return (
     <>
       <CustomerNavbar />
       <div className="main-container" style={{ backgroundColor: '#b7721834', minHeight: '100vh' }}>
+        {/* Rating Modal - appears on top of everything */}
+        {showRatingModal && unratedOrders.length > 0 && (
+          <div className="c-dashboard-rating-modal-overlay">
+            <div className="c-dashboard-rating-modal-content">
+              <h3>Rate Your Delivered Order</h3>
+              <p>Please rate this order before continuing:</p>
+              <OrderRating 
+                order={unratedOrders[currentRatingIndex]} 
+                onRatingSubmitted={handleRatingSubmit}
+                isMandatory={true}
+              />
+            </div>
+          </div>
+        )}
+
         <div className="dashboard-header">
           <h2 style={{ marginTop: "25px", marginLeft: "15px" }}>Dashboard</h2>
-          {/* <CustomerDashboard onSelectCustomer={setSelectedMobile} /> */}
         </div>
-        <div className="dashboard-container">
+        
+        {/* Dashboard content (blocked by modal if unrated orders exist) */}
+        <div className="dashboard-container" style={{
+          filter: showRatingModal ? 'blur(5px)' : 'none',
+          pointerEvents: showRatingModal ? 'none' : 'auto'
+        }}>
           <div className="row-cards" style={{ marginTop: '15px', marginBottom: '15px' }}>
             {cards.map((card, index) => (
-              <Link to={card.link} key={index} style={{ textDecoration: 'none' }}>
-                <div className="metric-card" style={{ cursor: 'pointer' }}>
-                  <h3>{card.title}</h3>
-                  <p style={{ fontSize: '25px', color: 'black', marginTop: '20px' }}>{card.count}</p>
-                </div>
-              </Link>
+              <div 
+                key={index} 
+                className="metric-card" 
+                style={{ cursor: 'pointer' }}
+                onClick={() => handleCardClick(card.title)}
+              >
+                <h3>{card.title}</h3>
+                <p style={{ fontSize: '25px', color: 'black', marginTop: '20px' }}>{card.count}</p>
+              </div>
             ))}
           </div>
+          
           <div className="row-cards" style={{ marginTop: '15px', marginBottom: '15px' }}>
-            {/* <div className="metric-card">
-              <Bar data={barData} options={{ responsive: true, maintainAspectRatio: false }} />
-            </div> */}
             <div className="metric-card">
               <Pie data={pieDataReceivablesPayables} options={{ responsive: true, maintainAspectRatio: false }} />
             </div>

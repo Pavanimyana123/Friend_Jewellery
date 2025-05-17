@@ -55,20 +55,24 @@ const ViewOrders = () => {
     fetchWorkers();
   }, []);
 
-  const fetchData = async () => {
-    try {
-      const response = await fetch(`${baseURL}/api/orders`);
-      if (!response.ok) {
-        throw new Error('Failed to fetch orders');
-      }
-      const result = await response.json();
-      setData(result);
-    } catch (error) {
-      console.error('Error fetching orders:', error);
-    } finally {
-      setLoading(false);
+ const fetchData = async () => {
+  try {
+    const response = await fetch(`${baseURL}/api/orders`);
+    if (!response.ok) {
+      throw new Error('Failed to fetch orders');
     }
-  };
+    const result = await response.json();
+
+    // Filter out orders with order_status "Delivered"
+    const filteredData = result.filter(order => order.order_status !== 'Delivered');
+
+    setData(filteredData);
+  } catch (error) {
+    console.error('Error fetching orders:', error);
+  } finally {
+    setLoading(false);
+  }
+};
 
   useEffect(() => {
     fetchData();
@@ -514,6 +518,7 @@ const ViewOrders = () => {
 
               console.log("Status updated:", response.data);
               alert("Order status updated successfully!");
+              fetchData();
             } catch (error) {
               console.error("Error updating status:", error);
               alert("Failed to update status.");

@@ -215,16 +215,19 @@ const Broucher = () => {
                   className="broucher-form-control-custom"
                 />
               </Form.Group>
-              <Form.Group controlId="broucherName" className="mb-3" >
-                <Form.Label>Purity</Form.Label>
-                <Form.Control
-                  type="text"
-                  value={purity}
-                  onChange={(e) => setPurity(e.target.value)}
-                  placeholder="Enter Purity"
-                  className="broucher-form-control-custom"
-                />
-              </Form.Group>
+             <Form.Group controlId="broucherName" className="mb-3">
+  <Form.Label>Purity</Form.Label>
+  <Form.Select
+    value={purity}
+    onChange={(e) => setPurity(e.target.value)}
+    className="broucher-form-control-custom"
+  >
+    <option value="">Select Purity</option>
+    <option value="22C">22C</option>
+    <option value="24C">24C</option>
+  </Form.Select>
+</Form.Group>
+
               <Form.Group controlId="broucherName" className="mb-3">
                 <Form.Label>Description</Form.Label>
                 <Form.Control

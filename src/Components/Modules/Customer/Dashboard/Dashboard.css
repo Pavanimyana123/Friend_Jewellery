@@ -65,3 +65,111 @@
     grid-template-columns: repeat(1, 1fr);
   }
 }
+
+/* Dashboard Rating Modal - Mobile First Approach */
+.c-dashboard-rating-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.9);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  padding: 16px;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+}
+
+.c-dashboard-rating-modal-content {
+  background: #fff;
+  border-radius: 12px;
+  width: 100%;
+  max-width: 420px;
+  max-height: 90vh;
+  padding: 24px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  overflow-y: auto;
+  animation: modalEnter 0.3s ease-out;
+}
+
+/* Modal Content Typography */
+.c-dashboard-rating-modal-content h3 {
+  color: #2d3748;
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 8px;
+  text-align: center;
+}
+
+.c-dashboard-rating-modal-content p {
+  color: #4a5568;
+  font-size: 0.9375rem;
+  line-height: 1.5;
+  margin-bottom: 24px;
+  text-align: center;
+}
+
+/* Animation */
+@keyframes modalEnter {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsive Adjustments */
+@media (min-width: 375px) {
+  .c-dashboard-rating-modal-content {
+    padding: 28px;
+  }
+}
+
+@media (min-width: 425px) {
+  .c-dashboard-rating-modal-content h3 {
+    font-size: 1.375rem;
+  }
+  
+  .c-dashboard-rating-modal-content p {
+    font-size: 1rem;
+  }
+}
+
+/* Tablet and Desktop */
+@media (min-width: 768px) {
+  .c-dashboard-rating-modal-content {
+    max-width: 480px;
+    padding: 32px;
+  }
+  
+  .c-dashboard-rating-modal-content h3 {
+    font-size: 1.5rem;
+  }
+}
+
+/* Very small mobile devices (e.g., iPhone 5/SE) */
+@media (max-height: 600px) {
+  .c-dashboard-rating-modal-content {
+    max-height: 85vh;
+    padding: 20px;
+  }
+}
+
+/* Landscape orientation */
+@media (max-width: 768px) and (orientation: landscape) {
+  .c-dashboard-rating-modal-overlay {
+    align-items: flex-start;
+    padding-top: 20px;
+    padding-bottom: 20px;
+  }
+  
+  .c-dashboard-rating-modal-content {
+    max-height: 80vh;
+  }
+}

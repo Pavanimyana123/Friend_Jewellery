@@ -36,42 +36,48 @@ const ViewOrders = () => {
     "Delivered",
   ];
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await fetch(`${baseURL}/api/orders`);
-        if (!response.ok) {
-          throw new Error('Failed to fetch data');
-        }
-        const result = await response.json();
-        const filteredByUser = result.filter(order => order.account_id === user?.id);
-
-        // Prioritize "Actual Order" in case of duplicates
-        const uniqueOrdersMap = new Map();
-
-        filteredByUser.forEach(order => {
-          const key = `${order.order_number}_${order.actual_order_id}`;
-          const existing = uniqueOrdersMap.get(key);
-
-          // Prefer "Actual Order"
-          if (!existing || order.status === "Actual Order") {
-            uniqueOrdersMap.set(key, order);
-          }
-        });
-
-        const finalFilteredOrders = Array.from(uniqueOrdersMap.values());
-        setData(finalFilteredOrders);
-      } catch (error) {
-        console.error('Error fetching data:', error);
-      } finally {
-        setLoading(false);
+ 
+ useEffect(() => {
+  const fetchData = async () => {
+    try {
+      const response = await fetch(`${baseURL}/api/orders`);
+      if (!response.ok) {
+        throw new Error('Failed to fetch data');
       }
-    };
+      const result = await response.json();
 
-    if (user) {
-      fetchData();
+      // Filter by user and exclude delivered orders
+      const filteredByUser = result.filter(
+        order => order.account_id === user?.id && order.order_status == 'Delivered'
+      );
+
+      // Prioritize "Actual Order" in case of duplicates
+      const uniqueOrdersMap = new Map();
+
+      filteredByUser.forEach(order => {
+        const key = `${order.order_number}_${order.actual_order_id}`;
+        const existing = uniqueOrdersMap.get(key);
+
+        // Prefer "Actual Order"
+        if (!existing || order.status === "Actual Order") {
+          uniqueOrdersMap.set(key, order);
+        }
+      });
+
+      const finalFilteredOrders = Array.from(uniqueOrdersMap.values());
+      setData(finalFilteredOrders);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    } finally {
+      setLoading(false);
     }
-  }, [baseURL, user]);
+  };
+
+  if (user) {
+    fetchData();
+  }
+}, [baseURL, user]);
+
 
   useEffect(() => {
     const fetchDesignRequests = async () => {
@@ -317,7 +323,7 @@ const ViewOrders = () => {
                         </div>
                       ))}
                     </div>
-                    {/* <OrderRating order={order} onRatingSubmitted={handleRatingSubmitted} /> */}
+                    <OrderRating order={order} onRatingSubmitted={handleRatingSubmitted} />
                   </div>
 
                 </div>

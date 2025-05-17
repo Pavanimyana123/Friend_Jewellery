@@ -6,7 +6,7 @@ import baseURL from '../../../../Url/NodeBaseURL';
 import './ViewOrders.css';
 import axios from 'axios';
 import ModalPopup from '../Design/Modalpopup';
-import OrderRating from './RatingOrder'; // Updated import for OrderRating
+// import OrderRating from './RatingOrder'; // Updated import for OrderRating
 
 const ViewOrders = () => {
   const { user } = useContext(AuthContext);
@@ -44,7 +44,9 @@ const ViewOrders = () => {
           throw new Error('Failed to fetch data');
         }
         const result = await response.json();
-        const filteredByUser = result.filter(order => order.account_id === user?.id);
+        const filteredByUser = result.filter(
+           order => order.account_id === user?.id && order.order_status !== 'Delivered'
+        );
 
         // Prioritize "Actual Order" in case of duplicates
         const uniqueOrdersMap = new Map();
@@ -317,7 +319,7 @@ const ViewOrders = () => {
                         </div>
                       ))}
                     </div>
-                    <OrderRating order={order} onRatingSubmitted={handleRatingSubmitted} />
+                    {/* <OrderRating order={order} onRatingSubmitted={handleRatingSubmitted} /> */}
                   </div>
 
                 </div>
