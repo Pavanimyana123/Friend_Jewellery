@@ -123,18 +123,20 @@ const Broucher = () => {
       <Navbar />
 
       <Container fluid className="gallery-main-container">
-        <div className="gallery-table-container d-flex justify-content-between align-items-center">
+        <div className="gallery-table-container d-flex align-items-center">
           <h3 className="mb-0">Broucher/Catalog</h3>
-          <Button variant="outline-primary" className="add-gallery-btn" onClick={handleShow}>
-            + Add Broucher/Catalog
-          </Button>
-          <Button
-            variant="danger"
-            disabled={selectedIds.length === 0}
-            onClick={handleDeleteSelected}
-          >
-            Delete Selected
-          </Button>
+          <div className="ms-auto d-flex">
+            <Button variant="outline-primary" className="add-gallery-btn me-2" onClick={handleShow}>
+              + Add Broucher/Catalog
+            </Button>
+            <Button
+              variant="danger"
+              disabled={selectedIds.length === 0}
+              onClick={handleDeleteSelected}
+            >
+              Delete Selected
+            </Button>
+          </div>
         </div>
 
         <Row>
@@ -215,18 +217,18 @@ const Broucher = () => {
                   className="broucher-form-control-custom"
                 />
               </Form.Group>
-             <Form.Group controlId="broucherName" className="mb-3">
-  <Form.Label>Purity</Form.Label>
-  <Form.Select
-    value={purity}
-    onChange={(e) => setPurity(e.target.value)}
-    className="broucher-form-control-custom"
-  >
-    <option value="">Select Purity</option>
-    <option value="22C">22C</option>
-    <option value="24C">24C</option>
-  </Form.Select>
-</Form.Group>
+              <Form.Group controlId="broucherName" className="mb-3">
+                <Form.Label>Purity</Form.Label>
+                <Form.Select
+                  value={purity}
+                  onChange={(e) => setPurity(e.target.value)}
+                  className="broucher-form-control-custom"
+                >
+                  <option value="">Select Purity</option>
+                  <option value="22C">22C</option>
+                  <option value="24C">24C</option>
+                </Form.Select>
+              </Form.Group>
 
               <Form.Group controlId="broucherName" className="mb-3">
                 <Form.Label>Description</Form.Label>
