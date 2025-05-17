@@ -44,12 +44,12 @@ const ViewOrders = () => {
           throw new Error('Failed to fetch data');
         }
         const result = await response.json();
-        const filteredByUser  = result.filter(order => order.account_id === user?.id);
+        const filteredByUser = result.filter(order => order.account_id === user?.id);
 
         // Prioritize "Actual Order" in case of duplicates
         const uniqueOrdersMap = new Map();
 
-        filteredByUser .forEach(order => {
+        filteredByUser.forEach(order => {
           const key = `${order.order_number}_${order.actual_order_id}`;
           const existing = uniqueOrdersMap.get(key);
 
@@ -96,7 +96,7 @@ const ViewOrders = () => {
         subcategory: order.subcategory,
         orderNumber: order.order_number
       });
-      
+
 
       if (response.status === 200) {
         alert("Order cancel request sent successfully.");
@@ -127,10 +127,10 @@ const ViewOrders = () => {
       order.purity?.toLowerCase().includes(lowerSearchTerm)
     );
   })
-  .sort((a, b) => new Date(b.date) - new Date(a.date)); // Sort by date in descending order
+    .sort((a, b) => new Date(b.date) - new Date(a.date)); // Sort by date in descending order
 
   const handleImageClick = (order) => {
- if (order.image_url) {
+    if (order.image_url) {
       const newWindow = window.open();
       if (newWindow) {
         newWindow.document.write(`
@@ -212,66 +212,66 @@ const ViewOrders = () => {
                     <span><strong>Order ID:</strong> <span>{order.order_number}</span></span>
                     <span><strong>Delivery Date:</strong> <span>{new Date(order.delivery_date).toLocaleDateString('en-GB')}</span></span>
                     <span>
-    Designed Modified {modificationCounts[order.actual_order_id] || 0} time(s).</span>
+                      Designed Modified {modificationCounts[order.actual_order_id] || 0} time(s).</span>
 
                     <div className="order-actions">
-                    <button
-  onClick={() => handleCancelOrder(order)}
-  className="cancel-button rate-button"
-  disabled={
-    order.cancel_req_status === "Pending" ||
-    order.cancel_req_status === "Rejected" ||
-    order.order_status === "Canceled" ||
-    order.order_status === "Delivered"
-  }
->
-  {order.cancel_req_status === "Pending"
-    ? "Cancel Requested"
-    : order.cancel_req_status === "Rejected"
-      ? "Cancel Rejected"
-      : order.order_status === "Canceled"
-        ? "Order Canceled"
-        : order.order_status === "Delivered"
-          ? "Delivered"
-          : "Cancel Order"}
-</button>
+                      <button
+                        onClick={() => handleCancelOrder(order)}
+                        className="cancel-button rate-button"
+                        disabled={
+                          order.cancel_req_status === "Pending" ||
+                          order.cancel_req_status === "Rejected" ||
+                          order.order_status === "Canceled" ||
+                          order.order_status === "Delivered"
+                        }
+                      >
+                        {order.cancel_req_status === "Pending"
+                          ? "Cancel Requested"
+                          : order.cancel_req_status === "Rejected"
+                            ? "Cancel Rejected"
+                            : order.order_status === "Canceled"
+                              ? "Order Canceled"
+                              : order.order_status === "Delivered"
+                                ? "Delivered"
+                                : "Cancel Order"}
+                      </button>
 
-  <button
-  className="cancel-button rate-button"
-  onClick={() => handleShowModal(order)}
-  disabled={
-    order.order_status === "Delivered" ||
-    order.order_status === "Canceled" ||
-    (designRequests ?? []).some(
-      (design) =>
-        design.order_id === order.id &&
-        ["Requested", "Approved", "Rejected"].includes(design.approve_status)
-    )
-  }
-  style={{
-    backgroundColor:
-      order.order_status === "Delivered" || order.order_status === "Canceled"
-        ? "#b0bec5"
-        : (designRequests ?? []).some((design) => design.order_id === order.id)
-        ? designRequests.find((design) => design.order_id === order.id)?.approve_status === "Requested"
-          ? "orange"
-          : designRequests.find((design) => design.order_id === order.id)?.approve_status === "Approved"
-            ? "green"
-            : "red"
-        : "rgb(62, 115, 247)",
-  }}
->
-  {(designRequests ?? []).some((design) => design.order_id === order.id) ? (
-    designRequests.find((design) => design.order_id === order.id)?.approve_status === "Requested"
-      ? "Design Requested"
-      : designRequests.find((design) => design.order_id === order.id)?.approve_status === "Approved"
-        ? "Approved"
-        : "Rejected"
-  ) : (
-    "Design Request"
-  )}
-</button>
-</div>
+                      <button
+                        className="cancel-button rate-button"
+                        onClick={() => handleShowModal(order)}
+                        disabled={
+                          order.order_status === "Delivered" ||
+                          order.order_status === "Canceled" ||
+                          (designRequests ?? []).some(
+                            (design) =>
+                              design.order_id === order.id &&
+                              ["Requested", "Approved", "Rejected"].includes(design.approve_status)
+                          )
+                        }
+                        style={{
+                          backgroundColor:
+                            order.order_status === "Delivered" || order.order_status === "Canceled"
+                              ? "#b0bec5"
+                              : (designRequests ?? []).some((design) => design.order_id === order.id)
+                                ? designRequests.find((design) => design.order_id === order.id)?.approve_status === "Requested"
+                                  ? "orange"
+                                  : designRequests.find((design) => design.order_id === order.id)?.approve_status === "Approved"
+                                    ? "green"
+                                    : "red"
+                                : "rgb(62, 115, 247)",
+                        }}
+                      >
+                        {(designRequests ?? []).some((design) => design.order_id === order.id) ? (
+                          designRequests.find((design) => design.order_id === order.id)?.approve_status === "Requested"
+                            ? "Design Requested"
+                            : designRequests.find((design) => design.order_id === order.id)?.approve_status === "Approved"
+                              ? "Approved"
+                              : "Rejected"
+                        ) : (
+                          "Design Request"
+                        )}
+                      </button>
+                    </div>
 
                   </div>
 
@@ -289,14 +289,16 @@ const ViewOrders = () => {
                         <p><strong>Design Name:</strong> <span>{order.product_design_name}</span></p>
                         <p><strong>Gross Wt:</strong> <span>{order.gross_weight}</span></p>
                         <p><strong>Purity:</strong> <span>{order.purity}</span></p>
-                       {order.order_status !== 'Delivered' && (
-  <>
-    <p><strong>Gold Rate:</strong> <span>{order.rate}</span></p>
-    <p><strong>Advance Gold:</strong> <span>{order.fine_wt}</span></p>
-  </>
-)}
+                        <p><strong>Gold Rate:</strong> <span>{order.rate}</span></p>
+                        {order.order_status !== 'Delivered' && (
+                          <>
+                            
+                            <p><strong>Advance Gold:</strong> <span>{order.fine_wt}</span></p>
+                            <p><strong>Advance Amount:</strong> <span>{order.advance_amount}</span></p>
+                          </>
+                        )}
 
-                        <p><strong>Advance Amount:</strong> <span>{order.advance_amount}</span></p>
+
                         <p><strong>Worker Status:</strong> <span>{order.work_status}</span></p>
                       </div>
                     </div>
@@ -317,7 +319,7 @@ const ViewOrders = () => {
                     </div>
                     <OrderRating order={order} onRatingSubmitted={handleRatingSubmitted} />
                   </div>
-   
+
                 </div>
               ))
             ) : (

@@ -58,6 +58,12 @@ function VendorNavbar() {
                     className={window.location.pathname === '/c-vieworders' ? 'active' : ''}
                 >
                     View Orders</Link>
+                     <Link
+                    to="/c-deliveredorders"
+                    onClick={handleItemClick}
+                    className={window.location.pathname === '/c-deliveredorders' ? 'active' : ''}
+                >
+                    Delivered Orders</Link>
                 <Link
                     to="/c-cancelorders"
                     onClick={handleItemClick}

@@ -18,9 +18,11 @@ import AdminDashboard from "./Components/Modules/Admin/Dashboard/Dashboard";
 import AdminOrder from "./Components/Modules/Admin/Orders/OrderForm";
 import AdminViewOrders from "./Components/Modules/Admin/Orders/ViewOrders";
 import AdminCancelOrders from "./Components/Modules/Admin/Orders/CancelOrders";
+import AdminDeliveredOrders from "./Components/Modules/Admin/Orders/DeliveredOrders";
 import AdminCustomerTable from "./Components/Modules/Admin/Customer/CustomerTable";
 import AdminWorkerTable from "./Components/Modules/Admin/Worker/WorkerTable";
 import ViewOrders from "./Components/Modules/Customer/Orders/ViewOrders";
+import DeliveredOrders from "./Components/Modules/Customer/Orders/DeliveredOrders";
 import CancelOrders from "./Components/Modules/Customer/Orders/CancelOrders";
 import CustomerDashboard from "./Components/Modules/Customer/Dashboard/Dashboard";
 import WorkerDashboard from "./Components/Modules/Worker/Dashboard/Dashboard";
@@ -213,6 +215,15 @@ export default function MainApp() {
             }
           />
           <Route
+            path="/a-delivered-orders"
+            exact
+            element={
+              <ProtectedRoute>
+                <AdminDeliveredOrders />
+              </ProtectedRoute>
+            }
+          />
+          <Route
             path="/a-customertable"
             exact
             element={
@@ -254,6 +265,15 @@ export default function MainApp() {
             element={
               <ProtectedRoute>
                 <ViewOrders />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/c-deliveredorders"
+            exact
+            element={
+              <ProtectedRoute>
+                <DeliveredOrders />
               </ProtectedRoute>
             }
           />

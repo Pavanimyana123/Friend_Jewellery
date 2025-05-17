@@ -200,14 +200,15 @@ const TaxINVoiceReceipt = ({ selectedOrders, estimateNumber }) => {
     const totalMetalAmount = selectedOrders.reduce((sum, order) => sum + parseFloat(order.amount || 0), 0);
     const totalStoneAmount = selectedOrders.reduce((sum, order) => sum + parseFloat(order.stone_price || 0), 0);
     const totalMC = selectedOrders.reduce((sum, order) => sum + parseFloat(order.total_mc || 0), 0);
-     const advanceAmount = selectedOrders.reduce((sum, order) => sum + parseFloat(order.advance_amount || 0), 0);
+    const advanceAmount = selectedOrders.reduce((sum, order) => sum + parseFloat(order.advance_amount || 0), 0);
 
     const taxableAmount = totalMetalAmount + totalStoneAmount + totalMC;
     const taxAmount = selectedOrders.reduce((sum, order) => sum + parseFloat(order.tax_amount || 0), 0);
     const halfTax = (taxAmount / 2).toFixed(2);
     const totalPrice = selectedOrders.reduce((sum, order) => sum + parseFloat(order.total_price || 0), 0);
-    const totalPriceInWords = toWordsTitleCase(finalAmount);
+
     const finalAmount = taxableAmount - advanceAmount;
+    const totalPriceInWords = toWordsTitleCase(finalAmount);
 
     return (
         <Document>
@@ -446,15 +447,15 @@ const TaxINVoiceReceipt = ({ selectedOrders, estimateNumber }) => {
 
                         <View style={{ alignItems: "flex-end", marginTop: 5, paddingRight: 10 }}>
                             <View style={{ flexDirection: "row" }}>
-                                <Text style={{ fontWeight: "bold", marginRight: 5 , fontFamily: 'Times-Bold'}}>Total Amount:</Text>
+                                <Text style={{ fontWeight: "bold", marginRight: 5, fontFamily: 'Times-Bold', marginBottom:5 }}>Total Amount:</Text>
                                 <Text>{taxableAmount.toFixed(2)}</Text>
                             </View>
-                             <View style={{ flexDirection: "row" }}>
-                                <Text style={{ fontWeight: "bold", marginRight: 5 , fontFamily: 'Times-Bold'}}>Advance Amount:</Text>
+                            <View style={{ flexDirection: "row" }}>
+                                <Text style={{ fontWeight: "bold", marginRight: 5, fontFamily: 'Times-Bold', marginBottom:5 }}>Advance Amount:</Text>
                                 <Text>{advanceAmount.toFixed(2)}</Text>
                             </View>
                             <View style={{ flexDirection: "row" }}>
-                                <Text style={{ fontWeight: "bold", marginRight: 5 , fontFamily: 'Times-Bold'}}>Final Total Amount:</Text>
+                                <Text style={{ fontWeight: "bold", marginRight: 5, fontFamily: 'Times-Bold', marginBottom:5 }}>Final Total Amount:</Text>
                                 <Text>{finalAmount.toFixed(2)}</Text>
                             </View>
                         </View>

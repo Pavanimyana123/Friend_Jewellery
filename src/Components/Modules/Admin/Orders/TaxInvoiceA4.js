@@ -200,12 +200,14 @@ const TaxINVoiceReceipt = ({ selectedOrders, invoiceNumber }) => {
     const totalMetalAmount = selectedOrders.reduce((sum, order) => sum + parseFloat(order.amount || 0), 0);
     const totalStoneAmount = selectedOrders.reduce((sum, order) => sum + parseFloat(order.stone_price || 0), 0);
     const totalMC = selectedOrders.reduce((sum, order) => sum + parseFloat(order.total_mc || 0), 0);
+    const advanceAmount = selectedOrders.reduce((sum, order) => sum + parseFloat(order.advance_amount || 0), 0);
 
     const taxableAmount = totalMetalAmount + totalStoneAmount + totalMC;
     const taxAmount = selectedOrders.reduce((sum, order) => sum + parseFloat(order.tax_amount || 0), 0);
     const halfTax = (taxAmount / 2).toFixed(2);
     const totalPrice = selectedOrders.reduce((sum, order) => sum + parseFloat(order.total_price || 0), 0);
-    const totalPriceInWords = toWordsTitleCase(totalPrice);
+    const finalAmount = totalPrice - advanceAmount;
+    const totalPriceInWords = toWordsTitleCase(finalAmount);
 
     return (
         <Document>
@@ -440,12 +442,12 @@ const TaxINVoiceReceipt = ({ selectedOrders, invoiceNumber }) => {
                         </View>
                         <View style={[styles.horizontalLine, { marginTop: -2 }]} />
 
-                        <View style={{ flexDirection: "row", justifyContent: "space-between", fontFamily: 'Times-Bold' }}>
+                        <View style={{ alignItems: "flex-end", fontFamily: 'Times-Bold' }}>
                             {/* Left Side Content */}
-                            <View style={{ paddingLeft: 10, marginTop: 20 }}>
+                            {/* <View style={{ paddingLeft: 10, marginTop: 20 }}>
                                 <Text style={[styles.bold, { marginBottom: 3 }]}>Cash Recd: 45000.00</Text>
                                 <Text style={[styles.bold]}>NEFT Recd: 37297.00 #: Bank:</Text>
-                            </View>
+                            </View> */}
 
                             <View style={{ paddingRight: 10, marginTop: 5 }}>
                                 {/* <View style={{ flexDirection: "row", justifyContent: "space-between", marginBottom: 3 }}>
@@ -475,6 +477,14 @@ const TaxINVoiceReceipt = ({ selectedOrders, invoiceNumber }) => {
                                 <View style={{ flexDirection: "row", justifyContent: "space-between", marginBottom: 3 }}>
                                     <Text style={[styles.bold]}>Net Amount:</Text>
                                     <Text style={{ textAlign: "right" }}>{totalPrice.toFixed(2)}</Text>
+                                </View>
+                                <View style={{ flexDirection: "row", justifyContent: "space-between", marginBottom: 3 }}>
+                                    <Text style={[styles.bold]}>Advance Amount:</Text>
+                                    <Text style={{ textAlign: "right" }}>{advanceAmount.toFixed(2)}</Text>
+                                </View>
+                                <View style={{ flexDirection: "row", justifyContent: "space-between", marginBottom: 3 }}>
+                                    <Text style={[styles.bold]}>Final Amount:</Text>
+                                    <Text style={{ textAlign: "right" }}>{finalAmount.toFixed(2)}</Text>
                                 </View>
                             </View>
                         </View>

@@ -66,7 +66,7 @@ function Order() {
     total_weight_aw: "",
     rate: "",
     amount: "",
-    mc_on: "MC %",
+    mc_on: "MC / Gram",
     mc_percentage: "",
     total_mc: "",
     tax_percentage: "3 %",
@@ -385,7 +385,7 @@ function Order() {
       total_weight_aw: "",
       rate: "",
       amount: "",
-      mc_on: "MC %",
+      mc_on: "MC / Gram",
       mc_percentage: "",
       total_mc: "",
       tax_percentage: "3 %",
@@ -728,7 +728,7 @@ function Order() {
 
                 <Col xs={12} md={1}>
                   <InputField
-                    label={formData.mc_on || "MC %"}  // Dynamically change label
+                    label={formData.mc_on || "MC / Gram"}  // Dynamically change label
                     name="mc_percentage"
                     value={formData.mc_percentage}
                     type="text"
