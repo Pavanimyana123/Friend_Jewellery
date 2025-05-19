@@ -426,6 +426,34 @@ const ViewOrders = () => {
         id: "estimate",
       },
 
+{
+  Header: 'Receipt',
+  id: 'add_receipts',
+  Cell: ({ row }) => {
+    const isDisabled = parseFloat(row.original.balance_amt) === parseFloat(row.original.receipt_amt);
+
+    return (
+      <Button
+       style={{
+                backgroundColor: '#28a745',
+                borderColor: '#28a745',
+                fontSize: '0.800rem', // Smaller font size
+                padding: '0.10rem 0.5rem', // Reduced padding
+              }}
+        
+        onClick={() =>
+          navigate(`/a-receipts`, {
+            state: { order: row.original },
+          })
+        }
+        disabled={isDisabled}
+      >
+        Add Receipts
+      </Button>
+    );
+  },
+},
+
 
       { Header: 'Sr. No.', Cell: ({ row }) => row.index + 1, id: 'sr_no' },
       {

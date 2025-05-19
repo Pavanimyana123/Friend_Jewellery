@@ -26,8 +26,7 @@ function Order() {
   const [showWebcam, setShowWebcam] = useState(false);
   const fileInputRef = useRef(null);
   const webcamRef = useRef(null);
-  const totalWeightSum = orders.reduce((sum, order) => sum + parseFloat(order.total_weight_aw || 0), 0);
-  const totalPriceSum = orders.reduce((sum, order) => sum + parseFloat(order.total_price || 0), 0);
+ 
 
   const [formData, setFormData] = useState({
     imagePreview: null, // For image preview before upload
@@ -83,6 +82,9 @@ function Order() {
   const [fineWt, setFineWt] = useState("");
   const [advanceAmount, setAdvanceAmount] = useState("");
 
+ const totalWeightSum = orders.reduce((sum, order) => sum + parseFloat(order.total_weight_aw || 0), 0);
+  const totalPriceSum = orders.reduce((sum, order) => sum + parseFloat(order.total_price || 0), 0);
+  const balanceAmt = totalPriceSum - advanceAmount;
 
   useEffect(() => {
     const fetchCurrentRates = async () => {
@@ -428,6 +430,7 @@ function Order() {
       advance_gross_wt: advanceGrossWt,
       fine_wt: fineWt,
       advance_amount: advanceAmount,
+      balance_amt: balanceAmt,
     }));
     
     console.log("updated orders=", updatedOrders);

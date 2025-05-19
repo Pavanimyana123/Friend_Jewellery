@@ -78,6 +78,8 @@ function Order() {
         qty: 1,
         fine_wt: "",
         advance_amount: "",
+        balance_amt: "",
+        overall_total_price: "",
         // o_size,
         // o_length,
         // stone_name,
@@ -157,33 +159,37 @@ function Order() {
     }, []);
 
     const handleChange = (e) => {
-        const { name, value } = e.target;
+    const { name, value } = e.target;
 
-        setFormData((prev) => {
-            if (name === "mc_on") {
-                // Reset mc_percentage and total_mc when mc_on is changed
-                return {
-                    ...prev,
-                    [name]: value,
-                    mc_percentage: "",
-                    total_mc: "",
-                };
-            }
+    setFormData((prev) => {
+        let updatedFormData = {
+            ...prev,
+            [name]: value,
+        };
 
-            if (name === "total_mc" && formData.mc_on === "MC / Piece" && value === "") {
-                return {
-                    ...prev,
-                    total_mc: "",
-                    mc_percentage: "", // Clear mc_percentage when total_mc is cleared
-                };
-            }
+        if (name === "mc_on") {
+            // Reset mc_percentage and total_mc when mc_on is changed
+            updatedFormData.mc_percentage = "";
+            updatedFormData.total_mc = "";
+        }
 
-            return {
-                ...prev,
-                [name]: value,
-            };
-        });
-    };
+        if (name === "total_mc" && prev.mc_on === "MC / Piece" && value === "") {
+            updatedFormData.total_mc = "";
+            updatedFormData.mc_percentage = "";
+        }
+
+        // Parse as float to safely calculate numbers
+        const totalPrice = parseFloat(updatedFormData.total_price) || 0;
+        const advanceAmount = parseFloat(updatedFormData.advance_amount) || 0;
+
+        // Update overall_total_price and balance_amt
+        updatedFormData.overall_total_price = totalPrice;
+        updatedFormData.balance_amt = totalPrice - advanceAmount;
+
+        return updatedFormData;
+    });
+};
+
 
     useEffect(() => {
         if (formData.metal && formData.purity) {

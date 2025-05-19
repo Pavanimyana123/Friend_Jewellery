@@ -53,6 +53,7 @@ import GalleryDisplay from "./Components/Modules/Admin/Gallery/GalleryTable";
 import Broucher from "./Components/Modules/Admin/Broucher/Broucher";
 import C_GalleryDisplay from "./Components/Modules/Customer/Gallery/Gallery";
 import C_Broucher from "./Components/Modules/Customer/Broucher/Broucher";
+import Receipts from "./Components/Modules/Admin/Orders/Receipts";
 
 export default function MainApp() {
   return (
@@ -175,6 +176,15 @@ export default function MainApp() {
             element={
               <ProtectedRoute>
                 <AdminViewOrders />
+              </ProtectedRoute>
+            }
+          />
+           <Route
+            path="/a-receipts"
+            exact
+            element={
+              <ProtectedRoute>
+                <Receipts />
               </ProtectedRoute>
             }
           />
