@@ -27,11 +27,11 @@ const GalleryDisplay = () => {
       prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
     );
   };
-  
+
 
   useEffect(() => {
     fetchGalleryItems();
-    
+
     // Cleanup function to revoke object URLs
     return () => {
       selectedImages.forEach(image => URL.revokeObjectURL(image));
@@ -46,7 +46,7 @@ const GalleryDisplay = () => {
 
   const handleDeleteSelected = async () => {
     if (selectedIds.length === 0) return alert("Please select items to delete");
-  
+
     try {
       const response = await fetch(`${baseURL}/api/delete-gallery-items`, {
         method: "POST",
@@ -55,7 +55,7 @@ const GalleryDisplay = () => {
         },
         body: JSON.stringify({ ids: selectedIds }),
       });
-  
+
       const data = await response.json();
       if (response.ok) {
         alert("Selected items deleted successfully");
@@ -70,7 +70,7 @@ const GalleryDisplay = () => {
       alert("Server error during deletion");
     }
   };
-  
+
 
   const handleShowModal = () => setShowModal(true);
   const handleCloseModal = () => {
@@ -93,12 +93,12 @@ const GalleryDisplay = () => {
 
     if (name === "image" && files) {
       const imageFiles = Array.from(files);
-      
+
       // Append new files to existing ones instead of replacing
       const updatedFiles = [...formData.image, ...imageFiles];
-      
+
       setFormData((prev) => ({ ...prev, image: updatedFiles }));
-      
+
       // Create previews for new files and combine with existing previews
       const newPreviews = imageFiles.map((file) => URL.createObjectURL(file));
       setSelectedImages((prev) => [...prev, ...newPreviews]);
@@ -116,7 +116,7 @@ const GalleryDisplay = () => {
 
     // Revoke the object URL before removing it
     URL.revokeObjectURL(updatedPreviews[index]);
-    
+
     updatedPreviews.splice(index, 1);
     updatedFiles.splice(index, 1);
 
@@ -143,10 +143,10 @@ const GalleryDisplay = () => {
       }
 
       fetchGalleryItems();
-      
+
       // Revoke all object URLs before clearing
       selectedImages.forEach(image => URL.revokeObjectURL(image));
-      
+
       setFormData({
         product_name: '',
         catalog_reference: '',
@@ -166,10 +166,15 @@ const GalleryDisplay = () => {
     <>
       <Navbar />
       <Container fluid className="gallery-main-container">
-        <div className="gallery-table-container d-flex justify-content-between align-items-center">
-          <h3 className="mb-0">Gallery</h3>
-          <div>
-            <Button variant="outline-primary" className="add-gallery-btn me-2" onClick={handleShowModal}>
+        <div className="gallery-table-container d-flex flex-column flex-md-row align-items-start align-items-md-center">
+          <h3 className="mb-2 mb-md-0 text-center text-md-start w-100 w-md-auto">Gallery</h3>
+
+          <div className="d-flex justify-content-center justify-content-md-end w-100 w-md-auto gap-2">
+            <Button
+              variant="outline-primary"
+              className="add-gallery-btn"
+              onClick={handleShowModal}
+            >
               + Add Gallery
             </Button>
             <Button
@@ -181,6 +186,7 @@ const GalleryDisplay = () => {
             </Button>
           </div>
         </div>
+
 
         <Row>
           {products.map((product, index) => (
@@ -198,7 +204,7 @@ const GalleryDisplay = () => {
                   src={`${baseURL}/uploads/gallery/${product.image}`}
                   className="gallery-img rounded"
                 />
-              
+
               </Card>
             </Col>
           ))}

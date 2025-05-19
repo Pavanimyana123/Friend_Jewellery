@@ -6,7 +6,7 @@ import baseURL from '../../../../Url/NodeBaseURL';
 import './Broucher.css'; // Create this CSS file for custom styles
 import { useLocation } from "react-router-dom";
 
-const Broucher = () => { 
+const Broucher = () => {
   const [brouchers, setBrouchers] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [broucherName, setBroucherName] = useState('');
@@ -76,7 +76,7 @@ const Broucher = () => {
     try {
       const res = await axios.get(`${baseURL}/api/broucher-items`);
       setBrouchers(res.data);
-       setFilteredBrouchers(res.data);
+      setFilteredBrouchers(res.data);
     } catch (err) {
       console.error("Error fetching brouchers:", err);
     }
@@ -124,30 +124,36 @@ const Broucher = () => {
   };
 
   useEffect(() => {
-          if (location.state?.tab) {
-              setActiveTab(location.state.tab);
-          }
-      }, [location.state]);
-  
-      // Filter brouchers based on active tab
-      useEffect(() => {
-          if (activeTab === "All") {
-              setFilteredBrouchers(brouchers);
-          } else {
-              const filtered = brouchers.filter(broucher => broucher.purity === activeTab);
-              setFilteredBrouchers(filtered);
-          }
-      }, [activeTab, brouchers]);
+    if (location.state?.tab) {
+      setActiveTab(location.state.tab);
+    }
+  }, [location.state]);
+
+  // Filter brouchers based on active tab
+  useEffect(() => {
+    if (activeTab === "All") {
+      setFilteredBrouchers(brouchers);
+    } else {
+      const filtered = brouchers.filter(broucher => broucher.purity === activeTab);
+      setFilteredBrouchers(filtered);
+    }
+  }, [activeTab, brouchers]);
 
   return (
     <>
       <Navbar />
 
       <Container fluid className="gallery-main-container">
-        <div className="gallery-table-container d-flex align-items-center">
-          <h3 className="mb-0">Broucher/Catalog</h3>
-          <div className="ms-auto d-flex">
-            <Button variant="outline-primary" className="add-gallery-btn me-2" onClick={handleShow}>
+        <div className="gallery-table-container d-flex flex-column flex-md-row align-items-start align-items-md-center">
+          <h3 className="mb-2 mb-md-0 text-center text-md-start w-100 w-md-auto">Broucher/Catalog</h3>
+
+          {/* Button container */}
+          <div className="d-flex justify-content-center justify-content-md-end w-100 w-md-auto gap-2">
+            <Button
+              variant="outline-primary"
+              className="add-gallery-btn"
+              onClick={handleShow}
+            >
               + Add Broucher/Catalog
             </Button>
             <Button
@@ -159,26 +165,28 @@ const Broucher = () => {
             </Button>
           </div>
         </div>
-         <div className="d-flex justify-content-center">
-                        {["All", "22C", "24C"].map(status => (
-                            <button
-                                key={status}
-                                className={`worker-tab-button ${activeTab === status ? 'active' : ''}`}
-                                onClick={() => setActiveTab(status)}
-                                style={{
-                                    marginLeft: '10px',
-                                    padding: '5px 15px',
-                                    border: '1px solid #ddd',
-                                    borderRadius: '4px',
-                                    backgroundColor: activeTab === status ? '#007bff' : 'white',
-                                    color: activeTab === status ? 'white' : 'black',
-                                    cursor: 'pointer'
-                                }}
-                            >
-                                {status}
-                            </button>
-                        ))}
-                    </div>
+
+
+        <div className="d-flex justify-content-center">
+          {["All", "22C", "24C"].map(status => (
+            <button
+              key={status}
+              className={`worker-tab-button ${activeTab === status ? 'active' : ''}`}
+              onClick={() => setActiveTab(status)}
+              style={{
+                marginLeft: '10px',
+                padding: '5px 15px',
+                border: '1px solid #ddd',
+                borderRadius: '4px',
+                backgroundColor: activeTab === status ? '#007bff' : 'white',
+                color: activeTab === status ? 'white' : 'black',
+                cursor: 'pointer'
+              }}
+            >
+              {status}
+            </button>
+          ))}
+        </div>
 
         <Row>
           {filteredBrouchers.map((item, index) => (
