@@ -11,7 +11,7 @@ import { DropdownButton, Dropdown } from "react-bootstrap";
 import { FaUpload, FaCamera, FaTrash, FaEdit } from "react-icons/fa";
 import Webcam from "react-webcam";
 import axios from "axios";
-import baseURL from '../../../../Url/NodeBaseURL'; 
+import baseURL from '../../../../Url/NodeBaseURL';
 
 function Order() {
   const [customers, setCustomers] = useState([]);
@@ -26,7 +26,7 @@ function Order() {
   const [showWebcam, setShowWebcam] = useState(false);
   const fileInputRef = useRef(null);
   const webcamRef = useRef(null);
- 
+
 
   const [formData, setFormData] = useState({
     imagePreview: null, // For image preview before upload
@@ -81,22 +81,22 @@ function Order() {
   const [advanceGrossWt, setAdvanceGrossWt] = useState("");
   const [fineWt, setFineWt] = useState("");
   const [advanceAmount, setAdvanceAmount] = useState("");
-   const [netWt, setNetWt] = useState("");
+  const [netWt, setNetWt] = useState("");
   const [summaryPrice, setSummaryPrice] = useState("");
 
- const totalWeightSum = orders.reduce((sum, order) => sum + parseFloat(order.total_weight_aw || 0), 0);
+  const totalWeightSum = orders.reduce((sum, order) => sum + parseFloat(order.total_weight_aw || 0), 0);
   const totalPriceSum = orders.reduce((sum, order) => sum + parseFloat(order.total_price || 0), 0);
   const balanceAmt = (summaryPrice - advanceAmount).toFixed(2);
-const [summaryRate, setSummaryRate] = useState("");
+  const [summaryRate, setSummaryRate] = useState("");
 
 
   useEffect(() => {
-  const net = parseFloat(totalWeightSum) - parseFloat(fineWt || 0);
-  const summary = net * parseFloat(summaryRate || 0);
+    const net = parseFloat(totalWeightSum) - parseFloat(fineWt || 0);
+    const summary = net * parseFloat(summaryRate || 0);
 
-  setNetWt(net.toFixed(3));
-  setSummaryPrice(summary.toFixed(2));
-}, [totalWeightSum, fineWt, summaryRate, advanceAmount]);
+    setNetWt(net.toFixed(3));
+    setSummaryPrice(summary.toFixed(2));
+  }, [totalWeightSum, fineWt, summaryRate, advanceAmount]);
 
 
   useEffect(() => {
@@ -110,8 +110,8 @@ const [summaryRate, setSummaryRate] = useState("");
           rate_16crt: response.data.rate_16crt || "",
           silver_rate: response.data.silver_rate || "",
         });
-              // Set summaryRate as rate_22crt
-      setSummaryRate(response.data.rate_22crt || "");
+        // Set summaryRate as rate_22crt
+        setSummaryRate(response.data.rate_22crt || "");
       } catch (error) {
         console.error('Error fetching current rates:', error);
       }
@@ -363,9 +363,7 @@ const [summaryRate, setSummaryRate] = useState("");
       ...selectedCustomer,
       date: selectedDate,
       account_id: selectedCustomer?.id,
-
-      order_number: newOrderNumber, // Ensure order_number is added correctly
-
+      order_number: newOrderNumber,
     };
 
     let updatedOrders;
@@ -373,7 +371,7 @@ const [summaryRate, setSummaryRate] = useState("");
       updatedOrders = orders.map((order, index) =>
         index === editingIndex ? updatedFormData : order
       );
-      setEditingIndex(null); // Reset editing index after update
+      setEditingIndex(null);
     } else {
       updatedOrders = [...orders, updatedFormData];
     }
@@ -400,8 +398,6 @@ const [summaryRate, setSummaryRate] = useState("");
       wastage_percentage: "",
       wastage_weight: "",
       total_weight_aw: "",
-      rate: "",
-      amount: "",
       mc_on: "MC / Gram",
       mc_percentage: "",
       total_mc: "",
@@ -415,11 +411,13 @@ const [summaryRate, setSummaryRate] = useState("");
       qty: 1,
       order_number: newOrderNumber,
     });
+
+    // Customer remains selected (no reset)
   };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    
+
 
     const storedOrders = JSON.parse(localStorage.getItem("orders")) || [];
     if (storedOrders.length === 0) {
@@ -450,7 +448,7 @@ const [summaryRate, setSummaryRate] = useState("");
       summary_price: summaryPrice,
       summary_rate: summaryRate
     }));
-    
+
     console.log("updated orders=", updatedOrders);
 
     updatedOrders.forEach((order, index) => {
@@ -610,7 +608,7 @@ const [summaryRate, setSummaryRate] = useState("");
                       type="date"
                       value={formData.estimated_delivery_date}
                       min={new Date().toISOString().split("T")[0]}
-                      onChange={handleChange} 
+                      onChange={handleChange}
                     />
                   </Row>
 
@@ -791,7 +789,7 @@ const [summaryRate, setSummaryRate] = useState("");
                     value={formData.delivery_date}
                     type="date"
                     min={new Date().toISOString().split("T")[0]}
-                    onChange={handleChange} 
+                    onChange={handleChange}
                   />
                 </Col>
 
@@ -951,86 +949,86 @@ const [summaryRate, setSummaryRate] = useState("");
             </Table>
           </div>
           <div className="order-form-section mt-1">
-  <h4>Summary</h4>
+            <h4>Summary</h4>
 
-  {/* Row 1: Total Weight and Total Price */}
-  <Row className="mb-3">
-    <Col xs={2} className="text-left fw-bold">Total Weight:</Col>
-    <Col xs={2} className="text-right">{totalWeightSum.toFixed(3)}</Col>
- 
-    <Col xs={2} className="text-left fw-bold">Total Price:</Col>
-    <Col xs={2} className="text-right">{totalPriceSum.toFixed(2)}</Col>
-    <Col xs={2} className="text-left fw-bold">Advance Gross Weight:</Col>
-    <Col xs={2}>
-      <InputField
-        name="advance_gross_wt"
-        type="text"
-        value={advanceGrossWt}
-        onChange={(e) => setAdvanceGrossWt(e.target.value)}
-      />
-    </Col>
-  </Row>
+            {/* Row 1: Total Weight and Total Price */}
+            <Row className="mb-3">
+              <Col xs={2} className="text-left fw-bold">Total Weight:</Col>
+              <Col xs={2} className="text-right">{totalWeightSum.toFixed(3)}</Col>
 
-  {/* Row 2: Advance Gross Weight and Fine Weight */}
-  <Row className="mb-3">
-    <Col xs={2} className="text-left fw-bold">Fine Weight:</Col>
-    <Col xs={2}>
-      <InputField
-        name="fine_wt"
-        type="text"
-        value={fineWt}
-        onChange={(e) => setFineWt(e.target.value)}
-      />
-    </Col>
-     <Col xs={2} className="text-left fw-bold">Net Weight:</Col>
-    <Col xs={2}>
-      <InputField
-        name="net_wt"
-        type="text"
-        value={netWt}
-        readOnly
-      />
-    </Col>
-    <Col xs={2} className="text-left fw-bold">Rate:</Col>
-    <Col xs={2}>
-      <InputField
-        name="rate"
-        type="text"
-        value={summaryRate}
-        onChange={(e) => setSummaryRate(e.target.value)}
-      />
-    </Col>
-  </Row>
-    <Row>
-    <Col xs={2} className="text-left fw-bold">Summary Price:</Col>
-    <Col xs={2}>
-      <InputField
-        name="summary_price"
-        type="text"
-        value={summaryPrice}
-        readOnly
-      />
-    </Col>
-    <Col xs={2} className="text-left fw-bold">Advance Amount:</Col>
-    <Col xs={2}>
-      <InputField
-        name="advance_amount"
-        type="text"
-        value={advanceAmount}
-        onChange={(e) => setAdvanceAmount(e.target.value)}
-      />
-    </Col>
-     <Col xs={2} className="text-left fw-bold"> Balance Amount:</Col>
-    <Col xs={2}>
-      <InputField
-        name="balance_amt"
-        type="text"
-        value={balanceAmt}
-        readOnly
-      />
-    </Col>
-  </Row>
-</div>
+              <Col xs={2} className="text-left fw-bold">Total Price:</Col>
+              <Col xs={2} className="text-right">{totalPriceSum.toFixed(2)}</Col>
+              <Col xs={2} className="text-left fw-bold">Advance Gross Weight:</Col>
+              <Col xs={2}>
+                <InputField
+                  name="advance_gross_wt"
+                  type="text"
+                  value={advanceGrossWt}
+                  onChange={(e) => setAdvanceGrossWt(e.target.value)}
+                />
+              </Col>
+            </Row>
+
+            {/* Row 2: Advance Gross Weight and Fine Weight */}
+            <Row className="mb-3">
+              <Col xs={2} className="text-left fw-bold">Fine Weight:</Col>
+              <Col xs={2}>
+                <InputField
+                  name="fine_wt"
+                  type="text"
+                  value={fineWt}
+                  onChange={(e) => setFineWt(e.target.value)}
+                />
+              </Col>
+              <Col xs={2} className="text-left fw-bold">Net Weight:</Col>
+              <Col xs={2}>
+                <InputField
+                  name="net_wt"
+                  type="text"
+                  value={netWt}
+                  readOnly
+                />
+              </Col>
+              <Col xs={2} className="text-left fw-bold">Rate:</Col>
+              <Col xs={2}>
+                <InputField
+                  name="rate"
+                  type="text"
+                  value={summaryRate}
+                  onChange={(e) => setSummaryRate(e.target.value)}
+                />
+              </Col>
+            </Row>
+            <Row>
+              <Col xs={2} className="text-left fw-bold">Summary Price:</Col>
+              <Col xs={2}>
+                <InputField
+                  name="summary_price"
+                  type="text"
+                  value={summaryPrice}
+                  readOnly
+                />
+              </Col>
+              <Col xs={2} className="text-left fw-bold">Advance Amount:</Col>
+              <Col xs={2}>
+                <InputField
+                  name="advance_amount"
+                  type="text"
+                  value={advanceAmount}
+                  onChange={(e) => setAdvanceAmount(e.target.value)}
+                />
+              </Col>
+              <Col xs={2} className="text-left fw-bold"> Balance Amount:</Col>
+              <Col xs={2}>
+                <InputField
+                  name="balance_amt"
+                  type="text"
+                  value={balanceAmt}
+                  readOnly
+                />
+              </Col>
+            </Row>
+          </div>
 
 
 
