@@ -55,40 +55,24 @@ const ViewOrders = () => {
     fetchWorkers();
   }, []);
 
-//  const fetchData = async () => {
-//   try {
-//     const response = await fetch(`${baseURL}/api/orders`);
-//     if (!response.ok) {
-//       throw new Error('Failed to fetch orders');
-//     }
-//     const result = await response.json();
-
-//     // Filter out orders with order_status "Delivered"
-//     const filteredData = result.filter(order => order.order_status !== 'Delivered');
-
-//     setData(filteredData);
-//   } catch (error) {
-//     console.error('Error fetching orders:', error);
-//   } finally {
-//     setLoading(false);
-//   }
-// };
-
-const fetchData = async () => {
+ const fetchData = async () => {
   try {
-    const response = await fetch(`${baseURL}/get-unique-order-details`);
+    const response = await fetch(`${baseURL}/api/orders`);
     if (!response.ok) {
       throw new Error('Failed to fetch orders');
     }
     const result = await response.json();
-    setData(result); // Set all data without filtering
+
+    // Filter out orders with order_status "Delivered"
+    const filteredData = result.filter(order => order.order_status !== 'Delivered');
+
+    setData(filteredData);
   } catch (error) {
     console.error('Error fetching orders:', error);
   } finally {
     setLoading(false);
   }
 };
-
 
   useEffect(() => {
     fetchData();
@@ -405,7 +389,6 @@ const fetchData = async () => {
         ),
         id: "select",
       },
-       { Header: 'Sr. No.', Cell: ({ row }) => row.index + 1, id: 'sr_no' },
 
       {
         Header: "Invoice",
@@ -470,6 +453,9 @@ const fetchData = async () => {
     );
   },
 },
+
+
+      { Header: 'Sr. No.', Cell: ({ row }) => row.index + 1, id: 'sr_no' },
       {
         Header: 'Date',
         accessor: (row) => {
@@ -494,152 +480,162 @@ const fetchData = async () => {
         id: 'order_no', // Add an ID for the order number column
       },
       {
+        Header: 'Metal',
+        accessor: 'metal',
+        id: 'metal', // Add an ID for the metal column
+      },
+      {
+        Header: 'Category',
+        accessor: 'category',
+        id: 'category', // Add an ID for the category column
+      },
+      {
+        Header: 'Sub Category',
+        accessor: 'subcategory',
+        id: 'sub_category', // Add an ID for the subcategory column
+      },
+      {
+        Header: 'Purity',
+        accessor: 'purity',
+        id: 'purity', // Add an ID for the purity column
+      },
+      {
+        Header: 'Design Name',
+        accessor: 'product_design_name',
+        id: 'design_name', // Add an ID for the design name column
+      },
+      {
+        Header: 'Gross Wt',
+        accessor: 'gross_weight',
+        id: 'gross_weight', // Add an ID for the gross weight column
+      },
+      {
+        Header: 'Stone Wt',
+        accessor: 'stone_weight',
+        id: 'stone_weight', // Add an ID for the stone weight column
+      },
+      {
         Header: 'Total Wt',
-        accessor: 'overall_total_weight',
-        id: 'overall_total_weight', // Add an ID for the total weight column
-      },
-       {
-        Header: 'Fine Wt',
-        accessor: 'fine_wt',
-        id: 'fine_wt', // Add an ID for the total weight column
-      },
-       {
-        Header: 'Net Wt',
-        accessor: 'net_wt',
-        id: 'net_wt', // Add an ID for the total weight column
+        accessor: 'total_weight_aw',
+        id: 'total_weight', // Add an ID for the total weight column
       },
       {
         Header: 'Total Amt',
-        accessor: 'overall_total_price',
-        id: 'overall_total_price', // Add an ID for the total amount column
+        accessor: 'total_price',
+        id: 'total_amt', // Add an ID for the total amount column
       },
-        {
-        Header: 'Advance Amt',
-        accessor: 'advance_amount',
-        id: 'advance_amount', // Add an ID for the total weight column
+      {
+        Header: "Order Status",
+        accessor: "order_status",
+        id: 'order_status', // Add an ID for the order status column
+        Cell: ({ row }) => {
+          const [status, setStatus] = useState(row.original.order_status || "Placed");
+          const isPending = row.original.work_status === "Pending"; // Check if work_status is Pending
+          const isDisabled = row.original.order_status === "Canceled" || row.original.assigned_status === "Not Assigned"; // Disable if Canceled or Not Assigned
+
+          const handleStatusChange = async (event) => {
+            const newStatus = event.target.value;
+            setStatus(newStatus);
+
+            try {
+              const response = await axios.put(`${baseURL}/api/orders/status/${row.original.id}`, {
+                order_status: newStatus,
+                worker_id: row.original.worker_id,
+                worker_name: row.original.worker_name,
+              });
+
+              console.log("Status updated:", response.data);
+              alert("Order status updated successfully!");
+              fetchData();
+            } catch (error) {
+              console.error("Error updating status:", error);
+              alert("Failed to update status.");
+            }
+          };
+
+          return (
+            <select value={status} onChange={handleStatusChange} disabled={isDisabled}>
+              <option value="Placed">Placed</option>
+              <option value="Processing" disabled={isPending}>Processing</option>
+              <option value="Ready for Delivery" disabled={isPending}>Ready for Delivery</option>
+              {/* <option value="Dispatched" disabled={isPending}>Dispatched</option>
+              <option value="Shipped" disabled={isPending}>Shipped</option>
+              <option value="Out for Delivery" disabled={isPending}>Out for Delivery</option> */}
+              <option value="Delivered" disabled={isPending}>Delivered</option>
+              <option value="Canceled" disabled={isPending}>Cancel</option>
+            </select>
+          );
+        },
       },
-       {
-        Header: 'Summary Price',
-        accessor: 'summary_price',
-        id: 'summary_price', // Add an ID for the total weight column
+      {
+        Header: "Image",
+        accessor: "image_url",
+        Cell: ({ value }) =>
+          value ? (
+            <img
+              src={`${baseURL}${value}`}
+              alt="Order Image"
+              style={{
+                width: "50px",
+                height: "50px",
+                borderRadius: "5px",
+                objectFit: "cover",
+                cursor: "pointer",
+              }}
+              onClick={() => handleImageClick(`${baseURL}${value}`)}
+            />
+          ) : (
+            "No Image"
+          ),
       },
-        {
-        Header: 'Balance Amt',
-        accessor: 'balance_amt',
-        id: 'balance_amt', // Add an ID for the total weight column
+      {
+        Header: 'Assign Worker',
+        id: 'assign_worker', // Add an ID for the assign worker column
+        Cell: ({ row }) => {
+          const assignedWorkerName = row.original.worker_name;
+          const isDisabled = row.original.assigned_status === 'Accepted';
+
+          return (
+            <select
+              value={assignedWorkerName || ''}
+              onChange={(e) => {
+                const selectedWorker = workers.find(worker => worker.account_name === e.target.value);
+                updateOrderWithWorker(row.original.id, selectedWorker?.id, selectedWorker?.account_name);
+              }}
+              disabled={isDisabled}
+            >
+              <option value="">Select Worker</option>
+              {workers.map((worker) => (
+                <option key={worker.id} value={worker.account_name}>
+                  {worker.account_name}
+                </option>
+              ))}
+            </select>
+          );
+        },
       },
-    //   {
-    //     Header: "Order Status",
-    //     accessor: "order_status",
-    //     id: 'order_status', // Add an ID for the order status column
-    //     Cell: ({ row }) => {
-    //       const [status, setStatus] = useState(row.original.order_status || "Placed");
-    //       const isPending = row.original.work_status === "Pending"; // Check if work_status is Pending
-    //       const isDisabled = row.original.order_status === "Canceled" || row.original.assigned_status === "Not Assigned"; // Disable if Canceled or Not Assigned
-
-    //       const handleStatusChange = async (event) => {
-    //         const newStatus = event.target.value;
-    //         setStatus(newStatus);
-
-    //         try {
-    //           const response = await axios.put(`${baseURL}/api/orders/status/${row.original.id}`, {
-    //             order_status: newStatus,
-    //             worker_id: row.original.worker_id,
-    //             worker_name: row.original.worker_name,
-    //           });
-
-    //           console.log("Status updated:", response.data);
-    //           alert("Order status updated successfully!");
-    //           fetchData();
-    //         } catch (error) {
-    //           console.error("Error updating status:", error);
-    //           alert("Failed to update status.");
-    //         }
-    //       };
-
-    //       return (
-    //         <select value={status} onChange={handleStatusChange} disabled={isDisabled}>
-    //           <option value="Placed">Placed</option>
-    //           <option value="Processing" disabled={isPending}>Processing</option>
-    //           <option value="Ready for Delivery" disabled={isPending}>Ready for Delivery</option>
-    //           {/* <option value="Dispatched" disabled={isPending}>Dispatched</option>
-    //           <option value="Shipped" disabled={isPending}>Shipped</option>
-    //           <option value="Out for Delivery" disabled={isPending}>Out for Delivery</option> */}
-    //           <option value="Delivered" disabled={isPending}>Delivered</option>
-    //           <option value="Canceled" disabled={isPending}>Cancel</option>
-    //         </select>
-    //       );
-    //     },
-    //   },
-    //   {
-    //     Header: "Image",
-    //     accessor: "image_url",
-    //     Cell: ({ value }) =>
-    //       value ? (
-    //         <img
-    //           src={`${baseURL}${value}`}
-    //           alt="Order Image"
-    //           style={{
-    //             width: "50px",
-    //             height: "50px",
-    //             borderRadius: "5px",
-    //             objectFit: "cover",
-    //             cursor: "pointer",
-    //           }}
-    //           onClick={() => handleImageClick(`${baseURL}${value}`)}
-    //         />
-    //       ) : (
-    //         "No Image"
-    //       ),
-    //   },
-    //   {
-    //     Header: 'Assign Worker',
-    //     id: 'assign_worker', // Add an ID for the assign worker column
-    //     Cell: ({ row }) => {
-    //       const assignedWorkerName = row.original.worker_name;
-    //       const isDisabled = row.original.assigned_status === 'Accepted';
-
-    //       return (
-    //         <select
-    //           value={assignedWorkerName || ''}
-    //           onChange={(e) => {
-    //             const selectedWorker = workers.find(worker => worker.account_name === e.target.value);
-    //             updateOrderWithWorker(row.original.id, selectedWorker?.id, selectedWorker?.account_name);
-    //           }}
-    //           disabled={isDisabled}
-    //         >
-    //           <option value="">Select Worker</option>
-    //           {workers.map((worker) => (
-    //             <option key={worker.id} value={worker.account_name}>
-    //               {worker.account_name}
-    //             </option>
-    //           ))}
-    //         </select>
-    //       );
-    //     },
-    //   },
-    //   {
-    //     Header: 'Assigned Status',
-    //     accessor: 'assigned_status',
-    //     id: 'assigned_status', // Add an ID for the assigned status column
-    //     Cell: ({ row }) => row.original.assigned_status || '',
-    //   },
-    //   {
-    //     Header: 'Worker Name',
-    //     accessor: 'worker_name',
-    //     id: 'worker_name', // Add an ID for the worker name column
-    //     Cell: ({ row }) => row.original.worker_name || 'N/A',
-    //   },
-    //   {
-    //     Header: "Work Status",
-    //     accessor: "work_status",
-    //     id: "work_status", // Add an ID for the work status column
-    //     Cell: ({ row }) => (
-    //       <span style={{ color: getStatusColor(row.original.work_status) }}>
-    //         {row.original.work_status || "N/A"}
-    //       </span>
-    //     ),
-    //   },
+      {
+        Header: 'Assigned Status',
+        accessor: 'assigned_status',
+        id: 'assigned_status', // Add an ID for the assigned status column
+        Cell: ({ row }) => row.original.assigned_status || '',
+      },
+      {
+        Header: 'Worker Name',
+        accessor: 'worker_name',
+        id: 'worker_name', // Add an ID for the worker name column
+        Cell: ({ row }) => row.original.worker_name || 'N/A',
+      },
+      {
+        Header: "Work Status",
+        accessor: "work_status",
+        id: "work_status", // Add an ID for the work status column
+        Cell: ({ row }) => (
+          <span style={{ color: getStatusColor(row.original.work_status) }}>
+            {row.original.work_status || "N/A"}
+          </span>
+        ),
+      },
       {
         Header: 'Action',
         id: 'action', // Add an ID for the action column
@@ -667,20 +663,10 @@ const fetchData = async () => {
   const [showModal, setShowModal] = useState(false);
   const [selectedOrder, setSelectedOrder] = useState(null);
 
- const handleView = async (order) => {
-  try {
-    const response = await fetch(`${baseURL}/get-order-details/${order.order_number}`);
-    if (!response.ok) {
-      throw new Error('Failed to fetch order details');
-    }
-    const result = await response.json();
-    setSelectedOrder(result);
+  const handleView = (order) => {
+    setSelectedOrder(order);
     setShowModal(true);
-  } catch (error) {
-    console.error('Error fetching order details:', error);
-    alert('Failed to load order details');
-  }
-};
+  };
 
 
   return (
@@ -718,102 +704,81 @@ const fetchData = async () => {
           {loading ? <div>Loading...</div> : <DataTable columns={columns} data={[...data].reverse()} />}
         </div>
       </div>
+      <Modal show={isModalOpen} onHide={() => setIsModalOpen(false)} centered>
+        <Modal.Header closeButton>
+          <Modal.Title>Image Preview</Modal.Title>
+        </Modal.Header>
+        <Modal.Body className="d-flex justify-content-center">
+          <img
+            src={modalImage}
+            alt="Enlarged Order"
+            style={{ maxWidth: "100%", maxHeight: "80vh", borderRadius: "10px" }}
+          />
+        </Modal.Body>
+      </Modal>
 
-<Modal show={showModal} onHide={() => setShowModal(false)} size="xl">
-  <Modal.Header closeButton>
-    <Modal.Title>Order Details - {selectedOrder?.uniqueData?.order_number}</Modal.Title>
-  </Modal.Header>
-  <Modal.Body>
-    {selectedOrder && (
-      <div className="admin-order-details-container">
-        <div className="admin-customer-info-section">
-          <h5>Customer Info</h5>
-          <div className="admin-customer-details">
-                <div><strong>Account Name:</strong> {selectedOrder.uniqueData.account_name}</div>
-            <div><strong>Mobile:</strong> {selectedOrder.uniqueData.mobile}</div>
-            {/* <div><strong>Email:</strong> {selectedOrder.uniqueData.email || 'N/A'}</div>
-            <div><strong>Address:</strong> {selectedOrder.uniqueData.address1 || 'N/A'}</div> */}
-            {selectedOrder.uniqueData.invoice_number && (
-              <div><strong>Invoice Number:</strong> {selectedOrder.uniqueData.invoice_number}</div>
-            )}
-            <div><strong>Total Amount:</strong> {selectedOrder.uniqueData.overall_total_price}</div>
-             <div><strong>Balance Amount:</strong> {selectedOrder.uniqueData.balance_amt}</div>
-          </div>
-        </div>
-
-        <div className="admin-products-section mt-4">
-          <h5>Products</h5>
-          <div className="table-responsive">
-            <table className="table table-bordered">
-              <thead>
-                <tr>
-                    <th>S.No</th>
-                <th>Invoice Number</th>
-                  <th>Metal</th>
-                  <th>Category</th>
-                  <th>Sub Category</th>
-                  <th>Design Name</th>
-                  <th>Purity</th>
-                  <th>Gross Wt</th>
-                  <th>Stone Wt</th>
-                  <th>Total Wt</th>
-                  <th>Rate</th>
-                  <th>Total Price</th>
-                  <th>Image</th>
-                </tr>
-              </thead>
-              <tbody>
-                {selectedOrder.repeatedData.map((product, index) => (
-                  <tr key={index}>
-                    <td>{index + 1}</td>
-                    <td>{product.invoice_number || 'N/A'}</td>
-                    <td>{product.metal}</td>
-                    <td>{product.category}</td>
-                    <td>{product.subcategory}</td>
-                    <td>{product.product_design_name}</td>
-                    <td>{product.purity}</td>
-                    <td>{product.gross_weight}</td>
-                    <td>{product.stone_weight}</td>
-                    <td>{product.total_weight_aw}</td>
-                    <td>{product.rate}</td>
-                    <td>{product.total_price}</td>
-                    <td>
-          {product.image_url ? (
-            <img
-              src={`${baseURL}${product.image_url}`}
-              alt="Order"
-              style={{
-                width: "50px",
-                height: "50px",
-                borderRadius: "5px",
-                objectFit: "cover",
-                cursor: "pointer",
-              }}
-              onClick={() => handleImageClick(`${baseURL}${product.image_url}`)}
-            />
-          ) : (
-            "No Image"
+      <Modal show={showModal} onHide={() => setShowModal(false)} size="lg">
+        <Modal.Header closeButton>
+          <Modal.Title>Order Details</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          {selectedOrder && (
+            <Row>
+              <Col md={4}>
+                <p><strong>Order No.:</strong> {selectedOrder.order_number}</p>
+                <p><strong>Metal:</strong> {selectedOrder.metal}</p>
+                <p><strong>Gross Weight:</strong> {selectedOrder.gross_weight}</p>
+                <p><strong>Stone Price:</strong> {selectedOrder.stone_price}</p>
+                <p><strong>Wastage%:</strong> {selectedOrder.wastage_percentage}</p>
+                <p><strong>Rate:</strong> {selectedOrder.rate}</p>
+                <p><strong>MC%:</strong> {selectedOrder.mc_percentage}</p>
+                <p><strong>Tax Amt:</strong> {selectedOrder.tax_amount}</p>
+                <p><strong>Order Status:</strong> {selectedOrder.order_status}</p>
+                <p><strong>Advance Gross Weight:</strong> {selectedOrder.advance_gross_wt}</p>
+              </Col>
+              <Col md={4}>
+                <p><strong>Category:</strong> {selectedOrder.category}</p>
+                <p><strong>Design Name:</strong> {selectedOrder.product_design_name}</p>
+                <p><strong>Stone Weight:</strong> {selectedOrder.stone_weight}</p>
+                <p><strong>Weight BW:</strong> {selectedOrder.weight_bw}</p>
+                <p><strong>Wastage Wt:</strong> {selectedOrder.wastage_weight}</p>
+                <p><strong>Amount:</strong> {selectedOrder.amount}</p>
+                <p><strong>Total MC:</strong> {selectedOrder.total_mc}</p>
+                <p><strong>Total Price:</strong> {selectedOrder.total_price}</p>
+                <p><strong>Worker:</strong> {selectedOrder.worker_name}</p>               
+                <p><strong>Fine Weight:</strong> {selectedOrder.fine_wt}</p>            
+              </Col>
+              <Col md={4}>
+                <p><strong>Subcategory:</strong> {selectedOrder.subcategory}</p>
+                <p><strong>Purity:</strong> {selectedOrder.purity}</p>
+                <p><strong>Stone Name:</strong> {selectedOrder.stone_name}</p>
+                <p><strong>Wastage On:</strong> {selectedOrder.wastage_on}</p>
+                <p><strong>Total Weight:</strong> {selectedOrder.total_weight_aw}</p>
+                <p><strong>MC On:</strong> {selectedOrder.mc_on}</p>
+                <p><strong>Tax%:</strong> {selectedOrder.tax_percentage}</p>
+                <p><strong>Remarks:</strong> {selectedOrder.remarks}</p>
+                <p><strong>Work Status:</strong> {selectedOrder.work_status}</p>
+                <p><strong>Advance Amount:</strong> {selectedOrder.advance_amount}</p>
+              </Col>
+              {/* {selectedOrder.image_url && (
+                <div>
+                  <strong>Image:</strong><br />
+                  <img
+                    src={`${baseURL}${selectedOrder.image_url}`}
+                    alt="Order"
+                    style={{ width: '150px', borderRadius: '8px', marginTop: '10px' }}
+                  />
+                </div>
+              )} */}
+            </Row>
           )}
-        </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </div>
-
-        <div className="total-amount-section text-end mt-3">
-          <h5>Total Amount: {selectedOrder.uniqueData.overall_total_price}</h5>
-        </div>
-      </div>
-    )}
-  </Modal.Body>
-  <Modal.Footer>
-    <Button variant="secondary" onClick={() => setShowModal(false)}>
-      Close
-    </Button>
-  </Modal.Footer>
-</Modal>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setShowModal(false)}>
+            Close
+          </Button>
+        </Modal.Footer>
+      </Modal>
 
 
     </>
