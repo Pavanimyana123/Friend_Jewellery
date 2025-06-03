@@ -14,6 +14,7 @@ import { pdf } from "@react-pdf/renderer";
 import TaxINVoiceReceipt from "./TaxInvoiceA4";
 import EstimateReceipt from './EstimateReceipt';
 import { saveAs } from "file-saver";
+import Swal from 'sweetalert2';
 
 const ViewOrders = () => {
   const navigate = useNavigate();
@@ -55,39 +56,39 @@ const ViewOrders = () => {
     fetchWorkers();
   }, []);
 
-//  const fetchData = async () => {
-//   try {
-//     const response = await fetch(`${baseURL}/api/orders`);
-//     if (!response.ok) {
-//       throw new Error('Failed to fetch orders');
-//     }
-//     const result = await response.json();
+  //  const fetchData = async () => {
+  //   try {
+  //     const response = await fetch(`${baseURL}/api/orders`);
+  //     if (!response.ok) {
+  //       throw new Error('Failed to fetch orders');
+  //     }
+  //     const result = await response.json();
 
-//     // Filter out orders with order_status "Delivered"
-//     const filteredData = result.filter(order => order.order_status !== 'Delivered');
+  //     // Filter out orders with order_status "Delivered"
+  //     const filteredData = result.filter(order => order.order_status !== 'Delivered');
 
-//     setData(filteredData);
-//   } catch (error) {
-//     console.error('Error fetching orders:', error);
-//   } finally {
-//     setLoading(false);
-//   }
-// };
+  //     setData(filteredData);
+  //   } catch (error) {
+  //     console.error('Error fetching orders:', error);
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
 
-const fetchData = async () => {
-  try {
-    const response = await fetch(`${baseURL}/get-unique-order-details`);
-    if (!response.ok) {
-      throw new Error('Failed to fetch orders');
+  const fetchData = async () => {
+    try {
+      const response = await fetch(`${baseURL}/get-unique-order-details`);
+      if (!response.ok) {
+        throw new Error('Failed to fetch orders');
+      }
+      const result = await response.json();
+      setData(result); // Set all data without filtering
+    } catch (error) {
+      console.error('Error fetching orders:', error);
+    } finally {
+      setLoading(false);
     }
-    const result = await response.json();
-    setData(result); // Set all data without filtering
-  } catch (error) {
-    console.error('Error fetching orders:', error);
-  } finally {
-    setLoading(false);
-  }
-};
+  };
 
 
   useEffect(() => {
@@ -127,25 +128,43 @@ const fetchData = async () => {
     }
   };
 
-  const handleDelete = async (id) => {
-    if (!window.confirm("Are you sure you want to delete this order?")) {
-      return;
-    }
+  // const handleDelete = async (id) => {
+  //   if (!window.confirm("Are you sure you want to delete this order?")) {
+  //     return;
+  //   }
 
-    try {
-      await axios.delete(`${baseURL}/api/delete-order/${id}`);
-      alert("Order deleted successfully");
-      setOrders(orders.filter(order => order.id !== id)); // Update state after deletion
-      fetchData();
-    } catch (error) {
-      console.error("Error deleting order:", error);
-      alert("Failed to delete order");
-    }
-  };
+  //   try {
+  //     await axios.delete(`${baseURL}/api/delete-order/${id}`);
+  //     alert("Order deleted successfully");
+  //     setOrders(orders.filter(order => order.id !== id)); // Update state after deletion
+  //     fetchData();
+  //   } catch (error) {
+  //     console.error("Error deleting order:", error);
+  //     alert("Failed to delete order");
+  //   }
+  // };
 
-  const handleEdit = (id) => {
-    navigate(`/a-edit-order/${id}`);
-  };
+
+  const handleDelete = async (orderNumber) => {
+  if (!window.confirm("Are you sure you want to delete this order?")) {
+    return;
+  }
+
+  try {
+    await axios.delete(`${baseURL}/api/deleteorder/${orderNumber}`);
+    alert("Order deleted successfully");
+    setOrders(orders.filter(order => order.order_number !== orderNumber)); // Update state after deletion
+    fetchData();
+  } catch (error) {
+    console.error("Error deleting order:", error);
+    alert("Failed to delete order");
+  }
+};
+
+
+  // const handleEdit = (id) => {
+  //   navigate(`/a-edit-order/${id}`);
+  // };
 
   const exportToExcel = () => {
     // Use filteredData if available, otherwise export all data
@@ -405,7 +424,7 @@ const fetchData = async () => {
         ),
         id: "select",
       },
-       { Header: 'Sr. No.', Cell: ({ row }) => row.index + 1, id: 'sr_no' },
+      { Header: 'Sr. No.', Cell: ({ row }) => row.index + 1, id: 'sr_no' },
 
       {
         Header: "Invoice",
@@ -443,33 +462,33 @@ const fetchData = async () => {
         id: "estimate",
       },
 
-{
-  Header: 'Receipt',
-  id: 'add_receipts',
-  Cell: ({ row }) => {
-    const isDisabled = parseFloat(row.original.balance_amt) === parseFloat(row.original.receipt_amt);
+      {
+        Header: 'Receipt',
+        id: 'add_receipts',
+        Cell: ({ row }) => {
+          const isDisabled = parseFloat(row.original.balance_amt) === parseFloat(row.original.receipt_amt);
 
-    return (
-      <Button
-       style={{
+          return (
+            <Button
+              style={{
                 backgroundColor: '#28a745',
                 borderColor: '#28a745',
                 fontSize: '0.800rem', // Smaller font size
                 padding: '0.10rem 0.5rem', // Reduced padding
-              }}
-        
-        onClick={() =>
-          navigate(`/a-receipts`, {
-            state: { order: row.original },
-          })
-        }
-        disabled={isDisabled}
-      >
-        Add Receipts
-      </Button>
-    );
-  },
-},
+              }}
+
+              onClick={() =>
+                navigate(`/a-receipts`, {
+                  state: { order: row.original },
+                })
+              }
+              disabled={isDisabled}
+            >
+              Add Receipts
+            </Button>
+          );
+        },
+      },
       {
         Header: 'Date',
         accessor: (row) => {
@@ -498,12 +517,12 @@ const fetchData = async () => {
         accessor: 'overall_total_weight',
         id: 'overall_total_weight', // Add an ID for the total weight column
       },
-       {
+      {
         Header: 'Fine Wt',
         accessor: 'fine_wt',
         id: 'fine_wt', // Add an ID for the total weight column
       },
-       {
+      {
         Header: 'Net Wt',
         accessor: 'net_wt',
         id: 'net_wt', // Add an ID for the total weight column
@@ -513,133 +532,133 @@ const fetchData = async () => {
         accessor: 'overall_total_price',
         id: 'overall_total_price', // Add an ID for the total amount column
       },
-        {
-        Header: 'Advance Amt',
-        accessor: 'advance_amount',
-        id: 'advance_amount', // Add an ID for the total weight column
-      },
-       {
+      {
         Header: 'Summary Price',
         accessor: 'summary_price',
         id: 'summary_price', // Add an ID for the total weight column
       },
-        {
+      {
+        Header: 'Advance Amt',
+        accessor: 'advance_amount',
+        id: 'advance_amount', // Add an ID for the total weight column
+      },
+      {
         Header: 'Balance Amt',
         accessor: 'balance_amt',
         id: 'balance_amt', // Add an ID for the total weight column
       },
-    //   {
-    //     Header: "Order Status",
-    //     accessor: "order_status",
-    //     id: 'order_status', // Add an ID for the order status column
-    //     Cell: ({ row }) => {
-    //       const [status, setStatus] = useState(row.original.order_status || "Placed");
-    //       const isPending = row.original.work_status === "Pending"; // Check if work_status is Pending
-    //       const isDisabled = row.original.order_status === "Canceled" || row.original.assigned_status === "Not Assigned"; // Disable if Canceled or Not Assigned
+      //   {
+      //     Header: "Order Status",
+      //     accessor: "order_status",
+      //     id: 'order_status', // Add an ID for the order status column
+      //     Cell: ({ row }) => {
+      //       const [status, setStatus] = useState(row.original.order_status || "Placed");
+      //       const isPending = row.original.work_status === "Pending"; // Check if work_status is Pending
+      //       const isDisabled = row.original.order_status === "Canceled" || row.original.assigned_status === "Not Assigned"; // Disable if Canceled or Not Assigned
 
-    //       const handleStatusChange = async (event) => {
-    //         const newStatus = event.target.value;
-    //         setStatus(newStatus);
+      //       const handleStatusChange = async (event) => {
+      //         const newStatus = event.target.value;
+      //         setStatus(newStatus);
 
-    //         try {
-    //           const response = await axios.put(`${baseURL}/api/orders/status/${row.original.id}`, {
-    //             order_status: newStatus,
-    //             worker_id: row.original.worker_id,
-    //             worker_name: row.original.worker_name,
-    //           });
+      //         try {
+      //           const response = await axios.put(`${baseURL}/api/orders/status/${row.original.id}`, {
+      //             order_status: newStatus,
+      //             worker_id: row.original.worker_id,
+      //             worker_name: row.original.worker_name,
+      //           });
 
-    //           console.log("Status updated:", response.data);
-    //           alert("Order status updated successfully!");
-    //           fetchData();
-    //         } catch (error) {
-    //           console.error("Error updating status:", error);
-    //           alert("Failed to update status.");
-    //         }
-    //       };
+      //           console.log("Status updated:", response.data);
+      //           alert("Order status updated successfully!");
+      //           fetchData();
+      //         } catch (error) {
+      //           console.error("Error updating status:", error);
+      //           alert("Failed to update status.");
+      //         }
+      //       };
 
-    //       return (
-    //         <select value={status} onChange={handleStatusChange} disabled={isDisabled}>
-    //           <option value="Placed">Placed</option>
-    //           <option value="Processing" disabled={isPending}>Processing</option>
-    //           <option value="Ready for Delivery" disabled={isPending}>Ready for Delivery</option>
-    //           {/* <option value="Dispatched" disabled={isPending}>Dispatched</option>
-    //           <option value="Shipped" disabled={isPending}>Shipped</option>
-    //           <option value="Out for Delivery" disabled={isPending}>Out for Delivery</option> */}
-    //           <option value="Delivered" disabled={isPending}>Delivered</option>
-    //           <option value="Canceled" disabled={isPending}>Cancel</option>
-    //         </select>
-    //       );
-    //     },
-    //   },
-    //   {
-    //     Header: "Image",
-    //     accessor: "image_url",
-    //     Cell: ({ value }) =>
-    //       value ? (
-    //         <img
-    //           src={`${baseURL}${value}`}
-    //           alt="Order Image"
-    //           style={{
-    //             width: "50px",
-    //             height: "50px",
-    //             borderRadius: "5px",
-    //             objectFit: "cover",
-    //             cursor: "pointer",
-    //           }}
-    //           onClick={() => handleImageClick(`${baseURL}${value}`)}
-    //         />
-    //       ) : (
-    //         "No Image"
-    //       ),
-    //   },
-    //   {
-    //     Header: 'Assign Worker',
-    //     id: 'assign_worker', // Add an ID for the assign worker column
-    //     Cell: ({ row }) => {
-    //       const assignedWorkerName = row.original.worker_name;
-    //       const isDisabled = row.original.assigned_status === 'Accepted';
+      //       return (
+      //         <select value={status} onChange={handleStatusChange} disabled={isDisabled}>
+      //           <option value="Placed">Placed</option>
+      //           <option value="Processing" disabled={isPending}>Processing</option>
+      //           <option value="Ready for Delivery" disabled={isPending}>Ready for Delivery</option>
+      //           {/* <option value="Dispatched" disabled={isPending}>Dispatched</option>
+      //           <option value="Shipped" disabled={isPending}>Shipped</option>
+      //           <option value="Out for Delivery" disabled={isPending}>Out for Delivery</option> */}
+      //           <option value="Delivered" disabled={isPending}>Delivered</option>
+      //           <option value="Canceled" disabled={isPending}>Cancel</option>
+      //         </select>
+      //       );
+      //     },
+      //   },
+      //   {
+      //     Header: "Image",
+      //     accessor: "image_url",
+      //     Cell: ({ value }) =>
+      //       value ? (
+      //         <img
+      //           src={`${baseURL}${value}`}
+      //           alt="Order Image"
+      //           style={{
+      //             width: "50px",
+      //             height: "50px",
+      //             borderRadius: "5px",
+      //             objectFit: "cover",
+      //             cursor: "pointer",
+      //           }}
+      //           onClick={() => handleImageClick(`${baseURL}${value}`)}
+      //         />
+      //       ) : (
+      //         "No Image"
+      //       ),
+      //   },
+      //   {
+      //     Header: 'Assign Worker',
+      //     id: 'assign_worker', // Add an ID for the assign worker column
+      //     Cell: ({ row }) => {
+      //       const assignedWorkerName = row.original.worker_name;
+      //       const isDisabled = row.original.assigned_status === 'Accepted';
 
-    //       return (
-    //         <select
-    //           value={assignedWorkerName || ''}
-    //           onChange={(e) => {
-    //             const selectedWorker = workers.find(worker => worker.account_name === e.target.value);
-    //             updateOrderWithWorker(row.original.id, selectedWorker?.id, selectedWorker?.account_name);
-    //           }}
-    //           disabled={isDisabled}
-    //         >
-    //           <option value="">Select Worker</option>
-    //           {workers.map((worker) => (
-    //             <option key={worker.id} value={worker.account_name}>
-    //               {worker.account_name}
-    //             </option>
-    //           ))}
-    //         </select>
-    //       );
-    //     },
-    //   },
-    //   {
-    //     Header: 'Assigned Status',
-    //     accessor: 'assigned_status',
-    //     id: 'assigned_status', // Add an ID for the assigned status column
-    //     Cell: ({ row }) => row.original.assigned_status || '',
-    //   },
-    //   {
-    //     Header: 'Worker Name',
-    //     accessor: 'worker_name',
-    //     id: 'worker_name', // Add an ID for the worker name column
-    //     Cell: ({ row }) => row.original.worker_name || 'N/A',
-    //   },
-    //   {
-    //     Header: "Work Status",
-    //     accessor: "work_status",
-    //     id: "work_status", // Add an ID for the work status column
-    //     Cell: ({ row }) => (
-    //       <span style={{ color: getStatusColor(row.original.work_status) }}>
-    //         {row.original.work_status || "N/A"}
-    //       </span>
-    //     ),
-    //   },
+      //       return (
+      //         <select
+      //           value={assignedWorkerName || ''}
+      //           onChange={(e) => {
+      //             const selectedWorker = workers.find(worker => worker.account_name === e.target.value);
+      //             updateOrderWithWorker(row.original.id, selectedWorker?.id, selectedWorker?.account_name);
+      //           }}
+      //           disabled={isDisabled}
+      //         >
+      //           <option value="">Select Worker</option>
+      //           {workers.map((worker) => (
+      //             <option key={worker.id} value={worker.account_name}>
+      //               {worker.account_name}
+      //             </option>
+      //           ))}
+      //         </select>
+      //       );
+      //     },
+      //   },
+      //   {
+      //     Header: 'Assigned Status',
+      //     accessor: 'assigned_status',
+      //     id: 'assigned_status', // Add an ID for the assigned status column
+      //     Cell: ({ row }) => row.original.assigned_status || '',
+      //   },
+      //   {
+      //     Header: 'Worker Name',
+      //     accessor: 'worker_name',
+      //     id: 'worker_name', // Add an ID for the worker name column
+      //     Cell: ({ row }) => row.original.worker_name || 'N/A',
+      //   },
+      //   {
+      //     Header: "Work Status",
+      //     accessor: "work_status",
+      //     id: "work_status", // Add an ID for the work status column
+      //     Cell: ({ row }) => (
+      //       <span style={{ color: getStatusColor(row.original.work_status) }}>
+      //         {row.original.work_status || "N/A"}
+      //       </span>
+      //     ),
+      //   },
       {
         Header: 'Action',
         id: 'action', // Add an ID for the action column
@@ -651,11 +670,16 @@ const fetchData = async () => {
             />
             <FaEdit
               style={{ cursor: 'pointer', marginLeft: '10px', color: 'blue' }}
-              onClick={() => handleEdit(row.original.id)}
+              onClick={() => handleEdit(row.original.order_number,
+                row.original.mobile,
+                row.original.advance_gross_wt,
+                row.original.fine_wt,
+                row.original.advance_amount,)}
             />
             <FaTrash
               style={{ cursor: 'pointer', marginLeft: '10px', color: 'red' }}
-              onClick={() => handleDelete(row.original.id)}
+              // onClick={() => handleDelete(row.original.id)}
+              onClick={() => handleDelete(row.original.order_number)}
             />
           </div>
         ),
@@ -667,20 +691,85 @@ const fetchData = async () => {
   const [showModal, setShowModal] = useState(false);
   const [selectedOrder, setSelectedOrder] = useState(null);
 
- const handleView = async (order) => {
-  try {
-    const response = await fetch(`${baseURL}/get-order-details/${order.order_number}`);
-    if (!response.ok) {
-      throw new Error('Failed to fetch order details');
+  const handleView = async (order) => {
+    try {
+      const response = await fetch(`${baseURL}/get-order-details/${order.order_number}`);
+      if (!response.ok) {
+        throw new Error('Failed to fetch order details');
+      }
+      const result = await response.json();
+      setSelectedOrder(result);
+      setShowModal(true);
+    } catch (error) {
+      console.error('Error fetching order details:', error);
+      alert('Failed to load order details');
     }
-    const result = await response.json();
-    setSelectedOrder(result);
-    setShowModal(true);
-  } catch (error) {
-    console.error('Error fetching order details:', error);
-    alert('Failed to load order details');
-  }
-};
+  };
+
+
+  const handleEdit = async (
+    order_number, mobile, advance_gross_wt, fine_wt, advance_amount
+  ) => {
+
+    const result = await Swal.fire({
+      title: 'Are you sure?',
+      text: 'Do you want to edit this record?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, go ahead!',
+      cancelButtonText: 'No, cancel',
+    });
+
+    if (result.isConfirmed) {
+      try {
+        // Fetch repair details
+        const response = await axios.get(`${baseURL}/get-order-details/${order_number}`);
+        const details = response.data;
+
+        // Verify if the API returned data
+        if (!details || !details.repeatedData) {
+          console.error('No repeatedData found in response:', details);
+          Swal.fire('Error', 'No repair details found for the provided order number.', 'error');
+          return;
+        }
+
+        // Retrieve existing repair details from localStorage or set to an empty array if not available
+        const existingDetails = JSON.parse(localStorage.getItem('orders')) || [];
+
+        // Get today's date in yyyy-mm-dd format
+        const today = new Date().toISOString().split('T')[0];
+
+        // Update repeatedData with today's date
+        const formattedDetails = details.repeatedData.map((item) => ({
+          ...item,
+          date: today,
+          order_number, // Ensure the order_number is explicitly included
+        }));
+        const updatedDetails = [...existingDetails, ...formattedDetails];
+        localStorage.setItem('orders', JSON.stringify(updatedDetails));
+
+
+        console.log('Updated repair details added to localStorage:', updatedDetails);
+
+        // Navigate to the sales page with state
+        navigate('/a-orders', {
+          state: {
+            order_number,
+            mobile,
+            advance_gross_wt, fine_wt, advance_amount,
+            orderDetails: details,
+          },
+        });
+      } catch (error) {
+        console.error('Error fetching repair details:', error);
+        Swal.fire('Error', 'Unable to fetch repair details. Please try again.', 'error');
+      }
+    } else {
+      Swal.fire('Cancelled', 'Edit operation was cancelled.', 'info');
+    }
+  };
 
 
   return (
@@ -719,101 +808,101 @@ const fetchData = async () => {
         </div>
       </div>
 
-<Modal show={showModal} onHide={() => setShowModal(false)} size="xl">
-  <Modal.Header closeButton>
-    <Modal.Title>Order Details - {selectedOrder?.uniqueData?.order_number}</Modal.Title>
-  </Modal.Header>
-  <Modal.Body>
-    {selectedOrder && (
-      <div className="admin-order-details-container">
-        <div className="admin-customer-info-section">
-          <h5>Customer Info</h5>
-          <div className="admin-customer-details">
-                <div><strong>Account Name:</strong> {selectedOrder.uniqueData.account_name}</div>
-            <div><strong>Mobile:</strong> {selectedOrder.uniqueData.mobile}</div>
-            {/* <div><strong>Email:</strong> {selectedOrder.uniqueData.email || 'N/A'}</div>
+      <Modal show={showModal} onHide={() => setShowModal(false)} size="xl">
+        <Modal.Header closeButton>
+          <Modal.Title>Order Details - {selectedOrder?.uniqueData?.order_number}</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          {selectedOrder && (
+            <div className="admin-order-details-container">
+              <div className="admin-customer-info-section">
+                <h5>Customer Info</h5>
+                <div className="admin-customer-details">
+                  <div><strong>Account Name:</strong> {selectedOrder.uniqueData.account_name}</div>
+                  <div><strong>Mobile:</strong> {selectedOrder.uniqueData.mobile}</div>
+                  {/* <div><strong>Email:</strong> {selectedOrder.uniqueData.email || 'N/A'}</div>
             <div><strong>Address:</strong> {selectedOrder.uniqueData.address1 || 'N/A'}</div> */}
-            {selectedOrder.uniqueData.invoice_number && (
-              <div><strong>Invoice Number:</strong> {selectedOrder.uniqueData.invoice_number}</div>
-            )}
-            <div><strong>Total Amount:</strong> {selectedOrder.uniqueData.overall_total_price}</div>
-             <div><strong>Balance Amount:</strong> {selectedOrder.uniqueData.balance_amt}</div>
-          </div>
-        </div>
+                  {selectedOrder.uniqueData.invoice_number && (
+                    <div><strong>Invoice Number:</strong> {selectedOrder.uniqueData.invoice_number}</div>
+                  )}
+                  <div><strong>Total Amount:</strong> {selectedOrder.uniqueData.overall_total_price}</div>
+                  <div><strong>Balance Amount:</strong> {selectedOrder.uniqueData.balance_amt}</div>
+                </div>
+              </div>
 
-        <div className="admin-products-section mt-4">
-          <h5>Products</h5>
-          <div className="table-responsive">
-            <table className="table table-bordered">
-              <thead>
-                <tr>
-                    <th>S.No</th>
-                <th>Invoice Number</th>
-                  <th>Metal</th>
-                  <th>Category</th>
-                  <th>Sub Category</th>
-                  <th>Design Name</th>
-                  <th>Purity</th>
-                  <th>Gross Wt</th>
-                  <th>Stone Wt</th>
-                  <th>Total Wt</th>
-                  <th>Rate</th>
-                  <th>Total Price</th>
-                  <th>Image</th>
-                </tr>
-              </thead>
-              <tbody>
-                {selectedOrder.repeatedData.map((product, index) => (
-                  <tr key={index}>
-                    <td>{index + 1}</td>
-                    <td>{product.invoice_number || 'N/A'}</td>
-                    <td>{product.metal}</td>
-                    <td>{product.category}</td>
-                    <td>{product.subcategory}</td>
-                    <td>{product.product_design_name}</td>
-                    <td>{product.purity}</td>
-                    <td>{product.gross_weight}</td>
-                    <td>{product.stone_weight}</td>
-                    <td>{product.total_weight_aw}</td>
-                    <td>{product.rate}</td>
-                    <td>{product.total_price}</td>
-                    <td>
-          {product.image_url ? (
-            <img
-              src={`${baseURL}${product.image_url}`}
-              alt="Order"
-              style={{
-                width: "50px",
-                height: "50px",
-                borderRadius: "5px",
-                objectFit: "cover",
-                cursor: "pointer",
-              }}
-              onClick={() => handleImageClick(`${baseURL}${product.image_url}`)}
-            />
-          ) : (
-            "No Image"
+              <div className="admin-products-section mt-4">
+                <h5>Products</h5>
+                <div className="table-responsive">
+                  <table className="table table-bordered">
+                    <thead>
+                      <tr>
+                        <th>S.No</th>
+                        <th>Invoice Number</th>
+                        <th>Metal</th>
+                        <th>Category</th>
+                        <th>Sub Category</th>
+                        <th>Design Name</th>
+                        <th>Purity</th>
+                        <th>Gross Wt</th>
+                        <th>Stone Wt</th>
+                        <th>Total Wt</th>
+                        <th>Rate</th>
+                        <th>Total Price</th>
+                        <th>Image</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {selectedOrder.repeatedData.map((product, index) => (
+                        <tr key={index}>
+                          <td>{index + 1}</td>
+                          <td>{product.invoice_number || 'N/A'}</td>
+                          <td>{product.metal}</td>
+                          <td>{product.category}</td>
+                          <td>{product.subcategory}</td>
+                          <td>{product.product_design_name}</td>
+                          <td>{product.purity}</td>
+                          <td>{product.gross_weight}</td>
+                          <td>{product.stone_weight}</td>
+                          <td>{product.total_weight_aw}</td>
+                          <td>{product.rate}</td>
+                          <td>{product.total_price}</td>
+                          <td>
+                            {product.image_url ? (
+                              <img
+                                src={`${baseURL}${product.image_url}`}
+                                alt="Order"
+                                style={{
+                                  width: "50px",
+                                  height: "50px",
+                                  borderRadius: "5px",
+                                  objectFit: "cover",
+                                  cursor: "pointer",
+                                }}
+                                onClick={() => handleImageClick(`${baseURL}${product.image_url}`)}
+                              />
+                            ) : (
+                              "No Image"
+                            )}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
+              <div className="total-amount-section text-end mt-3">
+                <h5>Total Amount: {selectedOrder.uniqueData.overall_total_price}</h5>
+              </div>
+            </div>
           )}
-        </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </div>
-
-        <div className="total-amount-section text-end mt-3">
-          <h5>Total Amount: {selectedOrder.uniqueData.overall_total_price}</h5>
-        </div>
-      </div>
-    )}
-  </Modal.Body>
-  <Modal.Footer>
-    <Button variant="secondary" onClick={() => setShowModal(false)}>
-      Close
-    </Button>
-  </Modal.Footer>
-</Modal>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setShowModal(false)}>
+            Close
+          </Button>
+        </Modal.Footer>
+      </Modal>
 
 
     </>

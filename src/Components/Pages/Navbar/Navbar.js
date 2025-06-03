@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronDown, faChevronUp } from '@fortawesome/free-solid-svg-icons';
@@ -32,6 +32,13 @@ function Navbar() {
         localStorage.removeItem("user");
         navigate("/login");
     };
+
+    useEffect(() => {
+        if (location.pathname !== '/a-orders') {
+            localStorage.removeItem('orders');
+        }
+    }, [location.pathname]);
+
 
     return (
         <header className="navbar-header">
@@ -85,7 +92,7 @@ function Navbar() {
                                 className={window.location.pathname === '/a-view-orders' || location.pathname === '/a-orders' || location.pathname === '/a-edit-order/:id' ? 'active' : ''}
                             >
                                 Orders</Link>
-                                 <Link
+                            <Link
                                 to="/a-delivered-orders"
                                 onClick={handleItemClick}
                                 className={window.location.pathname === '/a-delivered-orders' ? 'active' : ''}

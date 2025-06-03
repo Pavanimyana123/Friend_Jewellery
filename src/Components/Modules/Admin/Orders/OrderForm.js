@@ -91,6 +91,32 @@ function Order() {
 
 
   useEffect(() => {
+    if (location.state?.mobile && customers.length > 0) {
+      const matchedCustomer = customers.find((c) => c.mobile === location.state.mobile);
+      if (matchedCustomer) {
+        setSelectedCustomer(matchedCustomer);
+        setFormData((prev) => ({
+          ...prev,
+          ...matchedCustomer,
+          mobile: matchedCustomer.mobile,
+          account_id: matchedCustomer.id,
+        }));
+      }
+    }
+  }, [location.state?.mobile, customers]);
+
+  useEffect(() => {
+    if (location.state) {
+      const { advance_gross_wt, fine_wt, advance_amount } = location.state;
+      if (advance_gross_wt) setAdvanceGrossWt(advance_gross_wt);
+      if (fine_wt) setFineWt(fine_wt);
+      if (advance_amount) setAdvanceAmount(advance_amount);
+    }
+  }, [location.state]);
+
+
+
+  useEffect(() => {
     const net = parseFloat(totalWeightSum) - parseFloat(fineWt || 0);
     const summary = net * parseFloat(summaryRate || 0);
 
@@ -172,8 +198,6 @@ function Order() {
       }));
     }
   }, [formData.metal, formData.purity, rates]);
-
-
 
   useEffect(() => {
     // Fetch customer data from API when component loads
@@ -355,6 +379,23 @@ function Order() {
     setEditingIndex(index);  // Track the index being edited
   };
 
+  const getRateByPurity = (metal, purity, rates) => {
+    if (!metal || !purity) return "";
+
+    metal = metal.toLowerCase();
+
+    if (["gold", "diamond"].includes(metal)) {
+      if (purity.includes("22")) return rates.rate_22crt;
+      if (purity.includes("24")) return rates.rate_24crt;
+      if (purity.includes("18")) return rates.rate_18crt;
+      if (purity.includes("16")) return rates.rate_16crt;
+    } else if (metal === "silver") {
+      return rates.silver_rate;
+    }
+
+    return "";
+  };
+
   const handleAddItem = () => {
     const newOrderNumber = formData.order_number || `ORD-${Date.now()}`;
 
@@ -379,14 +420,31 @@ function Order() {
     setOrders(updatedOrders);
     localStorage.setItem("orders", JSON.stringify(updatedOrders));
 
+    // Reset form and pre-calculate rate and amount
+    const purity = "22KT";
+    const metal = "Gold";
+    const rate = getRateByPurity(metal, purity, rates) || "";
+
+    const qty = 1;
+    const total_weight_aw = 0;
+    const pricing = ""; // Or set your default pricing strategy
+    const pieceCost = 0;
+
+    let amount = 0;
+    if (pricing === "By fixed") {
+      amount = pieceCost * qty;
+    } else {
+      amount = parseFloat(rate) * total_weight_aw;
+    }
+
     setFormData({
       imagePreview: null,
-      metal: "Gold",
+      metal,
       category: "",
       subcategory: "",
       product_design_name: "",
       status: "Actual Order",
-      purity: "22KT",
+      purity,
       gross_weight: "",
       stone_weight: "",
       stone_name: "",
@@ -408,12 +466,15 @@ function Order() {
       delivery_date: "",
       image_url: null,
       order_status: "Placed",
-      qty: 1,
+      qty,
       order_number: newOrderNumber,
+      rate,
+      pricing,
+      pieace_cost: pieceCost,
+      amount: amount.toFixed(2),
     });
-
-    // Customer remains selected (no reset)
   };
+
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -480,17 +541,23 @@ function Order() {
   };
 
   useEffect(() => {
-    const fetchLastOrderNumber = async () => {
-      try {
-        const response = await axios.get(`${baseURL}/api/lastOrderNumber`);
-        setFormData(prev => ({ ...prev, order_number: response.data.lastOrderNumber }));
-      } catch (error) {
-        console.error("Error fetching invoice number:", error);
-      }
-    };
+    const incomingOrderNumber = location.state?.order_number;
 
-    fetchLastOrderNumber();
-  }, []);
+    if (incomingOrderNumber) {
+      setFormData(prev => ({ ...prev, order_number: incomingOrderNumber }));
+    } else {
+      const fetchLastOrderNumber = async () => {
+        try {
+          const response = await axios.get(`${baseURL}/api/lastOrderNumber`);
+          setFormData(prev => ({ ...prev, order_number: response.data.lastOrderNumber }));
+        } catch (error) {
+          console.error("Error fetching invoice number:", error);
+        }
+      };
+
+      fetchLastOrderNumber();
+    }
+  }, [location.state?.order_number]);
 
   const handleAddCustomer = () => {
     navigate("/a-customers", { state: { from: "/a-orders" } });
