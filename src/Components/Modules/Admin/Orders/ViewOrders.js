@@ -34,6 +34,43 @@ const ViewOrders = () => {
     setIsModalOpen(true);
   };
 
+  // Create a separate component for the status dropdown
+const StatusDropdown = ({ product, fetchData }) => {
+  const [status, setStatus] = useState(product.order_status || "Placed");
+  const isPending = product.work_status === "Pending";
+  const isDisabled = product.order_status === "Canceled" || product.assigned_status === "Not Assigned";
+
+  const handleStatusChange = async (event) => {
+    const newStatus = event.target.value;
+    setStatus(newStatus);
+
+    try {
+      const response = await axios.put(`${baseURL}/api/orders/status/${product.id}`, {
+        order_status: newStatus,
+        worker_id: product.worker_id,
+        worker_name: product.worker_name,
+      });
+
+      console.log("Status updated:", response.data);
+      alert("Order status updated successfully!");
+      fetchData();
+    } catch (error) {
+      console.error("Error updating status:", error);
+      alert("Failed to update status.");
+    }
+  };
+
+  return (
+    <select value={status} onChange={handleStatusChange} disabled={isDisabled}>
+      <option value="Placed">Placed</option>
+      <option value="Processing" disabled={isPending}>Processing</option>
+      <option value="Ready for Delivery" disabled={isPending}>Ready for Delivery</option>
+      <option value="Delivered" disabled={isPending}>Delivered</option>
+      <option value="Canceled" disabled={isPending}>Cancel</option>
+    </select>
+  );
+};
+
   useEffect(() => {
     const fetchWorkers = async () => {
       try {
@@ -833,61 +870,93 @@ const ViewOrders = () => {
               <div className="admin-products-section mt-4">
                 <h5>Products</h5>
                 <div className="table-responsive">
-                  <table className="table table-bordered">
-                    <thead>
-                      <tr>
-                        <th>S.No</th>
-                        <th>Invoice Number</th>
-                        <th>Metal</th>
-                        <th>Category</th>
-                        <th>Sub Category</th>
-                        <th>Design Name</th>
-                        <th>Purity</th>
-                        <th>Gross Wt</th>
-                        <th>Stone Wt</th>
-                        <th>Total Wt</th>
-                        <th>Rate</th>
-                        <th>Total Price</th>
-                        <th>Image</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {selectedOrder.repeatedData.map((product, index) => (
-                        <tr key={index}>
-                          <td>{index + 1}</td>
-                          <td>{product.invoice_number || 'N/A'}</td>
-                          <td>{product.metal}</td>
-                          <td>{product.category}</td>
-                          <td>{product.subcategory}</td>
-                          <td>{product.product_design_name}</td>
-                          <td>{product.purity}</td>
-                          <td>{product.gross_weight}</td>
-                          <td>{product.stone_weight}</td>
-                          <td>{product.total_weight_aw}</td>
-                          <td>{product.rate}</td>
-                          <td>{product.total_price}</td>
-                          <td>
-                            {product.image_url ? (
-                              <img
-                                src={`${baseURL}${product.image_url}`}
-                                alt="Order"
-                                style={{
-                                  width: "50px",
-                                  height: "50px",
-                                  borderRadius: "5px",
-                                  objectFit: "cover",
-                                  cursor: "pointer",
-                                }}
-                                onClick={() => handleImageClick(`${baseURL}${product.image_url}`)}
-                              />
-                            ) : (
-                              "No Image"
-                            )}
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
+<table className="table table-bordered">
+  <thead>
+    <tr>
+      <th>S.No</th>
+      <th>Invoice Number</th>
+      <th>Metal</th>
+      <th>Category</th>
+      <th>Sub Category</th>
+      <th>Design Name</th>
+      <th>Purity</th>
+      <th>Gross Wt</th>
+      <th>Stone Wt</th>
+      <th>Total Wt</th>
+      <th>Rate</th>
+      <th>Total Price</th>
+      <th>Image</th>
+      <th>Order Status</th>
+      <th>Assign Worker</th>
+      <th>Assigned Status</th>
+      <th>Worker Name</th>
+      <th>Work Status</th>
+    </tr>
+  </thead>
+  <tbody>
+    {selectedOrder.repeatedData.map((product, index) => (
+      <tr key={index}>
+        <td>{index + 1}</td>
+        <td>{product.invoice_number || 'N/A'}</td>
+        <td>{product.metal}</td>
+        <td>{product.category}</td>
+        <td>{product.subcategory}</td>
+        <td>{product.product_design_name}</td>
+        <td>{product.purity}</td>
+        <td>{product.gross_weight}</td>
+        <td>{product.stone_weight}</td>
+        <td>{product.total_weight_aw}</td>
+        <td>{product.rate}</td>
+        <td>{product.total_price}</td>
+        <td>
+          {product.image_url ? (
+            <img
+              src={`${baseURL}${product.image_url}`}
+              alt="Order"
+              style={{
+                width: "50px",
+                height: "50px",
+                borderRadius: "5px",
+                objectFit: "cover",
+                cursor: "pointer",
+              }}
+              onClick={() => handleImageClick(`${baseURL}${product.image_url}`)}
+            />
+          ) : (
+            "No Image"
+          )}
+        </td>
+        <td>
+          <StatusDropdown product={product} fetchData={fetchData} />
+        </td>
+        <td>
+          <select
+            value={product.worker_name || ''}
+            onChange={(e) => {
+              const selectedWorker = workers.find(worker => worker.account_name === e.target.value);
+              updateOrderWithWorker(product.id, selectedWorker?.id, selectedWorker?.account_name);
+            }}
+            disabled={product.assigned_status === 'Accepted'}
+          >
+            <option value="">Select Worker</option>
+            {workers.map((worker) => (
+              <option key={worker.id} value={worker.account_name}>
+                {worker.account_name}
+              </option>
+            ))}
+          </select>
+        </td>
+        <td>{product.assigned_status || ''}</td>
+        <td>{product.worker_name || 'N/A'}</td>
+        <td>
+          <span style={{ color: getStatusColor(product.work_status) }}>
+            {product.work_status || "N/A"}
+          </span>
+        </td>
+      </tr>
+    ))}
+  </tbody>
+</table>
                 </div>
               </div>
 

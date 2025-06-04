@@ -117,6 +117,12 @@ function Navbar() {
                                 className={window.location.pathname === '/a-design-requests' ? 'active' : ''}
                             >
                                 Design Requests</Link>
+                                 <Link
+                                to="/a-receipts-orders"
+                                onClick={handleItemClick}
+                                className={window.location.pathname === '/a-receipts-orders' ? 'active' : ''}
+                            >
+                                 Receipts</Link>
                         </div>
                     )}
                 </div>
