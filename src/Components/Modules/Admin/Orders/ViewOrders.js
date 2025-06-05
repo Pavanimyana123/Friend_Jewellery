@@ -35,41 +35,41 @@ const ViewOrders = () => {
   };
 
   // Create a separate component for the status dropdown
-const StatusDropdown = ({ product, fetchData }) => {
-  const [status, setStatus] = useState(product.order_status || "Placed");
-  const isPending = product.work_status === "Pending";
-  const isDisabled = product.order_status === "Canceled" || product.assigned_status === "Not Assigned";
+  const StatusDropdown = ({ product, fetchData }) => {
+    const [status, setStatus] = useState(product.order_status || "Placed");
+    const isPending = product.work_status === "Pending";
+    const isDisabled = product.order_status === "Canceled" || product.assigned_status === "Not Assigned";
 
-  const handleStatusChange = async (event) => {
-    const newStatus = event.target.value;
-    setStatus(newStatus);
+    const handleStatusChange = async (event) => {
+      const newStatus = event.target.value;
+      setStatus(newStatus);
 
-    try {
-      const response = await axios.put(`${baseURL}/api/orders/status/${product.id}`, {
-        order_status: newStatus,
-        worker_id: product.worker_id,
-        worker_name: product.worker_name,
-      });
+      try {
+        const response = await axios.put(`${baseURL}/api/orders/status/${product.id}`, {
+          order_status: newStatus,
+          worker_id: product.worker_id,
+          worker_name: product.worker_name,
+        });
 
-      console.log("Status updated:", response.data);
-      alert("Order status updated successfully!");
-      fetchData();
-    } catch (error) {
-      console.error("Error updating status:", error);
-      alert("Failed to update status.");
-    }
+        console.log("Status updated:", response.data);
+        alert("Order status updated successfully!");
+        fetchData();
+      } catch (error) {
+        console.error("Error updating status:", error);
+        alert("Failed to update status.");
+      }
+    };
+
+    return (
+      <select value={status} onChange={handleStatusChange} disabled={isDisabled}>
+        <option value="Placed">Placed</option>
+        <option value="Processing" disabled={isPending}>Processing</option>
+        <option value="Ready for Delivery" disabled={isPending}>Ready for Delivery</option>
+        <option value="Delivered" disabled={isPending}>Delivered</option>
+        <option value="Canceled" disabled={isPending}>Cancel</option>
+      </select>
+    );
   };
-
-  return (
-    <select value={status} onChange={handleStatusChange} disabled={isDisabled}>
-      <option value="Placed">Placed</option>
-      <option value="Processing" disabled={isPending}>Processing</option>
-      <option value="Ready for Delivery" disabled={isPending}>Ready for Delivery</option>
-      <option value="Delivered" disabled={isPending}>Delivered</option>
-      <option value="Canceled" disabled={isPending}>Cancel</option>
-    </select>
-  );
-};
 
   useEffect(() => {
     const fetchWorkers = async () => {
@@ -183,20 +183,20 @@ const StatusDropdown = ({ product, fetchData }) => {
 
 
   const handleDelete = async (orderNumber) => {
-  if (!window.confirm("Are you sure you want to delete this order?")) {
-    return;
-  }
+    if (!window.confirm("Are you sure you want to delete this order?")) {
+      return;
+    }
 
-  try {
-    await axios.delete(`${baseURL}/api/deleteorder/${orderNumber}`);
-    alert("Order deleted successfully");
-    setOrders(orders.filter(order => order.order_number !== orderNumber)); // Update state after deletion
-    fetchData();
-  } catch (error) {
-    console.error("Error deleting order:", error);
-    alert("Failed to delete order");
-  }
-};
+    try {
+      await axios.delete(`${baseURL}/api/deleteorder/${orderNumber}`);
+      alert("Order deleted successfully");
+      setOrders(orders.filter(order => order.order_number !== orderNumber)); // Update state after deletion
+      fetchData();
+    } catch (error) {
+      console.error("Error deleting order:", error);
+      alert("Failed to delete order");
+    }
+  };
 
 
   // const handleEdit = (id) => {
@@ -285,146 +285,6 @@ const StatusDropdown = ({ product, fetchData }) => {
     setSelectedRows(sameMobileOrders.map((row) => row.id));
   };
 
-  const generateInvoiceNumber = (latestInvoice) => {
-    if (!latestInvoice) return "INV001"; // Start from INV001 if none exist
-
-    // Extract the numeric part and increment it
-    const match = latestInvoice.match(/INV(\d+)/);
-    if (match) {
-      const nextNumber = String(parseInt(match[1]) + 1).padStart(3, "0"); // Increment and pad
-      return `INV${nextNumber}`;
-    }
-
-    return "INV001"; // Fallback
-  };
-
-  const downloadPDF = async () => {
-    if (selectedRows.length === 0) {
-      alert("Please select at least one order to download.");
-      return;
-    }
-
-    // Prepare selected data
-    const selectedOrders = data.filter((order) => selectedRows.includes(order.id));
-    setSelectedData(selectedOrders);
-
-    try {
-      // Fetch the latest invoice number
-      const response = await fetch(`${baseURL}/api/get-latest-invoice`);
-      const result = await response.json();
-
-      const latestInvoice = result.latestInvoiceNumber; // Get the latest invoice number from DB
-      const newInvoiceNumber = generateInvoiceNumber(latestInvoice); // Generate new number
-
-      // Generate PDF Blob with Invoice Number
-      const doc = <TaxINVoiceReceipt selectedOrders={selectedOrders} invoiceNumber={newInvoiceNumber} />;
-      const pdfBlob = await pdf(doc).toBlob();
-
-      // Trigger download
-      saveAs(pdfBlob, `${newInvoiceNumber}.pdf`);
-      await handleSavePDFToServer(pdfBlob, newInvoiceNumber);
-
-      // Update database to set invoice_generated = 'Yes' and save invoice_number
-      await fetch(`${baseURL}/api/update-invoice-status`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          orderIds: selectedRows,
-          invoiceNumber: newInvoiceNumber, // Send the invoice number
-        }),
-      });
-
-      alert(`Invoice ${newInvoiceNumber} generated successfully`);
-
-      setSelectedRows([]);
-      fetchData();
-    } catch (error) {
-      console.error("Error generating invoice:", error);
-      alert("Failed to generate invoice.");
-    }
-  };
-
-  const handleSavePDFToServer = async (pdfBlob, invoiceNumber) => {
-    const formData = new FormData();
-    formData.append("invoice", pdfBlob, `${invoiceNumber}.pdf`);
-
-    try {
-      const response = await fetch(`${baseURL}/api/upload-invoice`, {
-        method: "POST",
-        body: formData,
-      });
-
-      if (!response.ok) {
-        throw new Error("Failed to upload invoice");
-      }
-
-      console.log(`Invoice ${invoiceNumber} saved on server`);
-    } catch (error) {
-      console.error("Error uploading invoice:", error);
-    }
-  };
-
-  const generateEstimateNumber = (latestEstimate) => {
-    if (!latestEstimate) return "EST001"; // Start from EST001 if none exist
-
-    const match = latestEstimate.match(/EST(\d+)/);
-    if (match) {
-      const nextNumber = String(parseInt(match[1]) + 1).padStart(3, "0"); // Increment and pad
-      return `EST${nextNumber}`;
-    }
-
-    return "EST001"; // Fallback
-  };
-
-  const downloadEstimatePDF = async () => {
-    if (selectedRows.length === 0) {
-      alert("Please select at least one order to download the estimate.");
-      return;
-    }
-
-    const selectedOrders = data.filter((order) => selectedRows.includes(order.id));
-    setSelectedData(selectedOrders);
-
-    try {
-      // Fetch the latest estimate number
-      const response = await fetch(`${baseURL}/api/get-latest-estimate`);
-      const result = await response.json();
-
-      const latestEstimate = result.latestEstimateNumber;
-      const newEstimateNumber = generateEstimateNumber(latestEstimate);
-
-      // Generate PDF Blob with Estimate Number
-      const doc = <EstimateReceipt selectedOrders={selectedOrders} estimateNumber={newEstimateNumber} />;
-      const pdfBlob = await pdf(doc).toBlob();
-
-      // Trigger download
-      saveAs(pdfBlob, `${newEstimateNumber}.pdf`);
-      await handleSavePDFToServer(pdfBlob, newEstimateNumber);
-
-      // Optional: Update database to mark estimate generated
-      await fetch(`${baseURL}/api/update-estimate-status`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          orderIds: selectedRows,
-          estimateNumber: newEstimateNumber, // Send the estimate number
-        }),
-      });
-
-      alert(`Estimate ${newEstimateNumber} generated successfully`);
-
-      setSelectedRows([]);
-      fetchData();
-    } catch (error) {
-      console.error("Error generating estimate:", error);
-      alert("Failed to generate estimate.");
-    }
-  };
-
   const getStatusColor = (status) => {
     switch (status) {
       case "Pending":
@@ -442,90 +302,7 @@ const StatusDropdown = ({ product, fetchData }) => {
 
   const columns = React.useMemo(
     () => [
-      {
-        Header: (
-          <input
-            type="checkbox"
-            checked={selectedRows.length === data.length && data.length > 0}
-            onChange={handleSelectAll}
-          // disabled={data.every(row => row.invoice_generated === "Yes")} // Disable if all are invoiced
-          />
-        ),
-        Cell: ({ row }) => (
-          <input
-            type="checkbox"
-            checked={selectedRows.includes(row.original.id)}
-            onChange={() => handleRowSelect(row.original.id)}
-            disabled={row.original.invoice_generated === "Yes"} // Disable if invoice is generated
-          />
-        ),
-        id: "select",
-      },
-      { Header: 'Sr. No.', Cell: ({ row }) => row.index + 1, id: 'sr_no' },
-
-      {
-        Header: "Invoice",
-        Cell: ({ row }) =>
-          row.original.invoice_generated === "Yes" && row.original.invoice_number ? (
-            <a
-              href={`${baseURL}/invoices/${row.original.invoice_number}.pdf`} // Fetch from backend
-              target="_blank"
-              rel="noopener noreferrer"
-              style={{ textDecoration: 'none' }}
-            >
-              📝 View
-            </a>
-          ) : (
-            "Not Available"
-          ),
-        id: "invoice",
-      },
-
-      {
-        Header: "Estimate",
-        Cell: ({ row }) =>
-          row.original.estimate_generated === "Yes" && row.original.estimate_number ? (
-            <a
-              href={`${baseURL}/invoices/${row.original.estimate_number}.pdf`} // Fetch from backend
-              target="_blank"
-              rel="noopener noreferrer"
-              style={{ textDecoration: 'none' }}
-            >
-              📝 View
-            </a>
-          ) : (
-            "Not Available"
-          ),
-        id: "estimate",
-      },
-
-      {
-        Header: 'Receipt',
-        id: 'add_receipts',
-        Cell: ({ row }) => {
-          const isDisabled = parseFloat(row.original.balance_amt) === parseFloat(row.original.receipt_amt);
-
-          return (
-            <Button
-              style={{
-                backgroundColor: '#28a745',
-                borderColor: '#28a745',
-                fontSize: '0.800rem', // Smaller font size
-                padding: '0.10rem 0.5rem', // Reduced padding
-              }}
-
-              onClick={() =>
-                navigate(`/a-receipts`, {
-                  state: { order: row.original },
-                })
-              }
-              disabled={isDisabled}
-            >
-              Add Receipts
-            </Button>
-          );
-        },
-      },
+      { Header: 'S No.', Cell: ({ row }) => row.index + 1, id: 'sr_no' },
       {
         Header: 'Date',
         accessor: (row) => {
@@ -584,118 +361,96 @@ const StatusDropdown = ({ product, fetchData }) => {
         accessor: 'balance_amt',
         id: 'balance_amt', // Add an ID for the total weight column
       },
-      //   {
-      //     Header: "Order Status",
-      //     accessor: "order_status",
-      //     id: 'order_status', // Add an ID for the order status column
-      //     Cell: ({ row }) => {
-      //       const [status, setStatus] = useState(row.original.order_status || "Placed");
-      //       const isPending = row.original.work_status === "Pending"; // Check if work_status is Pending
-      //       const isDisabled = row.original.order_status === "Canceled" || row.original.assigned_status === "Not Assigned"; // Disable if Canceled or Not Assigned
+      {
+        Header: "Invoice",
+        Cell: ({ row }) => {
+          const invoiceGenerated = row.original.invoice_generated === "Yes";
+          const invoiceNumber = row.original.invoice_number;
 
-      //       const handleStatusChange = async (event) => {
-      //         const newStatus = event.target.value;
-      //         setStatus(newStatus);
+          return invoiceGenerated && invoiceNumber ? (
+            <a
+              href={`${baseURL}/invoices/${invoiceNumber}.pdf`}
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{ textDecoration: 'none' }}
+            >
+              📝 View
+            </a>
+          ) : (
+            <Button
+              style={{
+                backgroundColor: '#28a745',
+                borderColor: '#28a745',
+                fontSize: '0.800rem', // Smaller font size
+                padding: '0.10rem 0.5rem', // Reduced padding
+              }}
+              onClick={() => handleGenerateInvoice(row.original.order_number)}
+            >
+              Generate
+            </Button>
+          );
+        },
+        id: "invoice",
+      },
 
-      //         try {
-      //           const response = await axios.put(`${baseURL}/api/orders/status/${row.original.id}`, {
-      //             order_status: newStatus,
-      //             worker_id: row.original.worker_id,
-      //             worker_name: row.original.worker_name,
-      //           });
+      {
+        Header: "Estimate",
+        Cell: ({ row }) => {
+          const estimateGenerated = row.original.estimate_generated === "Yes";
+          const estimateNumber = row.original.estimate_number;
 
-      //           console.log("Status updated:", response.data);
-      //           alert("Order status updated successfully!");
-      //           fetchData();
-      //         } catch (error) {
-      //           console.error("Error updating status:", error);
-      //           alert("Failed to update status.");
-      //         }
-      //       };
+          return estimateGenerated && estimateNumber ? (
+            <a
+              href={`${baseURL}/invoices/${estimateNumber}.pdf`}
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{ textDecoration: 'none' }}
+            >
+              📝 View
+            </a>
+          ) : (
+            <Button
+              onClick={() => handleGenerateEstimate(row.original.order_number)}
+              style={{
+                backgroundColor: '#28a745',
+                borderColor: '#28a745',
+                fontSize: '0.800rem', // Smaller font size
+                padding: '0.10rem 0.5rem', // Reduced padding
+              }}
+            >
+              Generate
+            </Button>
+          );
+        },
+        id: "estimate",
+      },
+      {
+        Header: 'Receipt',
+        id: 'add_receipts',
+        Cell: ({ row }) => {
+          const isDisabled = parseFloat(row.original.balance_amt) === parseFloat(row.original.receipt_amt);
 
-      //       return (
-      //         <select value={status} onChange={handleStatusChange} disabled={isDisabled}>
-      //           <option value="Placed">Placed</option>
-      //           <option value="Processing" disabled={isPending}>Processing</option>
-      //           <option value="Ready for Delivery" disabled={isPending}>Ready for Delivery</option>
-      //           {/* <option value="Dispatched" disabled={isPending}>Dispatched</option>
-      //           <option value="Shipped" disabled={isPending}>Shipped</option>
-      //           <option value="Out for Delivery" disabled={isPending}>Out for Delivery</option> */}
-      //           <option value="Delivered" disabled={isPending}>Delivered</option>
-      //           <option value="Canceled" disabled={isPending}>Cancel</option>
-      //         </select>
-      //       );
-      //     },
-      //   },
-      //   {
-      //     Header: "Image",
-      //     accessor: "image_url",
-      //     Cell: ({ value }) =>
-      //       value ? (
-      //         <img
-      //           src={`${baseURL}${value}`}
-      //           alt="Order Image"
-      //           style={{
-      //             width: "50px",
-      //             height: "50px",
-      //             borderRadius: "5px",
-      //             objectFit: "cover",
-      //             cursor: "pointer",
-      //           }}
-      //           onClick={() => handleImageClick(`${baseURL}${value}`)}
-      //         />
-      //       ) : (
-      //         "No Image"
-      //       ),
-      //   },
-      //   {
-      //     Header: 'Assign Worker',
-      //     id: 'assign_worker', // Add an ID for the assign worker column
-      //     Cell: ({ row }) => {
-      //       const assignedWorkerName = row.original.worker_name;
-      //       const isDisabled = row.original.assigned_status === 'Accepted';
+          return (
+            <Button
+              style={{
+                backgroundColor: '#28a745',
+                borderColor: '#28a745',
+                fontSize: '0.800rem', // Smaller font size
+                padding: '0.10rem 0.5rem', // Reduced padding
+              }}
 
-      //       return (
-      //         <select
-      //           value={assignedWorkerName || ''}
-      //           onChange={(e) => {
-      //             const selectedWorker = workers.find(worker => worker.account_name === e.target.value);
-      //             updateOrderWithWorker(row.original.id, selectedWorker?.id, selectedWorker?.account_name);
-      //           }}
-      //           disabled={isDisabled}
-      //         >
-      //           <option value="">Select Worker</option>
-      //           {workers.map((worker) => (
-      //             <option key={worker.id} value={worker.account_name}>
-      //               {worker.account_name}
-      //             </option>
-      //           ))}
-      //         </select>
-      //       );
-      //     },
-      //   },
-      //   {
-      //     Header: 'Assigned Status',
-      //     accessor: 'assigned_status',
-      //     id: 'assigned_status', // Add an ID for the assigned status column
-      //     Cell: ({ row }) => row.original.assigned_status || '',
-      //   },
-      //   {
-      //     Header: 'Worker Name',
-      //     accessor: 'worker_name',
-      //     id: 'worker_name', // Add an ID for the worker name column
-      //     Cell: ({ row }) => row.original.worker_name || 'N/A',
-      //   },
-      //   {
-      //     Header: "Work Status",
-      //     accessor: "work_status",
-      //     id: "work_status", // Add an ID for the work status column
-      //     Cell: ({ row }) => (
-      //       <span style={{ color: getStatusColor(row.original.work_status) }}>
-      //         {row.original.work_status || "N/A"}
-      //       </span>
-      //     ),
-      //   },
+              onClick={() =>
+                navigate(`/a-receipts`, {
+                  state: { order: row.original },
+                })
+              }
+              disabled={isDisabled}
+            >
+              Add Receipts
+            </Button>
+          );
+        },
+      },
       {
         Header: 'Action',
         id: 'action', // Add an ID for the action column
@@ -742,7 +497,6 @@ const StatusDropdown = ({ product, fetchData }) => {
       alert('Failed to load order details');
     }
   };
-
 
   const handleEdit = async (
     order_number, mobile, advance_gross_wt, fine_wt, advance_amount
@@ -808,6 +562,145 @@ const StatusDropdown = ({ product, fetchData }) => {
     }
   };
 
+  const generateInvoiceNumber = (latestInvoice) => {
+    if (!latestInvoice) return "INV001"; // Start from INV001 if none exist
+
+    // Extract the numeric part and increment it
+    const match = latestInvoice.match(/INV(\d+)/);
+    if (match) {
+      const nextNumber = String(parseInt(match[1]) + 1).padStart(3, "0"); // Increment and pad
+      return `INV${nextNumber}`;
+    }
+
+    return "INV001"; // Fallback
+  };
+
+  const generateEstimateNumber = (latestEstimate) => {
+    if (!latestEstimate) return "EST001"; // Start from EST001 if none exist
+
+    const match = latestEstimate.match(/EST(\d+)/);
+    if (match) {
+      const nextNumber = String(parseInt(match[1]) + 1).padStart(3, "0"); // Increment and pad
+      return `EST${nextNumber}`;
+    }
+
+    return "EST001"; // Fallback
+  };
+
+  const handleGenerateEstimate = async (orderNumber) => {
+    try {
+      // 🔄 Fetch full order data using order_number
+      const response = await fetch(`${baseURL}/get-order-details/${orderNumber}`);
+      if (!response.ok) throw new Error("Failed to fetch order details");
+
+      const fullOrder = await response.json();
+      const selectedOrders = fullOrder.repeatedData;
+
+      // 🧾 Fetch latest estimate number
+      const estimateRes = await fetch(`${baseURL}/api/get-latest-estimate`);
+      const estimateData = await estimateRes.json();
+      const newEstimateNumber = generateEstimateNumber(estimateData.latestEstimateNumber);
+
+      // 📄 Generate Estimate PDF
+      const doc = (
+        <EstimateReceipt
+          selectedOrders={selectedOrders}
+          estimateNumber={newEstimateNumber}
+          uniqueData={fullOrder.uniqueData} // optional, if EstimateReceipt uses it
+        />
+      );
+
+      const pdfBlob = await pdf(doc).toBlob();
+      saveAs(pdfBlob, `${newEstimateNumber}.pdf`);
+
+      await handleSavePDFToServer(pdfBlob, newEstimateNumber);
+
+      // ✅ Update estimate status in DB (using order_number)
+      await fetch(`${baseURL}/api/update-estimate-status`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          orderNumbers: [orderNumber], // 👈 send order_numbers instead of ids
+          estimateNumber: newEstimateNumber,
+        }),
+      });
+
+      alert(`Estimate ${newEstimateNumber} generated successfully`);
+      fetchData(); // refresh table
+    } catch (error) {
+      console.error("Error generating estimate:", error);
+      alert("Failed to generate estimate.");
+    }
+  };
+
+  const handleGenerateInvoice = async (orderNumber) => {
+    try {
+      // 🔄 Fetch full order data using order_number
+      const response = await fetch(`${baseURL}/get-order-details/${orderNumber}`);
+      if (!response.ok) throw new Error("Failed to fetch order details");
+
+      const fullOrder = await response.json();
+      const selectedOrders = fullOrder.repeatedData;
+
+      // 🧾 Fetch latest invoice number
+      const invoiceRes = await fetch(`${baseURL}/api/get-latest-invoice`);
+      const invoiceData = await invoiceRes.json();
+      const newInvoiceNumber = generateInvoiceNumber(invoiceData.latestInvoiceNumber);
+
+      // 📄 Generate Estimate PDF
+      const doc = (
+        <TaxINVoiceReceipt
+          selectedOrders={selectedOrders}
+          invoiceNumber={newInvoiceNumber}
+          uniqueData={fullOrder.uniqueData} // optional, if EstimateReceipt uses it
+        />
+      );
+
+      const pdfBlob = await pdf(doc).toBlob();
+      saveAs(pdfBlob, `${newInvoiceNumber}.pdf`);
+
+      await handleSavePDFToServer(pdfBlob, newInvoiceNumber);
+
+      // ✅ Update estimate status in DB (using order_number)
+      await fetch(`${baseURL}/api/update-invoice-status`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          orderNumbers: [orderNumber], // 👈 send order_numbers instead of ids
+          invoiceNumber: newInvoiceNumber,
+        }),
+      });
+
+      alert(`Invoice ${newInvoiceNumber} generated successfully`);
+      fetchData(); // refresh table
+    } catch (error) {
+      console.error("Error generating estimate:", error);
+      alert("Failed to generate estimate.");
+    }
+  };
+
+  const handleSavePDFToServer = async (pdfBlob, invoiceNumber) => {
+    const formData = new FormData();
+    formData.append("invoice", pdfBlob, `${invoiceNumber}.pdf`);
+
+    try {
+      const response = await fetch(`${baseURL}/api/upload-invoice`, {
+        method: "POST",
+        body: formData,
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to upload invoice");
+      }
+
+      console.log(`Invoice ${invoiceNumber} saved on server`);
+    } catch (error) {
+      console.error("Error uploading invoice:", error);
+    }
+  };
+
+
+
 
   return (
     <>
@@ -819,12 +712,12 @@ const StatusDropdown = ({ product, fetchData }) => {
               <h3>Orders</h3>
             </Col>
             <Col className="d-flex justify-content-end gap-2">
-              <Button onClick={downloadEstimatePDF} disabled={selectedRows.length === 0}>
+              {/* <Button onClick={downloadEstimatePDF} disabled={selectedRows.length === 0}>
                 Generate Estimate
               </Button>
               <Button onClick={downloadPDF} disabled={selectedRows.length === 0}>
                 Generate Invoice
-              </Button>
+              </Button> */}
               <Button
                 className="export_but"
                 onClick={exportToExcel}
@@ -870,93 +763,93 @@ const StatusDropdown = ({ product, fetchData }) => {
               <div className="admin-products-section mt-4">
                 <h5>Products</h5>
                 <div className="table-responsive">
-<table className="table table-bordered">
-  <thead>
-    <tr>
-      <th>S.No</th>
-      <th>Invoice Number</th>
-      <th>Metal</th>
-      <th>Category</th>
-      <th>Sub Category</th>
-      <th>Design Name</th>
-      <th>Purity</th>
-      <th>Gross Wt</th>
-      <th>Stone Wt</th>
-      <th>Total Wt</th>
-      <th>Rate</th>
-      <th>Total Price</th>
-      <th>Image</th>
-      <th>Order Status</th>
-      <th>Assign Worker</th>
-      <th>Assigned Status</th>
-      <th>Worker Name</th>
-      <th>Work Status</th>
-    </tr>
-  </thead>
-  <tbody>
-    {selectedOrder.repeatedData.map((product, index) => (
-      <tr key={index}>
-        <td>{index + 1}</td>
-        <td>{product.invoice_number || 'N/A'}</td>
-        <td>{product.metal}</td>
-        <td>{product.category}</td>
-        <td>{product.subcategory}</td>
-        <td>{product.product_design_name}</td>
-        <td>{product.purity}</td>
-        <td>{product.gross_weight}</td>
-        <td>{product.stone_weight}</td>
-        <td>{product.total_weight_aw}</td>
-        <td>{product.rate}</td>
-        <td>{product.total_price}</td>
-        <td>
-          {product.image_url ? (
-            <img
-              src={`${baseURL}${product.image_url}`}
-              alt="Order"
-              style={{
-                width: "50px",
-                height: "50px",
-                borderRadius: "5px",
-                objectFit: "cover",
-                cursor: "pointer",
-              }}
-              onClick={() => handleImageClick(`${baseURL}${product.image_url}`)}
-            />
-          ) : (
-            "No Image"
-          )}
-        </td>
-        <td>
-          <StatusDropdown product={product} fetchData={fetchData} />
-        </td>
-        <td>
-          <select
-            value={product.worker_name || ''}
-            onChange={(e) => {
-              const selectedWorker = workers.find(worker => worker.account_name === e.target.value);
-              updateOrderWithWorker(product.id, selectedWorker?.id, selectedWorker?.account_name);
-            }}
-            disabled={product.assigned_status === 'Accepted'}
-          >
-            <option value="">Select Worker</option>
-            {workers.map((worker) => (
-              <option key={worker.id} value={worker.account_name}>
-                {worker.account_name}
-              </option>
-            ))}
-          </select>
-        </td>
-        <td>{product.assigned_status || ''}</td>
-        <td>{product.worker_name || 'N/A'}</td>
-        <td>
-          <span style={{ color: getStatusColor(product.work_status) }}>
-            {product.work_status || "N/A"}
-          </span>
-        </td>
-      </tr>
-    ))}
-  </tbody>
-</table>
+                  <table className="table table-bordered">
+                    <thead>
+                      <tr>
+                        <th>S.No</th>
+                        <th>Invoice Number</th>
+                        <th>Metal</th>
+                        <th>Category</th>
+                        <th>Sub Category</th>
+                        <th>Design Name</th>
+                        <th>Purity</th>
+                        <th>Gross Wt</th>
+                        <th>Stone Wt</th>
+                        <th>Total Wt</th>
+                        <th>Rate</th>
+                        <th>Total Price</th>
+                        <th>Image</th>
+                        <th>Order Status</th>
+                        <th>Assign Worker</th>
+                        <th>Assigned Status</th>
+                        <th>Worker Name</th>
+                        <th>Work Status</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {selectedOrder.repeatedData.map((product, index) => (
+                        <tr key={index}>
+                          <td>{index + 1}</td>
+                          <td>{product.invoice_number || 'N/A'}</td>
+                          <td>{product.metal}</td>
+                          <td>{product.category}</td>
+                          <td>{product.subcategory}</td>
+                          <td>{product.product_design_name}</td>
+                          <td>{product.purity}</td>
+                          <td>{product.gross_weight}</td>
+                          <td>{product.stone_weight}</td>
+                          <td>{product.total_weight_aw}</td>
+                          <td>{product.rate}</td>
+                          <td>{product.total_price}</td>
+                          <td>
+                            {product.image_url ? (
+                              <img
+                                src={`${baseURL}${product.image_url}`}
+                                alt="Order"
+                                style={{
+                                  width: "50px",
+                                  height: "50px",
+                                  borderRadius: "5px",
+                                  objectFit: "cover",
+                                  cursor: "pointer",
+                                }}
+                                onClick={() => handleImageClick(`${baseURL}${product.image_url}`)}
+                              />
+                            ) : (
+                              "No Image"
+                            )}
+                          </td>
+                          <td>
+                            <StatusDropdown product={product} fetchData={fetchData} />
+                          </td>
+                          <td>
+                            <select
+                              value={product.worker_name || ''}
+                              onChange={(e) => {
+                                const selectedWorker = workers.find(worker => worker.account_name === e.target.value);
+                                updateOrderWithWorker(product.id, selectedWorker?.id, selectedWorker?.account_name);
+                              }}
+                              disabled={product.assigned_status === 'Accepted'}
+                            >
+                              <option value="">Select Worker</option>
+                              {workers.map((worker) => (
+                                <option key={worker.id} value={worker.account_name}>
+                                  {worker.account_name}
+                                </option>
+                              ))}
+                            </select>
+                          </td>
+                          <td>{product.assigned_status || ''}</td>
+                          <td>{product.worker_name || 'N/A'}</td>
+                          <td>
+                            <span style={{ color: getStatusColor(product.work_status) }}>
+                              {product.work_status || "N/A"}
+                            </span>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
                 </div>
               </div>
 

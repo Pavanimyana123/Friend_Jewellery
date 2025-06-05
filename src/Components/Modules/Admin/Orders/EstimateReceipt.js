@@ -185,7 +185,7 @@ const styles = StyleSheet.create({
     },
 });
 
-const TaxINVoiceReceipt = ({ selectedOrders, estimateNumber }) => {
+const TaxINVoiceReceipt = ({ selectedOrders, estimateNumber, uniqueData }) => {
     console.log("selected orders=", selectedOrders);
     const toWordsTitleCase = (num) => {
         return toWords(num)
