@@ -132,38 +132,49 @@ const ViewOrders = () => {
     fetchData();
   }, []);
 
-  const updateOrderWithWorker = async (orderId, workerId, workerName) => {
-    try {
-      const response = await fetch(`${baseURL}/api/orders/assign/${orderId}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          assigned_status: workerId ? 'Assigned' : 'Not Assigned',
-          worker_id: workerId,
-          worker_name: workerName,
-          work_status: 'Pending',
-        }),
-      });
+ const updateOrderWithWorker = async (orderId, workerId, workerName) => {
+  try {
+    const response = await fetch(`${baseURL}/api/orders/assign/${orderId}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        assigned_status: workerId ? 'Assigned' : 'Not Assigned',
+        worker_id: workerId,
+        worker_name: workerName,
+        work_status: 'Pending',
+      }),
+    });
 
-      if (!response.ok) {
-        throw new Error('Failed to update order');
-      }
-      // Update UI state after successful update
-      // setData((prevData) =>
-      //   prevData.map((order) =>
-      //     order.order_number === orderId
-      //       ? { ...order, assigned_status: 'Assigned', worker_id: workerId, worker_name: workerName }
-      //       : order
-      //   )
-      // );
-      setAssignedWorkers((prev) => ({ ...prev, [orderId]: workerName })); // Store worker name for display
-      fetchData();
-    } catch (error) {
-      console.error('Error updating order:', error);
+    if (!response.ok) {
+      throw new Error('Failed to update order');
     }
-  };
+
+    // Update the modal state immediately
+    if (selectedOrder) {
+      setSelectedOrder(prev => ({
+        ...prev,
+        repeatedData: prev.repeatedData.map(item => 
+          item.id === orderId 
+            ? { 
+                ...item,
+                assigned_status: workerId ? 'Assigned' : 'Not Assigned',
+                worker_id: workerId,
+                worker_name: workerName,
+                work_status: 'Pending'
+              }
+            : item
+        )
+      }));
+    }
+
+    // Optional: Refresh the main data if needed
+    fetchData();
+  } catch (error) {
+    console.error('Error updating order:', error);
+  }
+};
 
   // const handleDelete = async (id) => {
   //   if (!window.confirm("Are you sure you want to delete this order?")) {
@@ -361,37 +372,59 @@ const ViewOrders = () => {
         accessor: 'balance_amt',
         id: 'balance_amt', // Add an ID for the total weight column
       },
-      {
-        Header: "Invoice",
-        Cell: ({ row }) => {
-          const invoiceGenerated = row.original.invoice_generated === "Yes";
-          const invoiceNumber = row.original.invoice_number;
+     {
+  Header: "Invoice",
+  Cell: ({ row }) => {
+    const invoiceGenerated = row.original.invoice_generated === "Yes";
+    const invoiceNumber = row.original.invoice_number;
+    const [isReadyForInvoice, setIsReadyForInvoice] = useState(false);
 
-          return invoiceGenerated && invoiceNumber ? (
-            <a
-              href={`${baseURL}/invoices/${invoiceNumber}.pdf`}
-              target="_blank"
-              rel="noopener noreferrer"
-              style={{ textDecoration: 'none' }}
-            >
-              📝 View
-            </a>
-          ) : (
-            <Button
-              style={{
-                backgroundColor: '#28a745',
-                borderColor: '#28a745',
-                fontSize: '0.800rem', // Smaller font size
-                padding: '0.10rem 0.5rem', // Reduced padding
-              }}
-              onClick={() => handleGenerateInvoice(row.original.order_number)}
-            >
-              Generate
-            </Button>
-          );
-        },
-        id: "invoice",
-      },
+    // Check if all orders with this order_number are "Ready for Delivery"
+    useEffect(() => {
+      const checkOrderStatus = async () => {
+        try {
+          const response = await fetch(`${baseURL}/get-order-details/${row.original.order_number}`);
+          if (!response.ok) {
+            throw new Error('Failed to fetch order details');
+          }
+          const result = await response.json();
+          const allReady = result.every(order => order.order_status === "Ready for Delivery");
+          setIsReadyForInvoice(allReady);
+        } catch (error) {
+          console.error('Error checking order status:', error);
+          setIsReadyForInvoice(false);
+        }
+      };
+
+      checkOrderStatus();
+    }, [row.original.order_number]);
+
+    return invoiceGenerated && invoiceNumber ? (
+      <a
+        href={`${baseURL}/invoices/${invoiceNumber}.pdf`}
+        target="_blank"
+        rel="noopener noreferrer"
+        style={{ textDecoration: 'none' }}
+      >
+        📝 View
+      </a>
+    ) : (
+      <Button
+        style={{
+          backgroundColor: isReadyForInvoice ? '#28a745' : '#6c757d',
+          borderColor: isReadyForInvoice ? '#28a745' : '#6c757d',
+          fontSize: '0.800rem',
+          padding: '0.10rem 0.5rem',
+        }}
+        onClick={() => handleGenerateInvoice(row.original.order_number)}
+        disabled={!isReadyForInvoice}
+      >
+        Generate
+      </Button>
+    );
+  },
+  id: "invoice",
+},
 
       {
         Header: "Estimate",
