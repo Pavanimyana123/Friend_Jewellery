@@ -12,9 +12,14 @@ const Broucher = () => {
   const [broucherName, setBroucherName] = useState('');
   const [description, setDescription] = useState('');
   const [purity, setPurity] = useState('');
+  const [category, setCategory] = useState('');
+  const [categories, setCategories] = useState([]);
+  const [showCategoryModal, setShowCategoryModal] = useState(false);
+  const [newCategory, setNewCategory] = useState('');
   const [file, setFile] = useState(null);
   const [selectedIds, setSelectedIds] = useState([]);
-  const [activeTab, setActiveTab] = useState("All"); // State for active tab
+  const [activePurityTab, setActivePurityTab] = useState("All"); // State for purity filter
+  const [activeCategoryTab, setActiveCategoryTab] = useState("All"); // State for category filter
   const [filteredBrouchers, setFilteredBrouchers] = useState([]);
   const location = useLocation();
 
@@ -31,14 +36,14 @@ const Broucher = () => {
     setBroucherName('');
     setDescription('');
     setPurity('');
+    setCategory('');
     setFile(null);
   };
 
-  // ✅ Submit the new broucher
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!broucherName || !description || !purity || !file) {
-      alert('Please provide a name, description, purity and file.');
+    if (!broucherName || !description || !purity || !file || !category) {
+      alert('Please provide a name, description, purity, category, and file.');
       return;
     }
 
@@ -46,6 +51,7 @@ const Broucher = () => {
     formData.append('broucher_name', broucherName);
     formData.append('description', description);
     formData.append('purity', purity);
+    formData.append('category', category); 
     formData.append('file', file);
 
     try {
@@ -55,12 +61,12 @@ const Broucher = () => {
         },
       });
 
-      // Add new item to the list
       setBrouchers(prev => [...prev, {
         id: response.data.id,
         broucher_name: broucherName,
         description: description,
         purity: purity,
+        category: category,
         file_path: file.name
       }]);
       handleClose();
@@ -85,6 +91,30 @@ const Broucher = () => {
   useEffect(() => {
     fetchBrouchers();
   }, []);
+
+  useEffect(() => {
+    fetch(`${baseURL}/api/categories`)
+      .then(res => res.json())
+      .then(data => setCategories(data))
+      .catch(err => console.error("Failed to fetch categories", err));
+  }, []);
+
+  const handleAddCategory = async () => {
+    try {
+      const res = await fetch(`${baseURL}/api/categories`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name: newCategory })
+      });
+      const added = await res.json();
+      setCategories([...categories, added]);
+      setCategory(added.name);
+      setNewCategory('');
+      setShowCategoryModal(false);
+    } catch (err) {
+      console.error("Error adding category", err);
+    }
+  };
 
   const [showDescriptionModal, setShowDescriptionModal] = useState(false);
   const [selectedDescription, setSelectedDescription] = useState('');
@@ -116,7 +146,6 @@ const Broucher = () => {
     }
   };
 
-
   const handleReadMore = (title, description) => {
     setSelectedTitle(title);
     setSelectedDescription(description);
@@ -125,19 +154,26 @@ const Broucher = () => {
 
   useEffect(() => {
     if (location.state?.tab) {
-      setActiveTab(location.state.tab);
+      setActivePurityTab(location.state.tab);
     }
   }, [location.state]);
 
-  // Filter brouchers based on active tab
+  // Filter brouchers based on active tabs
   useEffect(() => {
-    if (activeTab === "All") {
-      setFilteredBrouchers(brouchers);
-    } else {
-      const filtered = brouchers.filter(broucher => broucher.purity === activeTab);
-      setFilteredBrouchers(filtered);
+    let filtered = [...brouchers];
+    
+    // First filter by category if not "All"
+    if (activeCategoryTab !== "All") {
+      filtered = filtered.filter(broucher => broucher.category === activeCategoryTab);
     }
-  }, [activeTab, brouchers]);
+    
+    // Then filter by purity if not "All"
+    if (activePurityTab !== "All") {
+      filtered = filtered.filter(broucher => broucher.purity === activePurityTab);
+    }
+    
+    setFilteredBrouchers(filtered);
+  }, [activeCategoryTab, activePurityTab, brouchers]);
 
   return (
     <>
@@ -147,7 +183,6 @@ const Broucher = () => {
         <div className="gallery-table-container d-flex flex-column flex-md-row align-items-start align-items-md-center">
           <h3 className="mb-2 mb-md-0 text-center text-md-start w-100 w-md-auto">Broucher/Catalog</h3>
 
-          {/* Button container */}
           <div className="d-flex justify-content-center justify-content-md-end w-100 w-md-auto gap-2">
             <Button
               variant="outline-primary"
@@ -166,97 +201,142 @@ const Broucher = () => {
           </div>
         </div>
 
+       <div
+  className="d-flex justify-content-center mb-3 align-items-center flex-wrap gap-2"
+  style={{
+    flexDirection: window.innerWidth <= 768 ? 'column' : 'row',
+    alignItems: window.innerWidth <= 768 ? 'stretch' : 'center',
+    gap: '10px',
+  }}
+>
+  {/* Category Dropdown */}
+  <div style={{ width: window.innerWidth <= 768 ? '100%' : '200px' }}>
+    <select
+      className="form-select"
+      value={activeCategoryTab}
+      onChange={(e) => setActiveCategoryTab(e.target.value)}
+      style={{
+        width: '100%',
+        padding: '5px 10px',
+        borderRadius: '4px',
+        border: '1px solid #ddd',
+        height: '38px',
+      }}
+    >
+      <option value="All">All Categories</option>
+      {categories.map((cat) => (
+        <option key={cat.id} value={cat.name}>
+          {cat.name}
+        </option>
+      ))}
+    </select>
+  </div>
 
-        <div className="d-flex justify-content-center">
-          {["All", "22C", "24C"].map(status => (
-            <button
-              key={status}
-              className={`worker-tab-button ${activeTab === status ? 'active' : ''}`}
-              onClick={() => setActiveTab(status)}
-              style={{
-                marginLeft: '10px',
-                padding: '5px 15px',
-                border: '1px solid #ddd',
-                borderRadius: '4px',
-                backgroundColor: activeTab === status ? '#007bff' : 'white',
-                color: activeTab === status ? 'white' : 'black',
-                cursor: 'pointer'
-              }}
-            >
-              {status}
-            </button>
-          ))}
-        </div>
+  {/* Purity Buttons */}
+  <div
+    style={{
+      display: 'flex',
+      justifyContent: window.innerWidth <= 768 ? 'space-between' : 'flex-start',
+      gap: '10px',
+      flexWrap: 'wrap',
+      width: window.innerWidth <= 768 ? '100%' : 'auto',
+    }}
+  >
+    {['All', '22C', '24C'].map((purity) => (
+      <button
+        key={purity}
+        className={`worker-tab-button ${activePurityTab === purity ? 'active' : ''}`}
+        onClick={() => setActivePurityTab(purity)}
+        style={{
+          padding: '5px 15px',
+          border: '1px solid #ddd',
+          borderRadius: '4px',
+          backgroundColor: activePurityTab === purity ? '#007bff' : 'white',
+          color: activePurityTab === purity ? 'white' : 'black',
+          cursor: 'pointer',
+          height: '38px',
+          flex: window.innerWidth <= 768 ? '1' : 'none',
+        }}
+      >
+        {purity}
+      </button>
+    ))}
+  </div>
+</div>
+
+
 
         <Row>
-          {filteredBrouchers.map((item, index) => (
-            <Col md={3} xs={12} lg={2} key={index} className="mb-4 mt-4">
-              <Card className="h-100 text-center shadow-sm position-relative">
-                <input
-                  type="checkbox"
-                  className="form-check-input position-absolute"
-                  style={{ top: '10px', left: '10px', zIndex: 2 }}
-                  checked={selectedIds.includes(item.id)}
-                  onChange={() => handleCheckboxChange(item.id)}
-                />
-                <Card.Body>
-                  <Card.Title
-                    className="fw-semibold text-truncate"
-                    title={item.broucher_name}
-                  >
-                    {item.broucher_name}
-                  </Card.Title>
-                  <Card.Title
-                    className="small"
-                    title={item.purity}
-                  >
-                    {item.purity}
-                  </Card.Title>
-                  <Card.Text className="small text-muted description-box">
-                    {item.description && item.description.length > 150 ? (
-                      <>
-                        {item.description.slice(0, 140)}...{' '}
-                        <span
-                          onClick={() =>
-                            handleReadMore(item.broucher_name, item.description)
-                          }
-                          style={{ color: '#007bff', cursor: 'pointer' }}
-                        >
-                          Read more
-                        </span>
-                      </>
-                    ) : (
-                      item.description || 'No description available'
-                    )}
-                  </Card.Text>
-                  <a
-                    href={`${baseURL}/uploads/broucher/${item.file_path}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="btn btn-sm btn-outline-primary mt-2"
-                  >
-                    View File
-                  </a>
-                </Card.Body>
-              </Card>
+          {filteredBrouchers.length > 0 ? (
+            filteredBrouchers.map((item, index) => (
+              <Col md={3} xs={12} lg={2} key={index} className="mb-4 mt-4">
+                <Card className="h-100 text-center shadow-sm position-relative">
+                  <input
+                    type="checkbox"
+                    className="form-check-input position-absolute"
+                    style={{ top: '10px', left: '10px', zIndex: 2 }}
+                    checked={selectedIds.includes(item.id)}
+                    onChange={() => handleCheckboxChange(item.id)}
+                  />
+                  <Card.Body>
+                    <Card.Title
+                      className="fw-semibold text-truncate"
+                      title={item.broucher_name}
+                    >
+                      {item.broucher_name}
+                    </Card.Title>
+                    <Card.Subtitle className="mb-2 text-muted">
+                      {item.category} | {item.purity}
+                    </Card.Subtitle>
+                    <Card.Text className="small text-muted description-box">
+                      {item.description && item.description.length > 150 ? (
+                        <>
+                          {item.description.slice(0, 140)}...{' '}
+                          <span
+                            onClick={() =>
+                              handleReadMore(item.broucher_name, item.description)
+                            }
+                            style={{ color: '#007bff', cursor: 'pointer' }}
+                          >
+                            Read more
+                          </span>
+                        </>
+                      ) : (
+                        item.description || 'No description available'
+                      )}
+                    </Card.Text>
+                    <a
+                      href={`${baseURL}/uploads/broucher/${item.file_path}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="btn btn-sm btn-outline-primary mt-2"
+                    >
+                      View File
+                    </a>
+                  </Card.Body>
+                </Card>
+              </Col>
+            ))
+          ) : (
+            <Col className="text-center py-5">
+              <h5>No brouchers found matching your filters</h5>
             </Col>
-          ))}
+          )}
         </Row>
-
 
         {/* Add Broucher Modal */}
         <Modal
           show={showModal}
           onHide={handleClose}
-          centered // This centers the modal vertically
-          dialogClassName="broucher-custom-modal" // Custom class for additional styling
+          centered
+          dialogClassName="broucher-custom-modal"
         >
           <Modal.Header closeButton className="broucher-modal-header-custom">
             <Modal.Title>Add Broucher</Modal.Title>
           </Modal.Header>
           <Modal.Body className="broucher-modal-body-custom">
             <Form onSubmit={handleSubmit}>
-              <Form.Group controlId="broucherName" className="mb-3" style={{ marginTop: '-35px' }}>
+              <Form.Group controlId="broucherName" className="mb-3">
                 <Form.Label>Catalog/Broucher Name</Form.Label>
                 <Form.Control
                   type="text"
@@ -266,7 +346,35 @@ const Broucher = () => {
                   className="broucher-form-control-custom"
                 />
               </Form.Group>
-              <Form.Group controlId="broucherName" className="mb-3">
+              
+              <Form.Group controlId="broucherCategory" className="mb-3">
+                <div className="d-flex justify-content-between align-items-center mb-2">
+                  <Form.Label className="mb-0">Category</Form.Label>
+                  <Button
+                    variant="primary"
+                    size="sm"
+                    className="p-0"
+                    style={{ width: '24px', height: '24px' }}
+                    onClick={() => setShowCategoryModal(true)}
+                  >
+                    <i className="bi bi-plus"></i>
+                  </Button>
+                </div>
+                <Form.Select
+                  value={category}
+                  onChange={(e) => setCategory(e.target.value)}
+                  className="broucher-form-control-custom"
+                >
+                  <option value="">Select Category</option>
+                  {categories.map((cat) => (
+                    <option key={cat.id} value={cat.name}>
+                      {cat.name}
+                    </option>
+                  ))}
+                </Form.Select>
+              </Form.Group>
+
+              <Form.Group controlId="broucherPurity" className="mb-3">
                 <Form.Label>Purity</Form.Label>
                 <Form.Select
                   value={purity}
@@ -279,7 +387,7 @@ const Broucher = () => {
                 </Form.Select>
               </Form.Group>
 
-              <Form.Group controlId="broucherName" className="mb-3">
+              <Form.Group controlId="broucherDescription" className="mb-3">
                 <Form.Label>Description</Form.Label>
                 <Form.Control
                   as="textarea"
@@ -290,7 +398,6 @@ const Broucher = () => {
                   className="broucher-form-control-custom"
                 />
               </Form.Group>
-
 
               <Form.Group controlId="formFile" className="mb-4">
                 <Form.Label>Upload File</Form.Label>
@@ -317,6 +424,35 @@ const Broucher = () => {
           </Modal.Body>
         </Modal>
 
+        <Modal
+          show={showCategoryModal}
+          onHide={() => setShowCategoryModal(false)}
+          centered
+          size="sm"
+        >
+          <Modal.Header closeButton>
+            <Modal.Title>Add Category</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <Form.Group controlId="newCategoryName">
+              <Form.Label>Category Name</Form.Label>
+              <Form.Control
+                type="text"
+                placeholder="Enter new category"
+                value={newCategory}
+                onChange={(e) => setNewCategory(e.target.value)}
+              />
+            </Form.Group>
+          </Modal.Body>
+          <Modal.Footer>
+            <Button variant="secondary" onClick={() => setShowCategoryModal(false)}>
+              Cancel
+            </Button>
+            <Button variant="primary" onClick={handleAddCategory}>
+              Add
+            </Button>
+          </Modal.Footer>
+        </Modal>
 
         <Modal show={showDescriptionModal} onHide={() => setShowDescriptionModal(false)} centered>
           <Modal.Header closeButton>
