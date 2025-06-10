@@ -1,71 +1,69 @@
 /* Centering and styling the modal */
 .broucher-custom-modal {
-    max-width: 500px;
+  max-width: 500px;
 }
 
 .broucher-modal-header-custom {
-    background-color: #f8f9fa;
-    border-bottom: 1px solid #dee2e6;
-    padding: 1rem 1.5rem;
+  background-color: #f8f9fa;
+  border-bottom: 1px solid #dee2e6;
+  padding: 1rem 1.5rem;
 }
 
 .broucher-modal-header-custom .broucher-modal-title {
-    font-weight: 600;
-    color: #333;
+  font-weight: 600;
+  color: #333;
 }
 
 .broucher-modal-body-custom {
-    padding: 1.5rem;
+  padding: 1.5rem;
 }
 
 /* Form styling */
 .broucher-form-control-custom {
-    padding: 0.5rem 0.75rem;
-    border-radius: 0.25rem;
-    border: 1px solid #ced4da;
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.25rem;
+  border: 1px solid #ced4da;
 }
 
 .broucher-form-control-custom:focus {
-    border-color: #80bdff;
-    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+  border-color: #80bdff;
+  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
 }
 
 /* Button styling */
 .submit-btn {
-    background-color: #4a6baf;
-    border: none;
-    padding: 0.5rem 1.5rem;
-    transition: all 0.3s;
+  background-color: #4a6baf;
+  border: none;
+  padding: 0.5rem 1.5rem;
+  transition: all 0.3s;
 }
 
 .submit-btn:hover {
-    background-color: #3a5a9f;
-    transform: translateY(-1px);
+  background-color: #3a5a9f;
+  transform: translateY(-1px);
 }
 
-
 .description-box {
-    overflow: hidden;
-    position: relative;
+  overflow: hidden;
+  position: relative;
+}
+@media (min-width: 577px) {
+  .description-box {
+    height: 45px;
   }
-  @media (min-width: 577px) {
-    .description-box {
-      height: 135px;
-    }
-  }
-
+}
 
 /* Responsive adjustments */
 @media (max-width: 576px) {
-    .broucher-custom-modal {
-        margin: 0.5rem;
-    }
-    
-    .broucher-modal-body-custom {
-        padding: 1rem;
-    }
+  .broucher-custom-modal {
+    margin: 0.5rem;
+  }
 
-    .description-box {
-        height: 85px;
-      }
+  .broucher-modal-body-custom {
+    padding: 1rem;
+  }
+
+  .description-box {
+    height: 46px;
+  }
 }

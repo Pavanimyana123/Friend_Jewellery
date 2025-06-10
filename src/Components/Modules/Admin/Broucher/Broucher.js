@@ -51,7 +51,7 @@ const Broucher = () => {
     formData.append('broucher_name', broucherName);
     formData.append('description', description);
     formData.append('purity', purity);
-    formData.append('category', category); 
+    formData.append('category', category);
     formData.append('file', file);
 
     try {
@@ -161,17 +161,17 @@ const Broucher = () => {
   // Filter brouchers based on active tabs
   useEffect(() => {
     let filtered = [...brouchers];
-    
+
     // First filter by category if not "All"
     if (activeCategoryTab !== "All") {
       filtered = filtered.filter(broucher => broucher.category === activeCategoryTab);
     }
-    
+
     // Then filter by purity if not "All"
     if (activePurityTab !== "All") {
       filtered = filtered.filter(broucher => broucher.purity === activePurityTab);
     }
-    
+
     setFilteredBrouchers(filtered);
   }, [activeCategoryTab, activePurityTab, brouchers]);
 
@@ -201,75 +201,76 @@ const Broucher = () => {
           </div>
         </div>
 
-       <div
-  className="d-flex justify-content-center mb-3 align-items-center flex-wrap gap-2"
-  style={{
-    flexDirection: window.innerWidth <= 768 ? 'column' : 'row',
-    alignItems: window.innerWidth <= 768 ? 'stretch' : 'center',
-    gap: '10px',
-  }}
->
-  {/* Category Dropdown */}
-  <div style={{ width: window.innerWidth <= 768 ? '100%' : '200px' }}>
-    <select
-      className="form-select"
-      value={activeCategoryTab}
-      onChange={(e) => setActiveCategoryTab(e.target.value)}
-      style={{
-        width: '100%',
-        padding: '5px 10px',
-        borderRadius: '4px',
-        border: '1px solid #ddd',
-        height: '38px',
-      }}
-    >
-      <option value="All">All Categories</option>
-      {categories.map((cat) => (
-        <option key={cat.id} value={cat.name}>
-          {cat.name}
-        </option>
-      ))}
-    </select>
-  </div>
+        <div
+          className="d-flex justify-content-center mb-3 align-items-center flex-wrap gap-2"
+          style={{
+            flexDirection: window.innerWidth <= 768 ? 'column' : 'row',
+            alignItems: window.innerWidth <= 768 ? 'stretch' : 'center',
+            gap: '10px',
+          }}
+        >
+          {/* Category Dropdown */}
+          <div style={{ width: window.innerWidth <= 768 ? '100%' : '200px' }}>
+            <select
+              className="form-select"
+              value={activeCategoryTab}
+              onChange={(e) => setActiveCategoryTab(e.target.value)}
+              style={{
+                width: '100%',
+                padding: '5px 10px',
+                borderRadius: '4px',
+                border: '1px solid #ddd',
+                height: '38px',
+              }}
+            >
+              <option value="All">All Categories</option>
+              {categories.map((cat) => (
+                <option key={cat.id} value={cat.name}>
+                  {cat.name}
+                </option>
+              ))}
+            </select>
+          </div>
 
-  {/* Purity Buttons */}
-  <div
-    style={{
-      display: 'flex',
-      justifyContent: window.innerWidth <= 768 ? 'space-between' : 'flex-start',
-      gap: '10px',
-      flexWrap: 'wrap',
-      width: window.innerWidth <= 768 ? '100%' : 'auto',
-    }}
-  >
-    {['All', '22C', '24C'].map((purity) => (
-      <button
-        key={purity}
-        className={`worker-tab-button ${activePurityTab === purity ? 'active' : ''}`}
-        onClick={() => setActivePurityTab(purity)}
-        style={{
-          padding: '5px 15px',
-          border: '1px solid #ddd',
-          borderRadius: '4px',
-          backgroundColor: activePurityTab === purity ? '#007bff' : 'white',
-          color: activePurityTab === purity ? 'white' : 'black',
-          cursor: 'pointer',
-          height: '38px',
-          flex: window.innerWidth <= 768 ? '1' : 'none',
-        }}
-      >
-        {purity}
-      </button>
-    ))}
-  </div>
-</div>
+          {/* Purity Buttons */}
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: window.innerWidth <= 768 ? 'space-between' : 'flex-start',
+              gap: '10px',
+              flexWrap: 'wrap',
+              width: window.innerWidth <= 768 ? '100%' : 'auto',
+            }}
+          >
+            {['All', '22C', '24C'].map((purity) => (
+              <button
+                key={purity}
+                className={`worker-tab-button ${activePurityTab === purity ? 'active' : ''}`}
+                onClick={() => setActivePurityTab(purity)}
+                style={{
+                  padding: '5px 15px',
+                  border: '1px solid #ddd',
+                  borderRadius: '4px',
+                  backgroundColor: activePurityTab === purity ? '#007bff' : 'white',
+                  color: activePurityTab === purity ? 'white' : 'black',
+                  cursor: 'pointer',
+                  height: '38px',
+                  flex: window.innerWidth <= 768 ? '1' : 'none',
+                }}
+              >
+                {purity}
+              </button>
+            ))}
+          </div>
+        </div>
 
 
 
         <Row>
           {filteredBrouchers.length > 0 ? (
             filteredBrouchers.map((item, index) => (
-              <Col md={3} xs={12} lg={2} key={index} className="mb-4 mt-4">
+              <Col xs={12} sm={6} md={4} lg={3} xl={3} key={index} className="mb-4 mt-4">
+
                 <Card className="h-100 text-center shadow-sm position-relative">
                   <input
                     type="checkbox"
@@ -289,9 +290,9 @@ const Broucher = () => {
                       {item.category} | {item.purity}
                     </Card.Subtitle>
                     <Card.Text className="small text-muted description-box">
-                      {item.description && item.description.length > 150 ? (
+                      {item.description && item.description.length > 110 ? (
                         <>
-                          {item.description.slice(0, 140)}...{' '}
+                          {item.description.slice(0, 85)}...{' '}
                           <span
                             onClick={() =>
                               handleReadMore(item.broucher_name, item.description)
@@ -346,7 +347,7 @@ const Broucher = () => {
                   className="broucher-form-control-custom"
                 />
               </Form.Group>
-              
+
               <Form.Group controlId="broucherCategory" className="mb-3">
                 <div className="d-flex justify-content-between align-items-center mb-2">
                   <Form.Label className="mb-0">Category</Form.Label>

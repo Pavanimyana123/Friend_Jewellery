@@ -118,75 +118,154 @@ const C_Broucher = () => {
         setShowDescriptionModal(true);
     };
 
-    return ( 
+    const [categories, setCategories] = useState([]);
+    const [activePurityTab, setActivePurityTab] = useState("All"); // State for purity filter
+    const [activeCategoryTab, setActiveCategoryTab] = useState("All");
+
+    useEffect(() => {
+        fetch(`${baseURL}/api/categories`)
+            .then(res => res.json())
+            .then(data => setCategories(data))
+            .catch(err => console.error("Failed to fetch categories", err));
+    }, []);
+
+    useEffect(() => {
+        let filtered = [...brouchers];
+
+        // First filter by category if not "All"
+        if (activeCategoryTab !== "All") {
+            filtered = filtered.filter(broucher => broucher.category === activeCategoryTab);
+        }
+
+        // Then filter by purity if not "All"
+        if (activePurityTab !== "All") {
+            filtered = filtered.filter(broucher => broucher.purity === activePurityTab);
+        }
+
+        setFilteredBrouchers(filtered);
+    }, [activeCategoryTab, activePurityTab, brouchers]);
+
+    return (
         <>
             <CustomerNavbar />
             <Container fluid className="customer-gallery-main-container">
                 <div className="customer-gallery-table-container d-flex justify-content-between align-items-center">
                     <h3 className="mb-0">Catalog/Brouchers</h3>
                 </div>
-                 <div className="d-flex justify-content-center">
-                        {["All", "22C", "24C"].map(status => (
+                <div
+                    className="d-flex justify-content-center mb-3 align-items-center flex-wrap gap-2"
+                    style={{
+                        flexDirection: window.innerWidth <= 768 ? 'column' : 'row',
+                        alignItems: window.innerWidth <= 768 ? 'stretch' : 'center',
+                        gap: '10px',
+                    }}
+                >
+                    {/* Category Dropdown */}
+                    <div style={{ width: window.innerWidth <= 768 ? '100%' : '200px' }}>
+                        <select
+                            className="form-select"
+                            value={activeCategoryTab}
+                            onChange={(e) => setActiveCategoryTab(e.target.value)}
+                            style={{
+                                width: '100%',
+                                padding: '5px 10px',
+                                borderRadius: '4px',
+                                border: '1px solid #ddd',
+                                height: '38px',
+                            }}
+                        >
+                            <option value="All">All Categories</option>
+                            {categories.map((cat) => (
+                                <option key={cat.id} value={cat.name}>
+                                    {cat.name}
+                                </option>
+                            ))}
+                        </select>
+                    </div>
+
+                    {/* Purity Buttons */}
+                    <div
+                        style={{
+                            display: 'flex',
+                            justifyContent: window.innerWidth <= 768 ? 'space-between' : 'flex-start',
+                            gap: '10px',
+                            flexWrap: 'wrap',
+                            width: window.innerWidth <= 768 ? '100%' : 'auto',
+                        }}
+                    >
+                        {['All', '22C', '24C'].map((purity) => (
                             <button
-                                key={status}
-                                className={`worker-tab-button ${activeTab === status ? 'active' : ''}`}
-                                onClick={() => setActiveTab(status)}
+                                key={purity}
+                                className={`worker-tab-button ${activePurityTab === purity ? 'active' : ''}`}
+                                onClick={() => setActivePurityTab(purity)}
                                 style={{
-                                    marginLeft: '10px',
                                     padding: '5px 15px',
                                     border: '1px solid #ddd',
                                     borderRadius: '4px',
-                                    backgroundColor: activeTab === status ? '#007bff' : 'white',
-                                    color: activeTab === status ? 'white' : 'black',
-                                    cursor: 'pointer'
+                                    backgroundColor: activePurityTab === purity ? '#007bff' : 'white',
+                                    color: activePurityTab === purity ? 'white' : 'black',
+                                    cursor: 'pointer',
+                                    height: '38px',
+                                    flex: window.innerWidth <= 768 ? '1' : 'none',
                                 }}
                             >
-                                {status}
+                                {purity}
                             </button>
                         ))}
                     </div>
+                </div>
 
                 <Row>
-                    {filteredBrouchers.map((item, index) => (
-                        <Col md={3} xs={12} lg={2} key={index} className="mb-4 mt-4">
-                            <Card className="h-100 text-center shadow-sm">
-                                <Card.Body>
-                                    <Card.Title className="fw-semibold text-truncate" title={item.broucher_name}>
-                                        {item.broucher_name}
-                                    </Card.Title> 
-                                    <Card.Title
-                                        className="small"
-                                        title={item.purity}
-                                    >
-                                        {item.purity}
-                                    </Card.Title>
-                                    <Card.Text className="small text-muted description-box">
-                                        {item.description && item.description.length > 150 ? (
-                                            <>
-                                                {item.description.slice(0, 140)}...{' '} 
-                                                <span
-                                                    onClick={() => handleReadMore(item.broucher_name, item.description)}
-                                                    style={{ color: '#007bff', cursor: 'pointer' }}
-                                                >
-                                                    Read more
-                                                </span>
-                                            </>
-                                        ) : (
-                                            item.description || 'No description available'
-                                        )}
-                                    </Card.Text>
-                                    <a
-                                        href={`${baseURL}/uploads/broucher/${item.file_path}`}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className="btn btn-sm btn-outline-primary mt-2"
-                                    >
-                                        View File
-                                    </a>
-                                </Card.Body>
-                            </Card>
+                    {filteredBrouchers.length > 0 ? (
+                        filteredBrouchers.map((item, index) => (
+                            <Col xs={12} sm={6} md={4} lg={3} xl={3} key={index} className="mb-4 mt-4">
+
+                                <Card className="h-100 text-center shadow-sm position-relative">
+
+                                    <Card.Body>
+                                        <Card.Title
+                                            className="fw-semibold text-truncate"
+                                            title={item.broucher_name}
+                                        >
+                                            {item.broucher_name}
+                                        </Card.Title>
+                                        <Card.Subtitle className="mb-2 text-muted">
+                                            {item.category} | {item.purity}
+                                        </Card.Subtitle>
+                                        <Card.Text className="small text-muted description-box">
+                                            {item.description && item.description.length > 110 ? (
+                                                <>
+                                                    {item.description.slice(0, 85)}...{' '}
+                                                    <span
+                                                        onClick={() =>
+                                                            handleReadMore(item.broucher_name, item.description)
+                                                        }
+                                                        style={{ color: '#007bff', cursor: 'pointer' }}
+                                                    >
+                                                        Read more
+                                                    </span>
+                                                </>
+                                            ) : (
+                                                item.description || 'No description available'
+                                            )}
+                                        </Card.Text>
+                                        <a
+                                            href={`${baseURL}/uploads/broucher/${item.file_path}`}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="btn btn-sm btn-outline-primary mt-2"
+                                        >
+                                            View File
+                                        </a>
+                                    </Card.Body>
+                                </Card>
+                            </Col>
+                        ))
+                    ) : (
+                        <Col className="text-center py-5">
+                            <h5>No brouchers found matching your filters</h5>
                         </Col>
-                    ))}
+                    )}
                 </Row>
 
                 <Modal show={showDescriptionModal} onHide={() => setShowDescriptionModal(false)} centered>

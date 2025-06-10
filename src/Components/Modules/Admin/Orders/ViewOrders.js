@@ -426,37 +426,37 @@ const ViewOrders = () => {
   id: "invoice",
 },
 
-      {
-        Header: "Estimate",
-        Cell: ({ row }) => {
-          const estimateGenerated = row.original.estimate_generated === "Yes";
-          const estimateNumber = row.original.estimate_number;
+      // {
+      //   Header: "Estimate",
+      //   Cell: ({ row }) => {
+      //     const estimateGenerated = row.original.estimate_generated === "Yes";
+      //     const estimateNumber = row.original.estimate_number;
 
-          return estimateGenerated && estimateNumber ? (
-            <a
-              href={`${baseURL}/invoices/${estimateNumber}.pdf`}
-              target="_blank"
-              rel="noopener noreferrer"
-              style={{ textDecoration: 'none' }}
-            >
-              📝 View
-            </a>
-          ) : (
-            <Button
-              onClick={() => handleGenerateEstimate(row.original.order_number)}
-              style={{
-                backgroundColor: '#28a745',
-                borderColor: '#28a745',
-                fontSize: '0.800rem', // Smaller font size
-                padding: '0.10rem 0.5rem', // Reduced padding
-              }}
-            >
-              Generate
-            </Button>
-          );
-        },
-        id: "estimate",
-      },
+      //     return estimateGenerated && estimateNumber ? (
+      //       <a
+      //         href={`${baseURL}/invoices/${estimateNumber}.pdf`}
+      //         target="_blank"
+      //         rel="noopener noreferrer"
+      //         style={{ textDecoration: 'none' }}
+      //       >
+      //         📝 View
+      //       </a>
+      //     ) : (
+      //       <Button
+      //         onClick={() => handleGenerateEstimate(row.original.order_number)}
+      //         style={{
+      //           backgroundColor: '#28a745',
+      //           borderColor: '#28a745',
+      //           fontSize: '0.800rem', // Smaller font size
+      //           padding: '0.10rem 0.5rem', // Reduced padding
+      //         }}
+      //       >
+      //         Generate
+      //       </Button>
+      //     );
+      //   },
+      //   id: "estimate",
+      // },
       {
         Header: 'Receipt',
         id: 'add_receipts',
