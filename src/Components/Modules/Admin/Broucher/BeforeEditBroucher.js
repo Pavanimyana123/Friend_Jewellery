@@ -22,8 +22,6 @@ const Broucher = () => {
   const [activeCategoryTab, setActiveCategoryTab] = useState("All"); // State for category filter
   const [filteredBrouchers, setFilteredBrouchers] = useState([]);
   const location = useLocation();
-  const [editMode, setEditMode] = useState(false);
-const [currentBroucher, setCurrentBroucher] = useState(null);
 
   const handleCheckboxChange = (id) => {
     setSelectedIds((prev) =>
@@ -33,59 +31,52 @@ const [currentBroucher, setCurrentBroucher] = useState(null);
 
   // Open/Close Modal
   const handleShow = () => setShowModal(true);
- const handleClose = () => {
-  setShowModal(false);
-  setBroucherName('');
-  setDescription('');
-  setPurity('');
-  setCategory('');
-  setFile(null);
-  setEditMode(false);
-  setCurrentBroucher(null);
-};
+  const handleClose = () => {
+    setShowModal(false);
+    setBroucherName('');
+    setDescription('');
+    setPurity('');
+    setCategory('');
+    setFile(null);
+  };
 
- const handleSubmit = async (e) => {
-  e.preventDefault();
-  if (!broucherName || !purity || !category) {
-    alert('Please provide a name, purity, and category.');
-    return;
-  }
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!broucherName || !description || !purity || !file || !category) {
+      alert('Please provide a name, description, purity, category, and file.');
+      return;
+    }
 
-  const formData = new FormData();
-  formData.append('broucher_name', broucherName);
-  formData.append('description', description);
-  formData.append('purity', purity);
-  formData.append('category', category);
-  if (file) {
+    const formData = new FormData();
+    formData.append('broucher_name', broucherName);
+    formData.append('description', description);
+    formData.append('purity', purity);
+    formData.append('category', category);
     formData.append('file', file);
-  }
 
-  try {
-    if (editMode) {
-      // Update existing broucher
-      await axios.put(`${baseURL}/api/update-broucher-item/${currentBroucher.id}`, formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      });
-      alert("Broucher/Catalog updated successfully");
-    } else {
-      // Add new broucher
+    try {
       const response = await axios.post(`${baseURL}/api/add-broucher-item`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
       });
-      alert("Broucher/Catalog uploaded successfully");
+
+      setBrouchers(prev => [...prev, {
+        id: response.data.id,
+        broucher_name: broucherName,
+        description: description,
+        purity: purity,
+        category: category,
+        file_path: file.name
+      }]);
+      handleClose();
+      alert("Broucher/Catalog uploaded successfully")
+      fetchBrouchers();
+    } catch (error) {
+      console.error(error);
+      alert('Upload failed!');
     }
-    
-    handleClose();
-    fetchBrouchers();
-  } catch (error) {
-    console.error(error);
-    alert(editMode ? 'Update failed!' : 'Upload failed!');
-  }
-};
+  };
 
   const fetchBrouchers = async () => {
     try {
@@ -124,16 +115,6 @@ const [currentBroucher, setCurrentBroucher] = useState(null);
       console.error("Error adding category", err);
     }
   };
-
-  const handleEdit = (broucher) => {
-  setCurrentBroucher(broucher);
-  setBroucherName(broucher.broucher_name);
-  setDescription(broucher.description);
-  setPurity(broucher.purity);
-  setCategory(broucher.category);
-  setEditMode(true);
-  setShowModal(true);
-};
 
   const [showDescriptionModal, setShowDescriptionModal] = useState(false);
   const [selectedDescription, setSelectedDescription] = useState('');
@@ -291,30 +272,14 @@ const [currentBroucher, setCurrentBroucher] = useState(null);
               <Col xs={12} sm={6} md={4} lg={3} xl={3} key={index} className="mb-4 mt-4">
 
                 <Card className="h-100 text-center shadow-sm position-relative">
-                  {/* <input
+                  <input
                     type="checkbox"
                     className="form-check-input position-absolute"
                     style={{ top: '10px', left: '10px', zIndex: 2 }}
                     checked={selectedIds.includes(item.id)}
                     onChange={() => handleCheckboxChange(item.id)}
-                  /> */}
+                  />
                   <Card.Body>
-                     <div className="d-flex justify-content-between align-items-start">
-    <input
-      type="checkbox"
-      className="form-check-input"
-      checked={selectedIds.includes(item.id)}
-      onChange={() => handleCheckboxChange(item.id)}
-    />
-    <Button 
-      variant="outline-secondary" 
-      size="sm"
-      onClick={() => handleEdit(item)}
-      className="ms-2"
-    >
-      <i className="bi bi-pencil"></i>
-    </Button>
-  </div>
                     <Card.Title
                       className="fw-semibold text-truncate"
                       title={item.broucher_name}
@@ -367,9 +332,9 @@ const [currentBroucher, setCurrentBroucher] = useState(null);
           centered
           dialogClassName="broucher-custom-modal"
         >
-        <Modal.Header closeButton className="broucher-modal-header-custom">
-  <Modal.Title>{editMode ? 'Edit Broucher' : 'Add Broucher'}</Modal.Title>
-</Modal.Header>
+          <Modal.Header closeButton className="broucher-modal-header-custom">
+            <Modal.Title>Add Broucher</Modal.Title>
+          </Modal.Header>
           <Modal.Body className="broucher-modal-body-custom">
             <Form onSubmit={handleSubmit}>
               <Form.Group controlId="broucherName" className="mb-3">
@@ -435,53 +400,26 @@ const [currentBroucher, setCurrentBroucher] = useState(null);
                 />
               </Form.Group>
 
-            <Form.Group controlId="formFile" className="mb-4">
-  <Form.Label>Upload File</Form.Label>
-  {editMode && currentBroucher?.file_path && (
-    <div className="mb-3">
-      <p className="mb-1">Current File:</p>
-      <div className="d-flex align-items-start gap-3">
-        {['.jpg', '.jpeg', '.png', '.gif'].some(ext => 
-          currentBroucher.file_path.toLowerCase().endsWith(ext)) ? (
-          <img
-            src={`${baseURL}/uploads/broucher/${currentBroucher.file_path}`}
-            alt="Current file preview"
-            style={{ maxWidth: '100px', maxHeight: '100px', objectFit: 'contain' }}
-            className="border rounded"
-          />
-        ) : (
-          <div className="bg-light d-flex align-items-center justify-content-center"
-            style={{ width: '100px', height: '100px' }}>
-            <i className="bi bi-file-earmark-text fs-3"></i>
-          </div>
-        )}
-        <div>
-         
-          <p className="small text-muted mb-0">
-            Upload a new file to replace the existing one
-          </p>
-        </div>
-      </div>
-    </div>
-  )}
-  <Form.Control
-    type="file"
-    accept="image/*,application/pdf"
-    onChange={(e) => setFile(e.target.files[0])}
-    className="broucher-form-control-custom"
-  />
-  <Form.Text className="text-muted">
-    Supported formats: PDF, JPG, PNG
-  </Form.Text>
-</Form.Group>
+              <Form.Group controlId="formFile" className="mb-4">
+                <Form.Label>Upload File</Form.Label>
+                <Form.Control
+                  type="file"
+                  accept="image/*,application/pdf"
+                  onChange={(e) => setFile(e.target.files[0])}
+                  className="broucher-form-control-custom"
+                />
+                <Form.Text className="text-muted">
+                  Supported formats: PDF, JPG, PNG
+                </Form.Text>
+              </Form.Group>
 
               <div className="d-flex justify-content-end">
                 <Button variant="secondary" onClick={handleClose} className="me-2">
                   Cancel
                 </Button>
-               <Button variant="primary" type="submit" className="submit-btn">
-  {editMode ? 'Update Broucher' : 'Upload Broucher'}
-</Button>
+                <Button variant="primary" type="submit" className="submit-btn">
+                  Upload Broucher
+                </Button>
               </div>
             </Form>
           </Modal.Body>

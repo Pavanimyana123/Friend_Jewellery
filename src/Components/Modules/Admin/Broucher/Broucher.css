@@ -14,6 +14,31 @@
   color: #333;
 }
 
+
+/* File preview styles */
+.file-preview-container {
+  border: 1px solid #dee2e6;
+  border-radius: 0.25rem;
+  padding: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.file-preview-image {
+  max-width: 100%;
+  max-height: 150px;
+  object-fit: contain;
+}
+
+.file-icon-placeholder {
+  width: 100px;
+  height: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #f8f9fa;
+  border-radius: 0.25rem;
+}
+
 .broucher-modal-body-custom {
   padding: 1.5rem;
 }
