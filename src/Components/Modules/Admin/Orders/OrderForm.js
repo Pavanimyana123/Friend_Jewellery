@@ -506,8 +506,8 @@ function Order() {
       advance_amount: advanceAmount,
       balance_amt: balanceAmt,
       net_wt: netWt,
-      summary_price: summaryPrice,
-      summary_rate: summaryRate
+      summary_price: parseFloat(parseFloat(summaryPrice).toFixed(2)), // Ensures number with 2 decimals
+      summary_rate: parseFloat(parseFloat(summaryRate).toFixed(2))
     }));
 
     console.log("updated orders=", updatedOrders);
