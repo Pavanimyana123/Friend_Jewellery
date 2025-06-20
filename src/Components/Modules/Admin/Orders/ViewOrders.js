@@ -132,49 +132,49 @@ const ViewOrders = () => {
     fetchData();
   }, []);
 
- const updateOrderWithWorker = async (orderId, workerId, workerName) => {
-  try {
-    const response = await fetch(`${baseURL}/api/orders/assign/${orderId}`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        assigned_status: workerId ? 'Assigned' : 'Not Assigned',
-        worker_id: workerId,
-        worker_name: workerName,
-        work_status: 'Pending',
-      }),
-    });
+  const updateOrderWithWorker = async (orderId, workerId, workerName) => {
+    try {
+      const response = await fetch(`${baseURL}/api/orders/assign/${orderId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          assigned_status: workerId ? 'Assigned' : 'Not Assigned',
+          worker_id: workerId,
+          worker_name: workerName,
+          work_status: 'Pending',
+        }),
+      });
 
-    if (!response.ok) {
-      throw new Error('Failed to update order');
-    }
+      if (!response.ok) {
+        throw new Error('Failed to update order');
+      }
 
-    // Update the modal state immediately
-    if (selectedOrder) {
-      setSelectedOrder(prev => ({
-        ...prev,
-        repeatedData: prev.repeatedData.map(item => 
-          item.id === orderId 
-            ? { 
+      // Update the modal state immediately
+      if (selectedOrder) {
+        setSelectedOrder(prev => ({
+          ...prev,
+          repeatedData: prev.repeatedData.map(item =>
+            item.id === orderId
+              ? {
                 ...item,
                 assigned_status: workerId ? 'Assigned' : 'Not Assigned',
                 worker_id: workerId,
                 worker_name: workerName,
                 work_status: 'Pending'
               }
-            : item
-        )
-      }));
-    }
+              : item
+          )
+        }));
+      }
 
-    // Optional: Refresh the main data if needed
-    fetchData();
-  } catch (error) {
-    console.error('Error updating order:', error);
-  }
-};
+      // Optional: Refresh the main data if needed
+      fetchData();
+    } catch (error) {
+      console.error('Error updating order:', error);
+    }
+  };
 
   // const handleDelete = async (id) => {
   //   if (!window.confirm("Are you sure you want to delete this order?")) {
@@ -347,11 +347,11 @@ const ViewOrders = () => {
         accessor: 'fine_wt',
         id: 'fine_wt', // Add an ID for the total weight column
       },
-      {
-        Header: 'Net Wt',
-        accessor: 'net_wt',
-        id: 'net_wt', // Add an ID for the total weight column
-      },
+      // {
+      //   Header: 'Net Wt',
+      //   accessor: 'net_wt',
+      //   id: 'net_wt', // Add an ID for the total weight column
+      // },
       {
         Header: 'Total Amt',
         accessor: 'overall_total_price',
@@ -368,63 +368,68 @@ const ViewOrders = () => {
         id: 'advance_amount', // Add an ID for the total weight column
       },
       {
+        Header: 'Receipts Amt',
+        accessor: row => parseFloat(row.receipt_amt || 0).toFixed(2),
+        id: 'receipt_amt',
+      },
+      {
         Header: 'Balance Amt',
         accessor: 'balance_amt',
         id: 'balance_amt', // Add an ID for the total weight column
       },
-     {
-  Header: "Invoice",
-  Cell: ({ row }) => {
-    const invoiceGenerated = row.original.invoice_generated === "Yes";
-    const invoiceNumber = row.original.invoice_number;
-    const [isReadyForInvoice, setIsReadyForInvoice] = useState(false);
+      {
+        Header: "Invoice",
+        Cell: ({ row }) => {
+          const invoiceGenerated = row.original.invoice_generated === "Yes";
+          const invoiceNumber = row.original.invoice_number;
+          const [isReadyForInvoice, setIsReadyForInvoice] = useState(false);
 
-    // Check if all orders with this order_number are "Ready for Delivery"
-    useEffect(() => {
-      const checkOrderStatus = async () => {
-        try {
-          const response = await fetch(`${baseURL}/get-order-details/${row.original.order_number}`);
-          if (!response.ok) {
-            throw new Error('Failed to fetch order details');
-          }
-          const result = await response.json();
-          const allReady = result.every(order => order.order_status === "Ready for Delivery");
-          setIsReadyForInvoice(allReady);
-        } catch (error) {
-          console.error('Error checking order status:', error);
-          setIsReadyForInvoice(false);
-        }
-      };
+          // Check if all orders with this order_number are "Ready for Delivery"
+          useEffect(() => {
+            const checkOrderStatus = async () => {
+              try {
+                const response = await fetch(`${baseURL}/get-order-details/${row.original.order_number}`);
+                if (!response.ok) {
+                  throw new Error('Failed to fetch order details');
+                }
+                const result = await response.json();
+                const allReady = result.every(order => order.order_status === "Ready for Delivery");
+                setIsReadyForInvoice(allReady);
+              } catch (error) {
+                console.error('Error checking order status:', error);
+                setIsReadyForInvoice(false);
+              }
+            };
 
-      checkOrderStatus();
-    }, [row.original.order_number]);
+            checkOrderStatus();
+          }, [row.original.order_number]);
 
-    return invoiceGenerated && invoiceNumber ? (
-      <a
-        href={`${baseURL}/invoices/${invoiceNumber}.pdf`}
-        target="_blank"
-        rel="noopener noreferrer"
-        style={{ textDecoration: 'none' }}
-      >
-        📝 View
-      </a>
-    ) : (
-      <Button
-        style={{
-          backgroundColor: isReadyForInvoice ? '#28a745' : '#6c757d',
-          borderColor: isReadyForInvoice ? '#28a745' : '#6c757d',
-          fontSize: '0.800rem',
-          padding: '0.10rem 0.5rem',
-        }}
-        onClick={() => handleGenerateInvoice(row.original.order_number)}
-        disabled={!isReadyForInvoice}
-      >
-        Generate
-      </Button>
-    );
-  },
-  id: "invoice",
-},
+          return invoiceGenerated && invoiceNumber ? (
+            <a
+              href={`${baseURL}/invoices/${invoiceNumber}.pdf`}
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{ textDecoration: 'none' }}
+            >
+              📝 View
+            </a>
+          ) : (
+            <Button
+              style={{
+                backgroundColor: isReadyForInvoice ? '#28a745' : '#6c757d',
+                borderColor: isReadyForInvoice ? '#28a745' : '#6c757d',
+                fontSize: '0.800rem',
+                padding: '0.10rem 0.5rem',
+              }}
+              onClick={() => handleGenerateInvoice(row.original.order_number)}
+              disabled={!isReadyForInvoice}
+            >
+              Generate
+            </Button>
+          );
+        },
+        id: "invoice",
+      },
 
       // {
       //   Header: "Estimate",
@@ -499,7 +504,7 @@ const ViewOrders = () => {
                 row.original.mobile,
                 row.original.advance_gross_wt,
                 row.original.fine_wt,
-                row.original.advance_amount,)}
+                row.original.advance_amount, row.original.receipt_amt)}
             />
             <FaTrash
               style={{ cursor: 'pointer', marginLeft: '10px', color: 'red' }}
@@ -532,7 +537,7 @@ const ViewOrders = () => {
   };
 
   const handleEdit = async (
-    order_number, mobile, advance_gross_wt, fine_wt, advance_amount
+    order_number, mobile, advance_gross_wt, fine_wt, advance_amount, receipt_amt
   ) => {
 
     const result = await Swal.fire({
@@ -582,7 +587,7 @@ const ViewOrders = () => {
           state: {
             order_number,
             mobile,
-            advance_gross_wt, fine_wt, advance_amount,
+            advance_gross_wt, fine_wt, advance_amount, receipt_amt,
             orderDetails: details,
           },
         });
@@ -740,17 +745,16 @@ const ViewOrders = () => {
       <Navbar />
       <div className="main-container">
         <div className="customers-table-container">
-          <Row className="mb-3 d-flex justify-content-between align-items-center">
-            <Col>
+          <Row className="mb-3">
+            <Col xs={12} md={6}>
               <h3>Orders</h3>
             </Col>
-            <Col className="d-flex justify-content-end gap-2">
-              {/* <Button onClick={downloadEstimatePDF} disabled={selectedRows.length === 0}>
-                Generate Estimate
-              </Button>
-              <Button onClick={downloadPDF} disabled={selectedRows.length === 0}>
-                Generate Invoice
-              </Button> */}
+
+            <Col
+              xs={12}
+              md={6}
+              className="d-flex flex-wrap justify-content-md-end justify-content-start gap-2 mt-2 mt-md-0"
+            >
               <Button
                 className="export_but"
                 onClick={exportToExcel}
@@ -758,6 +762,7 @@ const ViewOrders = () => {
               >
                 Export to Excel
               </Button>
+
               <Button
                 className="create_but"
                 onClick={() => navigate('/a-orders')}
@@ -767,6 +772,7 @@ const ViewOrders = () => {
               </Button>
             </Col>
           </Row>
+
           {loading ? <div>Loading...</div> : <DataTable columns={columns} data={[...data].reverse()} />}
         </div>
       </div>

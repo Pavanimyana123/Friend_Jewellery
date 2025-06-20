@@ -117,12 +117,12 @@ function Navbar() {
                                 className={window.location.pathname === '/a-design-requests' ? 'active' : ''}
                             >
                                 Design Requests</Link>
-                                 <Link
+                            <Link
                                 to="/a-receipts-orders"
                                 onClick={handleItemClick}
                                 className={window.location.pathname === '/a-receipts-orders' ? 'active' : ''}
                             >
-                                 Receipts</Link>
+                                Receipts</Link>
                         </div>
                     )}
                 </div>

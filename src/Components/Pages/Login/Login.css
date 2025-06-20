@@ -120,11 +120,18 @@ h3 {
   .login-password-toggle {
     position: absolute;
     right: 17%;
-    top: 53%;
+    top: 51%;
     transform: translateY(-50%);
     cursor: pointer;
     color: #555;
   }
+
+
+  hr {
+  border: none;
+  border-top: 1px solid #9e9b9b;
+}
+
   
 
 /* Responsive Design */
@@ -163,8 +170,8 @@ h3 {
 
     .login-password-toggle {
         position: absolute;
-        right: 20%;
-        top: 52%;
+        right: 18%;
+        top: 50%;
         transform: translateY(-50%);
         cursor: pointer;
         color: #555;

@@ -26,8 +26,6 @@ function Order() {
   const [showWebcam, setShowWebcam] = useState(false);
   const fileInputRef = useRef(null);
   const webcamRef = useRef(null);
-
-
   const [formData, setFormData] = useState({
     imagePreview: null, // For image preview before upload
     account_id: "",
@@ -83,12 +81,15 @@ function Order() {
   const [advanceAmount, setAdvanceAmount] = useState("");
   const [netWt, setNetWt] = useState("");
   const [summaryPrice, setSummaryPrice] = useState("");
-
   const totalWeightSum = orders.reduce((sum, order) => sum + parseFloat(order.total_weight_aw || 0), 0);
   const totalPriceSum = orders.reduce((sum, order) => sum + parseFloat(order.total_price || 0), 0);
-  const balanceAmt = (summaryPrice - advanceAmount).toFixed(2);
+  const totalStonePriceSum = orders.reduce((sum, order) => sum + parseFloat(order.stone_price || 0), 0);
+  const totalMakingChargeSum = orders.reduce((sum, order) => sum + parseFloat(order.total_mc || 0), 0);
+  const totalTaxSum = orders.reduce((sum, order) => sum + parseFloat(order.tax_amount || 0), 0);
   const [summaryRate, setSummaryRate] = useState("");
-
+  const [advanceFineWtAmt, setAdvanceFineWtAmt] = useState("");
+  const [receiptAmt, setReceiptAmt] = useState("");
+  const balanceAmt = (summaryPrice - advanceAmount - receiptAmt).toFixed(2);
 
   useEffect(() => {
     if (location.state?.mobile && customers.length > 0) {
@@ -107,22 +108,37 @@ function Order() {
 
   useEffect(() => {
     if (location.state) {
-      const { advance_gross_wt, fine_wt, advance_amount } = location.state;
+      const { advance_gross_wt, fine_wt, advance_amount, receipt_amt } = location.state;
       if (advance_gross_wt) setAdvanceGrossWt(advance_gross_wt);
       if (fine_wt) setFineWt(fine_wt);
       if (advance_amount) setAdvanceAmount(advance_amount);
+      if (receipt_amt) setReceiptAmt(receipt_amt);
     }
   }, [location.state]);
 
 
+  useEffect(() => {
+    const net = parseFloat(totalWeightSum) - parseFloat(fineWt || 0);
+    const summary = fineWt * parseFloat(summaryRate || 0);
+
+    setNetWt(net.toFixed(3));
+    setAdvanceFineWtAmt(summary.toFixed(2));
+  }, [totalWeightSum, fineWt, summaryRate, advanceAmount]);
 
   useEffect(() => {
     const net = parseFloat(totalWeightSum) - parseFloat(fineWt || 0);
-    const summary = net * parseFloat(summaryRate || 0);
+    const baseSummary = net * parseFloat(summaryRate || 0);
+
+    const totalStonePriceSum = orders.reduce((sum, order) => sum + parseFloat(order.stone_price || 0), 0);
+    const totalMakingChargeSum = orders.reduce((sum, order) => sum + parseFloat(order.total_mc || 0), 0);
+    const totalTaxSum = orders.reduce((sum, order) => sum + parseFloat(order.tax_amount || 0), 0);
+
+    const finalSummary = baseSummary + totalStonePriceSum + totalMakingChargeSum + totalTaxSum;
 
     setNetWt(net.toFixed(3));
-    setSummaryPrice(summary.toFixed(2));
-  }, [totalWeightSum, fineWt, summaryRate, advanceAmount]);
+    setSummaryPrice(finalSummary.toFixed(2));
+  }, [totalWeightSum, fineWt, summaryRate, advanceAmount, orders]);
+
 
 
   useEffect(() => {
@@ -500,9 +516,13 @@ function Order() {
       ...selectedCustomer,
       account_id: selectedCustomer?.id,
       overall_total_weight: totalWeightSum,
+      overall_stone_price: totalStonePriceSum,
+      overall_total_mc: totalMakingChargeSum,
+      overall_tax_amt: totalTaxSum,
       overall_total_price: totalPriceSum,
       advance_gross_wt: advanceGrossWt,
       fine_wt: fineWt,
+      advance_finewt_amt: advanceFineWtAmt,
       advance_amount: advanceAmount,
       balance_amt: balanceAmt,
       net_wt: netWt,
@@ -570,13 +590,12 @@ function Order() {
       <div className="main-container">
         <div className="order-form-container">
           <Form>
-            <div className="order-form" style={{ marginTop: '-10px' }}>
+            <div className="order-form" style={{ marginTop: '-40px' }}>
               {/* Left Section */}
               <div className="order-form-left">
                 <Col className="order-form-section">
                   <h4 className="mb-3">Customer Details</h4>
                   <Row>
-                    {/* Mobile Dropdown */}
                     <Col xs={12} md={3} className="d-flex align-items-center">
                       <div style={{ flex: 1 }}>
                         <InputField
@@ -598,8 +617,6 @@ function Order() {
                         style={{ marginLeft: "10px", cursor: "pointer", marginBottom: "20px" }}
                       />
                     </Col>
-
-                    {/* Customer Name Dropdown */}
                     <Col xs={12} md={3}>
                       <InputField
                         label="Customer Name"
@@ -646,8 +663,6 @@ function Order() {
                   </Row>
                 </Col>
               </div>
-
-              {/* Right Section */}
               <div className="order-form-right">
                 <div className="order-form-section">
                   <Row className="">
@@ -867,6 +882,7 @@ function Order() {
                     title="Choose / Capture Image"
                     variant="primary"
                     size="sm"
+                    
                   >
                     <Dropdown.Item onClick={() => fileInputRef.current && fileInputRef.current.click()}>
                       <FaUpload /> Choose Image
@@ -955,15 +971,15 @@ function Order() {
                   <th>Mobile</th>
                   <th>Customer</th>
                   <th>Date</th>
-                  <th>Metal</th>
-                  <th>Category</th>
                   <th>Subcategory</th>
                   <th>Design Name</th>
                   <th>Purity</th>
                   <th>Gross Wt</th>
                   <th>Stone Wt</th>
+                  <th>Stone Price</th>
                   <th>Total Weight</th>
-                  <th>Rate</th>
+                  <th>Total MC</th>
+                  <th>Tax Amt</th>
                   <th>Total Price</th>
                   <th>Image</th>
                   <th>Actions</th>
@@ -975,15 +991,15 @@ function Order() {
                     <td>{order.mobile}</td>
                     <td>{order.account_name}</td>
                     <td>{order.date}</td>
-                    <td>{order.metal}</td>
-                    <td>{order.category}</td>
                     <td>{order.subcategory}</td>
                     <td>{order.product_design_name}</td>
                     <td>{order.purity}</td>
                     <td>{order.gross_weight}</td>
                     <td>{order.stone_weight}</td>
+                    <td>{order.stone_price}</td>
                     <td>{order.total_weight_aw}</td>
-                    <td>{order.rate}</td>
+                    <td>{order.total_mc}</td>
+                    <td>{order.tax_amount}</td>
                     <td>{order.total_price}</td>
                     <td>
                       {order.imagePreview ? (
@@ -998,11 +1014,11 @@ function Order() {
                     </td>
                     <td>
                       <FaEdit
-                        style={{ cursor: 'pointer', marginLeft: '10px', color: 'blue', }}
+                        style={{ cursor: 'pointer', marginLeft: '10px', color: 'blue' }}
                         onClick={() => handleEdit(index)}
                       />
                       <FaTrash
-                        style={{ cursor: 'pointer', marginLeft: '10px', color: 'red', }}
+                        style={{ cursor: 'pointer', marginLeft: '10px', color: 'red' }}
                         onClick={() => {
                           const updatedOrders = orders.filter((_, i) => i !== index);
                           setOrders(updatedOrders);
@@ -1012,52 +1028,78 @@ function Order() {
                     </td>
                   </tr>
                 ))}
+
+                {/* Summary Row */}
+                <tr style={{ backgroundColor: '#f1f1f1', fontWeight: 'bold' }}>
+                  <td colSpan={8} className="text-center">Summary</td>
+                  <td>{totalStonePriceSum.toFixed(2)}</td>
+                  <td>{totalWeightSum.toFixed(3)}</td>
+                  <td>{totalMakingChargeSum.toFixed(2)}</td>
+                  <td>{totalTaxSum.toFixed(2)}</td>
+                  <td>{totalPriceSum.toFixed(2)}</td>
+                  <td colSpan={2}></td>
+                </tr>
               </tbody>
             </Table>
-          </div>
-          <div className="order-form-section mt-1">
-            <h4>Summary</h4>
 
-            {/* Row 1: Total Weight and Total Price */}
+          </div>
+          {/* <div className="order-form-section mt-1">
+            <h4>Summary</h4>
             <Row className="mb-3">
               <Col xs={2} className="text-left fw-bold">Total Weight:</Col>
               <Col xs={2} className="text-right">{totalWeightSum.toFixed(3)}</Col>
-
               <Col xs={2} className="text-left fw-bold">Total Price:</Col>
               <Col xs={2} className="text-right">{totalPriceSum.toFixed(2)}</Col>
-              <Col xs={2} className="text-left fw-bold">Advance Gross Weight:</Col>
-              <Col xs={2}>
+              <Col xs={2} className="text-left fw-bold">Total Stone Price:</Col>
+              <Col xs={2} className="text-right">{totalStonePriceSum.toFixed(2)}</Col>
+            </Row>
+            <Row className="mb-3">
+              <Col xs={2} className="text-left fw-bold">Total MC:</Col>
+              <Col xs={2} className="text-right">{totalMakingChargeSum.toFixed(2)}</Col>
+              <Col xs={2} className="text-left fw-bold">Total Tax:</Col>
+              <Col xs={2} className="text-right">{totalTaxSum.toFixed(2)}</Col>
+            </Row>
+          </div> */}
+
+          <div className="order-form-section mt-1">
+            <h4>Advance</h4>
+            <Row className="mb-3 g-2">
+              <Col xs={6} md={1} className="fw-bold">Gross Wt:</Col>
+              <Col xs={6} md={1}>
                 <InputField
                   name="advance_gross_wt"
                   type="text"
                   value={advanceGrossWt}
-                  onChange={(e) => setAdvanceGrossWt(e.target.value)}
+                  onChange={(e) => {
+                    const value = parseFloat(e.target.value) || "";
+                    if (value <= totalWeightSum) {
+                      setAdvanceGrossWt(value);
+                    } else {
+                      alert(`Advance Gross Wt cannot exceed Total Weight (${totalWeightSum})`);
+                    }
+                  }}
                 />
               </Col>
-            </Row>
 
-            {/* Row 2: Advance Gross Weight and Fine Weight */}
-            <Row className="mb-3">
-              <Col xs={2} className="text-left fw-bold">Fine Weight:</Col>
-              <Col xs={2}>
+              <Col xs={6} md={1} className="fw-bold">Fine Wt:</Col>
+              <Col xs={6} md={1}>
                 <InputField
                   name="fine_wt"
                   type="text"
                   value={fineWt}
-                  onChange={(e) => setFineWt(e.target.value)}
+                  onChange={(e) => {
+                    const value = parseFloat(e.target.value) || "";
+                    if (value <= advanceGrossWt) {
+                      setFineWt(value);
+                    } else {
+                      alert(`Fine Wt cannot exceed Advance Gross Wt (${advanceGrossWt})`);
+                    }
+                  }}
                 />
               </Col>
-              <Col xs={2} className="text-left fw-bold">Net Weight:</Col>
-              <Col xs={2}>
-                <InputField
-                  name="net_wt"
-                  type="text"
-                  value={netWt}
-                  readOnly
-                />
-              </Col>
-              <Col xs={2} className="text-left fw-bold">Rate:</Col>
-              <Col xs={2}>
+
+              <Col xs={6} md={1} className="fw-bold">Rate:</Col>
+              <Col xs={6} md={1}>
                 <InputField
                   name="rate"
                   type="text"
@@ -1065,10 +1107,19 @@ function Order() {
                   onChange={(e) => setSummaryRate(e.target.value)}
                 />
               </Col>
-            </Row>
-            <Row>
-              <Col xs={2} className="text-left fw-bold">Summary Price:</Col>
-              <Col xs={2}>
+
+              <Col xs={6} md={2} className="fw-bold">Advance Fine Wt Amt:</Col>
+              <Col xs={6} md={1}>
+                <InputField
+                  name="advance_finewt_amt"
+                  type="text"
+                  value={advanceFineWtAmt}
+                  readOnly
+                />
+              </Col>
+
+              <Col xs={6} md={2} className="fw-bold">Summary Price:</Col>
+              <Col xs={6} md={1}>
                 <InputField
                   name="summary_price"
                   type="text"
@@ -1076,8 +1127,9 @@ function Order() {
                   readOnly
                 />
               </Col>
-              <Col xs={2} className="text-left fw-bold">Advance Amount:</Col>
-              <Col xs={2}>
+
+              <Col xs={6} md={2} className="fw-bold">Advance Amount:</Col>
+              <Col xs={6} md={1}>
                 <InputField
                   name="advance_amount"
                   type="text"
@@ -1085,8 +1137,18 @@ function Order() {
                   onChange={(e) => setAdvanceAmount(e.target.value)}
                 />
               </Col>
-              <Col xs={2} className="text-left fw-bold"> Balance Amount:</Col>
-              <Col xs={2}>
+
+              <Col xs={6} md={2} className="fw-bold">Receipt Amount:</Col>
+              <Col xs={6} md={1}>
+                <InputField
+                  name="receipt_amt"
+                  value={receiptAmt}
+                  readOnly
+                />
+              </Col>
+
+              <Col xs={6} md={2} className="fw-bold">Balance Amount:</Col>
+              <Col xs={6} md={1}>
                 <InputField
                   name="balance_amt"
                   type="text"
@@ -1096,8 +1158,6 @@ function Order() {
               </Col>
             </Row>
           </div>
-
-
 
 
           <div className="form-buttons">

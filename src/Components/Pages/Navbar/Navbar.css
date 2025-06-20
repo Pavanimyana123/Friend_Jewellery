@@ -308,11 +308,13 @@
     width: 100%;
     text-align: center;
     border-bottom: 1px solid #f1f1f1;
+    color: black;
   }
 
   .navbar-dropdown-content {
     position: static;
     width: 100%;
+    background-color: white;
   }
 
   .navbar-hamburger {

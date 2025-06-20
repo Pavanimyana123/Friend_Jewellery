@@ -35,7 +35,8 @@ function Receipts() {
             mobile: order.mobile ?? '',
             account_name: order.account_name ?? '',
             order_number: order.order_number ?? '',
-            total_amt: order.bal_after_receipt > 0 ? order.bal_after_receipt : order.balance_amt ?? ''
+            // total_amt: order.bal_after_receipt > 0 ? order.bal_after_receipt : order.balance_amt ?? '',
+            total_amt: order.balance_amt ?? ''
         }));
     }
 }, [order]);
