@@ -110,45 +110,62 @@ function Register() {
     return firstErrorField; // Return the first error field
   };
 
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  setIsRegistering(true); // Disable button and show 'Registering...'
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const firstErrorField = validateForm();
 
-    setIsRegistering(true); // Disable button and show 'Registering...'
+  if (firstErrorField) {
+    // Scroll to the first error field
+    const inputElement = inputRefs.current[firstErrorField];
+    if (inputElement) {
+      inputElement.scrollIntoView({ behavior: "smooth", block: "center" });
+      inputElement.focus();
+    }
 
-    const firstErrorField = validateForm();
+    setIsRegistering(false);
+    return;
+  }
 
-    if (firstErrorField) {
-      // Scroll to the first error field
-      const inputElement = inputRefs.current[firstErrorField];
-      if (inputElement) {
-        inputElement.scrollIntoView({ behavior: "smooth", block: "center" });
-        inputElement.focus(); // Optionally focus the input
-      }
+  try {
+    // ✅ Check for duplicate mobile before proceeding
+    const response = await fetch(`${baseURL}/accounts`);
+    if (!response.ok) {
+      throw new Error("Failed to fetch data for duplicate check.");
+    }
 
-      setIsRegistering(false); // Re-enable button since validation failed
+    const result = await response.json();
+    const isDuplicateMobile = result.some((item) => item.mobile === formData.mobile);
+
+    if (isDuplicateMobile) {
+      alert("This mobile number is already registered as Customer.");
+      setIsRegistering(false); // Re-enable button
       return;
     }
 
-    try {
-      const otpResponse = await axios.post(`${baseURL}/api/send-otp`, {
-        email: formData.email
-      });
+    // ✅ Send OTP if mobile is not duplicate
+    const otpResponse = await axios.post(`${baseURL}/api/send-otp`, {
+      email: formData.email,
+    });
 
-      if (otpResponse.status === 200) {
-        navigate('/verify-otp', {
-          state: {
-            formData,
-            email: formData.email
-          }
-        });
-      }
-    } catch (error) {
-      alert("Failed to send OTP. Please try again.");
-    } finally {
-      setIsRegistering(false); // Re-enable button after API response
+    if (otpResponse.status === 200) {
+      navigate('/verify-otp', {
+        state: {
+          formData,
+          email: formData.email
+        }
+      });
     }
-  };
+
+  } catch (error) {
+    console.error(error);
+    alert("Failed to send OTP. Please try again.");
+  } finally {
+    setIsRegistering(false); // Re-enable button after API response
+  }
+};
+
 
 
   return (

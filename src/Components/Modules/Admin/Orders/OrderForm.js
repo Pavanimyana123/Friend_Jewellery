@@ -161,12 +161,40 @@ function Order() {
     fetchCurrentRates();
   }, []);
 
-  const handleChange = (e) => {
+  const incomingOrderNumber = location.state?.order_number; // Existing order number, if any
+
+  const handleChange = async (e) => {
     const { name, value } = e.target;
+
+    if (name === "order_number") {
+      // Only check for duplicates if the value is different from the existing one (in edit mode)
+      if (value !== incomingOrderNumber) {
+        try {
+          const response = await fetch(`${baseURL}/api/orders`);
+          if (!response.ok) {
+            throw new Error("Failed to fetch data for duplicate check.");
+          }
+          const result = await response.json();
+
+          const isDuplicate = result.some((item) => item.order_number === value);
+          if (isDuplicate) {
+            alert("This order number already exists.");
+
+            // Reset the order_number field
+            setFormData((prev) => ({
+              ...prev,
+              order_number: "", // Clear it
+            }));
+            return; // Exit early so it doesn't get set again below
+          }
+        } catch (error) {
+          console.error("Duplicate check error:", error);
+        }
+      }
+    }
 
     setFormData((prev) => {
       if (name === "mc_on") {
-        // Reset mc_percentage and total_mc when mc_on is changed
         return {
           ...prev,
           [name]: value,
@@ -175,11 +203,11 @@ function Order() {
         };
       }
 
-      if (name === "total_mc" && formData.mc_on === "MC / Piece" && value === "") {
+      if (name === "total_mc" && prev.mc_on === "MC / Piece" && value === "") {
         return {
           ...prev,
           total_mc: "",
-          mc_percentage: "", // Clear mc_percentage when total_mc is cleared
+          mc_percentage: "",
         };
       }
 
@@ -189,6 +217,9 @@ function Order() {
       };
     });
   };
+
+
+
 
   useEffect(() => {
     if (formData.metal && formData.purity) {
@@ -584,6 +615,8 @@ function Order() {
   };
 
 
+
+
   return (
     <>
       <Navbar />
@@ -675,8 +708,7 @@ function Order() {
                     />
                   </Row>
                   <Row>
-                    <InputField label="Order No" name="order_number" value={formData.order_number} onChange={handleChange} readOnly />
-
+                    <InputField label="Order No" name="order_number" value={formData.order_number} onChange={handleChange} />
                   </Row>
                   {/* <Row style={{ marginBottom: "-12px" }}>
                     <InputField label="Estimated Delivery Date" name="estimated_delivery_date" type="date" value={formData.estimated_delivery_date} onChange={handleChange} />
@@ -882,7 +914,7 @@ function Order() {
                     title="Choose / Capture Image"
                     variant="primary"
                     size="sm"
-                    
+
                   >
                     <Dropdown.Item onClick={() => fileInputRef.current && fileInputRef.current.click()}>
                       <FaUpload /> Choose Image
@@ -1068,14 +1100,30 @@ function Order() {
               <Col xs={6} md={1}>
                 <InputField
                   name="advance_gross_wt"
-                  type="text"
+                  type="number"
                   value={advanceGrossWt}
+                  // onChange={(e) => {
+                  //   const value = parseFloat(e.target.value) || "";
+                  //   if (value <= totalWeightSum) {
+                  //     setAdvanceGrossWt(value);
+                  //   } else {
+                  //     alert(`Advance Gross Wt cannot exceed Total Weight (${totalWeightSum})`);
+                  //   }
+                  // }}
                   onChange={(e) => {
-                    const value = parseFloat(e.target.value) || "";
-                    if (value <= totalWeightSum) {
+                    let value = e.target.value;
+
+                    // Allow empty input to avoid blocking backspace
+                    if (value === "") {
                       setAdvanceGrossWt(value);
-                    } else {
-                      alert(`Advance Gross Wt cannot exceed Total Weight (${totalWeightSum})`);
+                      return;
+                    }
+
+                    // Regex to allow numbers with up to 2 decimal places
+                    const regex = /^\d*\.?\d{0,3}$/;
+
+                    if (regex.test(value)) {
+                      setAdvanceGrossWt(value);
                     }
                   }}
                 />
@@ -1085,14 +1133,30 @@ function Order() {
               <Col xs={6} md={1}>
                 <InputField
                   name="fine_wt"
-                  type="text"
+                  type="number"
                   value={fineWt}
+                  // onChange={(e) => {
+                  //   const value = parseFloat(e.target.value) || "";
+                  //   if (value <= advanceGrossWt) {
+                  //     setFineWt(value);
+                  //   } else {
+                  //     alert(`Fine Wt cannot exceed Advance Gross Wt (${advanceGrossWt})`);
+                  //   }
+                  // }}
                   onChange={(e) => {
-                    const value = parseFloat(e.target.value) || "";
-                    if (value <= advanceGrossWt) {
+                    let value = e.target.value;
+
+                    // Allow empty input to avoid blocking backspace
+                    if (value === "") {
                       setFineWt(value);
-                    } else {
-                      alert(`Fine Wt cannot exceed Advance Gross Wt (${advanceGrossWt})`);
+                      return;
+                    }
+
+                    // Regex to allow numbers with up to 2 decimal places
+                    const regex = /^\d*\.?\d{0,3}$/;
+
+                    if (regex.test(value)) {
+                      setFineWt(value);
                     }
                   }}
                 />

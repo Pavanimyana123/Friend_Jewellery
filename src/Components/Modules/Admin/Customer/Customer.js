@@ -224,7 +224,6 @@ function Customer_Master() {
     return true;
   };
 
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSaving(true); // Disable button and show "Saving..."
@@ -235,20 +234,20 @@ function Customer_Master() {
     }
 
     try {
-      // Check for duplicate mobile only when creating a new customer
-      // if (!id) {
-      //   const response = await fetch(`${baseURL}/get/account-details`);
-      //   if (!response.ok) {
-      //     throw new Error("Failed to fetch data for duplicate check.");
-      //   }
-      //   const result = await response.json();
-      //   const isDuplicateMobile = result.some((item) => item.mobile === formData.mobile);
+      
+      if (!id) {
+        const response = await fetch(`${baseURL}/accounts`);
+        if (!response.ok) {
+          throw new Error("Failed to fetch data for duplicate check.");
+        }
+        const result = await response.json();
+        const isDuplicateMobile = result.some((item) => item.mobile === formData.mobile);
 
-      //   if (isDuplicateMobile) {
-      //     alert("This mobile number is already associated with another entry.");
-      //     return;
-      //   }
-      // }
+        if (isDuplicateMobile) {
+          alert("This mobile number is already registered as Customer.");
+          return;
+        }
+      }
 
       // Proceed with saving the record (POST or PUT)
       const method = id ? "PUT" : "POST";

@@ -27,10 +27,10 @@ const RepairsTable = () => {
         Header: 'Customer Name',
         accessor: 'account_name',
       },
-      {
-        Header: 'Print Name',
-        accessor: 'print_name',
-      },
+      // {
+      //   Header: 'Print Name',
+      //   accessor: 'print_name',
+      // },
       {
         Header: 'Mobile',
         accessor: 'mobile',

@@ -466,7 +466,9 @@ const ViewOrders = () => {
         Header: 'Receipt',
         id: 'add_receipts',
         Cell: ({ row }) => {
-          const isDisabled = parseFloat(row.original.balance_amt) === parseFloat(row.original.receipt_amt);
+          const isDisabled = parseFloat(row.original.summary_price) ===
+            (parseFloat(row.original.advance_amount) + parseFloat(row.original.receipt_amt));
+
 
           return (
             <Button
@@ -482,7 +484,7 @@ const ViewOrders = () => {
                   state: { order: row.original },
                 })
               }
-              disabled={isDisabled}
+              // disabled={isDisabled}
             >
               Add Receipts
             </Button>

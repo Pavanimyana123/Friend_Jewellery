@@ -47,9 +47,9 @@ const AssignedOrders = () => {
 
     useEffect(() => {
         if (location.state?.tab) {
-          setActiveTab(location.state.tab);
+            setActiveTab(location.state.tab);
         }
-      }, [location.state]);
+    }, [location.state]);
 
     const handleModalSubmit = async () => {
         if (!currentRow) return;
@@ -60,6 +60,9 @@ const AssignedOrders = () => {
                 worker_id: currentRow.worker_id,
                 worker_name: currentRow.worker_name,
                 worker_comment: comment,
+                subcategory: currentRow.subcategory,   
+                mobile: currentRow.mobile,
+                order_number: currentRow.order_number            
             });
 
             console.log("Work status updated:", response.data);
@@ -76,6 +79,7 @@ const AssignedOrders = () => {
         }
     };
 
+
     const handleImageClick = (imageSrc) => {
         setModalImage(imageSrc);
         setIsModalOpenImg(true);
@@ -83,19 +87,19 @@ const AssignedOrders = () => {
 
     // Filter orders based on search term and active tab
     const filteredOrders = data
-    .filter(order => {
-        const lowerSearchTerm = searchTerm.toLowerCase();
-        const matchesSearchTerm = (
-            order.order_number?.toString().toLowerCase().includes(lowerSearchTerm) ||
-            order.subcategory?.toLowerCase().includes(lowerSearchTerm) ||
-            order.stone_name?.toLowerCase().includes(lowerSearchTerm)
-        );
+        .filter(order => {
+            const lowerSearchTerm = searchTerm.toLowerCase();
+            const matchesSearchTerm = (
+                order.order_number?.toString().toLowerCase().includes(lowerSearchTerm) ||
+                order.subcategory?.toLowerCase().includes(lowerSearchTerm) ||
+                order.stone_name?.toLowerCase().includes(lowerSearchTerm)
+            );
 
-        const matchesActiveTab = activeTab === "All" || order.work_status === activeTab;
+            const matchesActiveTab = activeTab === "All" || order.work_status === activeTab;
 
-        return matchesSearchTerm && matchesActiveTab;
-    })
-    .sort((a, b) => new Date(b.date) - new Date(a.date)); // Sorts by date descending (newest first)
+            return matchesSearchTerm && matchesActiveTab;
+        })
+        .sort((a, b) => new Date(b.date) - new Date(a.date)); // Sorts by date descending (newest first)
 
 
     return (

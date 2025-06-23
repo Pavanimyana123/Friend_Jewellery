@@ -25,10 +25,10 @@ const WorkerTable = () => {
         Header: 'Customer Name',
         accessor: 'account_name',
       },
-      {
-        Header: 'Print Name',
-        accessor: 'print_name',
-      },
+      // {
+      //   Header: 'Print Name',
+      //   accessor: 'print_name',
+      // },
       {
         Header: 'Account Group',
         accessor: 'account_group',

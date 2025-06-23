@@ -181,11 +181,11 @@ function Navbar() {
                 </Link>
 
                 <Link
-                    to="/"
+                    to="/login"
                     onClick={handleItemClick}
                     className='logout-desktop'
                     style={{
-                        color: window.location.pathname === '/' ? '#f2cc5d' : 'black',
+                        color: window.location.pathname === '/login' ? '#f2cc5d' : 'black',
                         backgroundColor: 'transparent',
                         textDecoration: 'none',
                     }}
