@@ -393,8 +393,14 @@ const ViewOrders = () => {
                   throw new Error('Failed to fetch order details');
                 }
                 const result = await response.json();
-                const allReady = result.every(order => order.order_status === "Ready for Delivery");
+                console.log("API Result:", result);
+
+                const allReady = Array.isArray(result.repeatedData) && result.repeatedData.every(
+                  (order) => order.work_status === "Completed"
+                );
+
                 setIsReadyForInvoice(allReady);
+                console.log("allReady =", allReady);
               } catch (error) {
                 console.error('Error checking order status:', error);
                 setIsReadyForInvoice(false);
@@ -403,6 +409,8 @@ const ViewOrders = () => {
 
             checkOrderStatus();
           }, [row.original.order_number]);
+
+
 
           return invoiceGenerated && invoiceNumber ? (
             <a
@@ -484,7 +492,7 @@ const ViewOrders = () => {
                   state: { order: row.original },
                 })
               }
-              // disabled={isDisabled}
+            // disabled={isDisabled}
             >
               Add Receipts
             </Button>

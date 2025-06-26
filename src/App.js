@@ -17,6 +17,7 @@ import AdminWorker from "./Components/Modules/Admin/Worker/Worker";
 import AdminDashboard from "./Components/Modules/Admin/Dashboard/Dashboard";
 import AdminOrder from "./Components/Modules/Admin/Orders/OrderForm";
 import AdminViewOrders from "./Components/Modules/Admin/Orders/ViewOrders";
+import AdminOrdersList from "./Components/Modules/Admin/Orders/AllOrdersList";
 import AdminCancelOrders from "./Components/Modules/Admin/Orders/CancelOrders";
 import AdminDeliveredOrders from "./Components/Modules/Admin/Orders/DeliveredOrders";
 import AdminCustomerTable from "./Components/Modules/Admin/Customer/CustomerTable";
@@ -70,15 +71,15 @@ export default function MainApp() {
 
 
           <Route path="/" exact element={<Home />} />
-        <Route path="/schemes" exact element={<Schemes />} />
-        {/* <Route path="/seller" exact element={<Seller />} /> */}
-        {/* <Route path="/user" exact element={<User />} /> */}
-        <Route path="/contactUs" exact element={<ContactForm />} />
-        <Route path="/AboutUs" exact element={<AboutUs />} />
-        <Route path="/Brands" exact element={<Brands />} />
-        <Route path="/store" exact element={<Jewels />} />
-        <Route path="/sadashri-jewelkart" exact element={<Jewelkart />} />
-        <Route path="/Enterprise" exact element={<Enterprise />} />
+          <Route path="/schemes" exact element={<Schemes />} />
+          {/* <Route path="/seller" exact element={<Seller />} /> */}
+          {/* <Route path="/user" exact element={<User />} /> */}
+          <Route path="/contactUs" exact element={<ContactForm />} />
+          <Route path="/AboutUs" exact element={<AboutUs />} />
+          <Route path="/Brands" exact element={<Brands />} />
+          <Route path="/store" exact element={<Jewels />} />
+          <Route path="/sadashri-jewelkart" exact element={<Jewelkart />} />
+          <Route path="/Enterprise" exact element={<Enterprise />} />
 
           {/* Protected Routes */}
           <Route
@@ -99,7 +100,7 @@ export default function MainApp() {
               </ProtectedRoute>
             }
           />
-           <Route
+          <Route
             path="/a-gallerytable"
             exact
             element={
@@ -135,7 +136,7 @@ export default function MainApp() {
               </ProtectedRoute>
             }
           />
-           <Route
+          <Route
             path="/a-broucher"
             exact
             element={
@@ -153,7 +154,7 @@ export default function MainApp() {
               </ProtectedRoute>
             }
           />
-           <Route
+          <Route
             path="/a-ratings-reviews"
             exact
             element={
@@ -162,7 +163,7 @@ export default function MainApp() {
               </ProtectedRoute>
             }
           />
-           <Route
+          <Route
             path="/a-gallery"
             exact
             element={
@@ -180,6 +181,16 @@ export default function MainApp() {
               </ProtectedRoute>
             }
           />
+
+          <Route
+            path="/a-orderslist"
+            exact
+            element={
+              <ProtectedRoute>
+                <AdminOrdersList />
+              </ProtectedRoute>
+            }
+          />
           <Route
             path="/a-receipts-orders"
             exact
@@ -189,7 +200,7 @@ export default function MainApp() {
               </ProtectedRoute>
             }
           />
-           <Route
+          <Route
             path="/a-receipts"
             exact
             element={
@@ -324,7 +335,7 @@ export default function MainApp() {
               </ProtectedRoute>
             }
           />
-           <Route
+          <Route
             path="/profile-details"
             exact
             element={

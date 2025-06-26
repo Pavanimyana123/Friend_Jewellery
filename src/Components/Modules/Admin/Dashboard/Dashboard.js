@@ -35,6 +35,8 @@ function Dashboard() {
   const [deliveredOrderCount, setDeliveredOrderCount] = useState(0);
   const [completedOrderCount, setCompletedOrderCount] = useState(0);
   const [holdOrderCount, setHoldOrderCount] = useState(0);
+  const [assignedOrderCount, setAssignedOrderCount] = useState(0);
+  const [notAssignedOrderCount, setNotAssignedOrderCount] = useState(0);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -100,10 +102,19 @@ function Dashboard() {
           (order) => order.work_status && order.work_status.toLowerCase() === 'hold'
         ).length;
 
+        const assigned = result.filter(
+          (order) => order.assigned_status && order.assigned_status.toLowerCase() === 'assigned'
+        ).length;
+        const notAssigned = result.filter(
+          (order) => order.assigned_status && order.assigned_status.toLowerCase() === 'not assigned'
+        ).length;
+
         setPendingOrderCount(pending);
         setInProgressOrderCount(inProgress);
         setCompletedOrderCount(completed);
         setHoldOrderCount(hold);
+        setAssignedOrderCount(assigned);
+        setNotAssignedOrderCount(notAssigned);
 
       } catch (error) {
         console.error('Error fetching orders:', error);
@@ -162,14 +173,17 @@ function Dashboard() {
   const cards = [
     { title: "Customers", count: customerCount, path: "/a-customertable" },
     { title: "Workers", count: workerCount, path: "/a-workertable" },
-    { title: "Orders", count: orderCount, path: "/a-view-orders" },
-    { title: "Cancelled", count: cancelOrderCount, path: "/a-cancel-orders" },
-    { title: "Delivered", count: deliveredOrderCount, path: "/a-view-orders" },
-    { title: "Pending", count: pendingOrderCount, path: "/a-view-orders" },
-    { title: "In progress", count: inProgressOrderCount, path: "/a-view-orders" },
-    { title: "Completed", count: completedOrderCount, path: "/a-view-orders" },
-    { title: "On Hold", count: holdOrderCount, path: "/a-view-orders" },
+    { title: "Orders", count: orderCount, path: "/a-orderslist?search=Orders" },
+    // { title: "Assigned", count: assignedOrderCount, path: "/a-orderslist?search=Assigned" },
+    // { title: "Not Assigned", count: notAssignedOrderCount, path: "/a-orderslist?search=Not%20Assigned" },
+    { title: "Cancelled", count: cancelOrderCount, path: "/a-cancel-orders?search=Cancelled" },
+    { title: "Delivered", count: deliveredOrderCount, path: "/a-orderslist?search=Delivered" },
+    { title: "Pending", count: pendingOrderCount, path: "/a-orderslist?search=Pending" },
+    { title: "In progress", count: inProgressOrderCount, path: "/a-orderslist?search=In%20progress" },
+    { title: "Completed", count: completedOrderCount, path: "/a-orderslist?search=Completed" },
+    { title: "On Hold", count: holdOrderCount, path: "/a-orderslist?search=On%20Hold" },
   ];
+
 
   // const barData = {
   //   labels: ['Sales', 'Repairs', 'Orders'],

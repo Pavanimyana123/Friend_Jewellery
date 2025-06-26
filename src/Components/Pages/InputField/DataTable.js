@@ -6,7 +6,7 @@ import {
   useSortBy,
 } from "react-table";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { FaTimes } from "react-icons/fa"; 
+import { FaTimes } from "react-icons/fa";
 
 // Global Search & Date Filter Component
 function GlobalFilter({
@@ -69,7 +69,7 @@ function GlobalFilter({
               onClick={clearFilters}
               className="text-danger fs-4 cursor-pointer"
               title="Clear Filters"
-              style={{ cursor: "pointer", marginTop:'7px' }}
+              style={{ cursor: "pointer", marginTop: '7px' }}
             />
           )}
         </div>
@@ -83,9 +83,9 @@ function GlobalFilter({
 
 
 // Reusable DataTable Component
-export default function DataTable({ columns, data }) {
+export default function DataTable({ columns, data, defaultSearch = "" }) {
   const [filteredData, setFilteredData] = useState(data);
-  const [searchTerm, setSearchTerm] = useState("");
+  const [searchTerm, setSearchTerm] = useState(defaultSearch);
   const [fromDate, setFromDate] = useState("");
   const [toDate, setToDate] = useState("");
 
@@ -93,6 +93,11 @@ export default function DataTable({ columns, data }) {
   useEffect(() => {
     applyFilters(searchTerm, fromDate, toDate);
   }, [searchTerm, fromDate, toDate, data]);
+
+  useEffect(() => {
+    // Update search term when defaultSearch prop changes (when navigating between pages)
+    setSearchTerm(defaultSearch);
+  }, [defaultSearch]);
 
   const applyFilters = (searchTerm, fromDate, toDate) => {
     let filtered = data;
@@ -203,7 +208,7 @@ export default function DataTable({ columns, data }) {
       </div>
 
       <div className="d-flex align-items-center justify-content-between mt-3">
-        <div className="dataTable_pageInfo" style={{marginLeft:'-20px'}}>
+        <div className="dataTable_pageInfo" style={{ marginLeft: '-20px' }}>
           Page{" "}
           <strong>
             {pageIndex + 1} of {pageOptions.length}
