@@ -1,0 +1,20 @@
+/* PrivacyPolicy.css */
+
+/* Custom heading color */
+.custom-heading-main {
+  color: #a36e29;
+  margin-top: 100px;
+}
+.custom-heading {
+  color: #a36e29;
+}
+
+/* Custom link color */
+.custom-link {
+  color: #a36e29;
+}
+
+.custom-link:hover {
+  color: #8c5d24;
+  text-decoration: underline;
+}

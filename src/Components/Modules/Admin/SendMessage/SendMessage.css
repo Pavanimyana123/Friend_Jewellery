@@ -1,0 +1,157 @@
+.send-message-container {
+  max-width: 600px;
+  padding: 55px;
+  font-family: Arial, sans-serif;
+  margin: auto;
+  min-height: 100vh;
+}
+
+.phone-numbers-section,
+.templates-section,
+.message-section {
+  margin-bottom: 20px;
+  padding: 15px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+}
+
+.number-input-group {
+  display: flex;
+  margin-bottom: 10px;
+}
+
+.phone-input {
+  flex: 1;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  margin-right: 10px;
+}
+
+.remove-btn {
+  background: #ff4757;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  width: 30px;
+  cursor: pointer;
+}
+
+.remove-btn:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}
+
+.add-btn {
+  background: #2ed573;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.template-options {
+  display: flex;
+  flex-direction: column;
+}
+
+.template-option {
+  display: flex;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.template-option input {
+  margin-right: 10px;
+}
+
+.message-textarea {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  resize: vertical;
+}
+
+.send-btn {
+  background: #1e90ff;
+  color: white;
+  border: none;
+  padding: 12px 20px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  width: 100%;
+}
+
+.send-btn:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}
+
+.status-message {
+  margin-top: 15px;
+  padding: 10px;
+  border-radius: 4px;
+  text-align: center;
+}
+
+.status-message.success {
+  background: #d4edda;
+  color: #155724;
+}
+
+.status-message.error {
+  background: #f8d7da;
+  color: #721c24;
+}
+
+
+/* Error message should be below input */
+.error-text-below {
+  color: red;
+  font-size: 13px;
+  margin-top: 4px;
+  padding-left: 2px;
+}
+
+.error-input {
+  border: 1px solid red;
+}
+
+.number-input-group {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 15px;
+}
+
+.input-wrapper {
+  display: flex;
+  align-items: center;
+}
+
+.phone-input {
+  padding: 8px;
+  font-size: 16px;
+  width: 250px;
+}
+
+.remove-btn {
+  margin-left: 8px;
+  background: red;
+  color: white;
+  border: none;
+  cursor: pointer;
+  font-size: 18px;
+  padding: 0 10px;
+}
+
+.add-btn {
+  background: #007bff;
+  color: white;
+  padding: 8px 14px;
+  border: none;
+  cursor: pointer;
+  margin-top: 10px;
+}

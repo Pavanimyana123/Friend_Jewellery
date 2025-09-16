@@ -56,6 +56,8 @@ import C_GalleryDisplay from "./Components/Modules/Customer/Gallery/Gallery";
 import C_Broucher from "./Components/Modules/Customer/Broucher/Broucher";
 import Receipts from "./Components/Modules/Admin/Orders/Receipts";
 import ViewReceipts from "./Components/Modules/Admin/Orders/ViewReceipts";
+import SendMessage from "./Components/Modules/Admin/SendMessage/SendMessage";
+import Privacypolicy from "./Website/Pages/Privacypolicy/Privacypolicy";
 
 export default function MainApp() {
   return (
@@ -80,6 +82,7 @@ export default function MainApp() {
           <Route path="/store" exact element={<Jewels />} />
           <Route path="/sadashri-jewelkart" exact element={<Jewelkart />} />
           <Route path="/Enterprise" exact element={<Enterprise />} />
+          <Route path="/privacy-policy" exact element={<Privacypolicy />} />
 
           {/* Protected Routes */}
           <Route
@@ -142,6 +145,15 @@ export default function MainApp() {
             element={
               <ProtectedRoute>
                 <Broucher />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/a-sendmessage"
+            exact
+            element={
+              <ProtectedRoute>
+                <SendMessage />
               </ProtectedRoute>
             }
           />

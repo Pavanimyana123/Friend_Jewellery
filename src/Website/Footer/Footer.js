@@ -172,6 +172,7 @@ const Footer = () => {
               <p><a href="/store" className="footer-link">Our Store</a></p>
               <p><a href="/AboutUs" className="footer-link">About Us</a></p>
               <p><a href="/contactUs" className="footer-link">Contact Us</a></p>
+              <p><a href="/privacy-policy" className="footer-link">Privacy Policy</a></p>
             </div>
 
             <div className="footer-section">

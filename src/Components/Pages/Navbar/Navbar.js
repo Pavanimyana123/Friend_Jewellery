@@ -181,6 +181,18 @@ function Navbar() {
                 </Link>
 
                 <Link
+                    to="/a-sendmessage"
+                    onClick={handleItemClick}
+                    className={
+                        window.location.pathname === '/a-sendmessage' || window.location.pathname === '/a-sendmessage'
+                            ? 'active'
+                            : ''
+                    }
+                >
+                    Send Message
+                </Link>
+
+                <Link
                     to="/login"
                     onClick={handleItemClick}
                     className='logout-desktop'
