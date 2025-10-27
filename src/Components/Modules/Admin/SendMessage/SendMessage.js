@@ -14,9 +14,12 @@ function SendMessage() {
   const templates = {
     cust_reg:
       'Dear Customer, please complete your registration by clicking the link below: https://newfriendsjewellers.com/c-register',
+
     app_download:
-      'Dear Customer, Please click on the link below to download the APK: 👉 https://newfriendsjewellers.com/login',
+      'Dear Customer, Please click on the link below to download the APK to know your order details : https://drive.google.com/file/d/1oVzEOoTlWQnQpZB1-iln3NjbwjXw-Ybn/view?usp=drive_link - NEW FRIENDS JEWELLERY',
   };
+
+
 
   // Add a new phone number field
   const handleAddNumber = () => {
@@ -184,14 +187,15 @@ function SendMessage() {
               />
               <span>Customer Registration</span>
             </label>
-            {/* <label className="template-option">
+            <label className="template-option">
               <input
                 type="checkbox"
                 checked={selectedTemplate === 'app_download'}
                 onChange={() => handleTemplateChange('app_download')}
               />
               <span>App Download</span>
-            </label> */}
+            </label>
+
           </div>
         </div>
 

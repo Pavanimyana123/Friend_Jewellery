@@ -338,6 +338,16 @@ const ViewOrders = () => {
         id: 'order_no', // Add an ID for the order number column
       },
       {
+        Header: 'Bill No.',
+        accessor: 'bill_number',
+        id: 'bill_number', // Add an ID for the order number column
+      },
+      // {
+      //   Header: 'Voucher No.',
+      //   accessor: 'voucher_number',
+      //   id: 'voucher_number', 
+      // },
+      {
         Header: 'Total Wt',
         accessor: 'overall_total_weight',
         id: 'overall_total_weight', // Add an ID for the total weight column

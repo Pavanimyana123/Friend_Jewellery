@@ -43,6 +43,7 @@ function Order() {
     pan_card: "",
     date: "",
     order_number: "",
+    bill_number:'',
     estimated_delivery_date: "",
     metal: "Gold",
     category: "",
@@ -445,6 +446,7 @@ function Order() {
 
   const handleAddItem = () => {
     const newOrderNumber = formData.order_number || `ORD-${Date.now()}`;
+    const billNumber = formData.bill_number;
 
     const updatedFormData = {
       ...formData,
@@ -452,6 +454,7 @@ function Order() {
       date: selectedDate,
       account_id: selectedCustomer?.id,
       order_number: newOrderNumber,
+      bill_number:billNumber,
     };
 
     let updatedOrders;
@@ -515,6 +518,7 @@ function Order() {
       order_status: "Placed",
       qty,
       order_number: newOrderNumber,
+      bill_number:'',
       rate,
       pricing,
       pieace_cost: pieceCost,
@@ -698,7 +702,7 @@ function Order() {
               </div>
               <div className="order-form-right">
                 <div className="order-form-section">
-                  <Row className="">
+                  {/* <Row className="">
                     <InputField
                       label="Date"
                       type="date"
@@ -706,9 +710,12 @@ function Order() {
                       value={selectedDate}
                       onChange={(e) => setSelectedDate(e.target.value)}
                     />
+                  </Row> */}
+                  <Row>
+                    <InputField label="Order No" name="order_number" value={formData.order_number} readonly/>
                   </Row>
                   <Row>
-                    <InputField label="Order No" name="order_number" value={formData.order_number} onChange={handleChange} />
+                    <InputField label="Bill No" name="bill_number" value={formData.bill_number} onChange={handleChange} />
                   </Row>
                   {/* <Row style={{ marginBottom: "-12px" }}>
                     <InputField label="Estimated Delivery Date" name="estimated_delivery_date" type="date" value={formData.estimated_delivery_date} onChange={handleChange} />
@@ -793,20 +800,20 @@ function Order() {
                 <Col xs={12} md={1}>
                   <InputField label="Length" name="o_length" value={formData.o_length} type="text" onChange={handleChange} />
                 </Col>
-                <Col xs={12} md={1}>
+                <Col xs={12} md={2}>
                   <InputField label="Gross Wt" name="gross_weight" value={formData.gross_weight} type="text" onChange={handleChange} />
                 </Col>
-                <Col xs={12} md={1}>
+                <Col xs={12} md={2}>
                   <InputField label="Stone Wt" name="stone_weight" value={formData.stone_weight} type="text" onChange={handleChange} />
                 </Col>
                 <Col xs={12} md={2}>
                   <InputField label="Stone Name" name="stone_name" value={formData.stone_name} type="text" onChange={handleChange} />
                 </Col>
 
-                <Col xs={12} md={1}>
+                <Col xs={12} md={2}>
                   <InputField label="St Price" name="stone_price" value={formData.stone_price} type="text" onChange={handleChange} />
                 </Col>
-                <Col xs={12} md={1}>
+                <Col xs={12} md={2}>
                   <InputField label="Weight BW" name="weight_bw" value={formData.weight_bw} type="text" onChange={handleChange} readOnly />
                 </Col>
                 <Col xs={12} md={2}>
@@ -822,19 +829,19 @@ function Order() {
                     ]}
                   />
                 </Col>
-                <Col xs={12} md={1}>
+                <Col xs={12} md={2}>
                   <InputField label="Wastage %" name="wastage_percentage" value={formData.wastage_percentage} type="text" onChange={handleChange} />
                 </Col>
-                <Col xs={12} md={1}>
+                <Col xs={12} md={2}>
                   <InputField label="W.Wt" name="wastage_weight" value={formData.wastage_weight} type="text" onChange={handleChange} readOnly />
                 </Col>
-                <Col xs={12} md={1}>
+                <Col xs={12} md={2}>
                   <InputField label="Total Wt" name="total_weight_aw" value={formData.total_weight_aw} type="text" onChange={handleChange} readOnly />
                 </Col>
-                <Col xs={12} md={1}>
+                <Col xs={12} md={2}>
                   <InputField label="Rate" name="rate" value={formData.rate} type="text" onChange={handleChange} />
                 </Col>
-                <Col xs={12} md={1}>
+                <Col xs={12} md={2}>
                   <InputField
                     label="Amount"
                     name="amount"
@@ -859,7 +866,7 @@ function Order() {
                   />
                 </Col>
 
-                <Col xs={12} md={1}>
+                <Col xs={12} md={2}>
                   <InputField
                     label={formData.mc_on || "MC / Gram"}  // Dynamically change label
                     name="mc_percentage"
@@ -869,7 +876,7 @@ function Order() {
                   />
                 </Col>
 
-                <Col xs={12} md={1}>
+                <Col xs={12} md={2}>
                   <InputField label="Total MC" name="total_mc" value={formData.total_mc} type="text" onChange={handleChange} />
                 </Col>
                 <Col xs={12} md={2}>
@@ -884,7 +891,7 @@ function Order() {
                     ]}
                   />
                 </Col>
-                <Col xs={12} md={1}>
+                <Col xs={12} md={2}>
                   <InputField label="Tax Amt" name="tax_amount" value={formData.tax_amount} type="text" onChange={handleChange} readOnly />
                 </Col>
                 <Col xs={12} md={2}>
