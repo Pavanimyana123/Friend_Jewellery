@@ -7,9 +7,10 @@ import axios from "axios";
 import Navbar from '../../../Pages/Navbar/Navbar';
 import { Row, Col, Button } from 'react-bootstrap';
 import baseURL from '../../../../Url/NodeBaseURL';
+import baseURL2 from '../../../../Url/NodeBaseURL2';
 
 
-function Customer_Master() { 
+function Customer_Master() {
   const location = useLocation();
   const [isSaving, setIsSaving] = useState(false);
   const [formData, setFormData] = useState({
@@ -226,7 +227,7 @@ function Customer_Master() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setIsSaving(true); // Disable button and show "Saving..."
+    setIsSaving(true);
 
     if (!validateForm()) {
       setIsSaving(false);
@@ -234,14 +235,13 @@ function Customer_Master() {
     }
 
     try {
-      
+      // Duplicate check only on baseURL
       if (!id) {
         const response = await fetch(`${baseURL}/accounts`);
-        if (!response.ok) {
-          throw new Error("Failed to fetch data for duplicate check.");
-        }
+        if (!response.ok) throw new Error("Failed to fetch data for duplicate check.");
+
         const result = await response.json();
-        const isDuplicateMobile = result.some((item) => item.mobile === formData.mobile);
+        const isDuplicateMobile = result.some(item => item.mobile === formData.mobile);
 
         if (isDuplicateMobile) {
           alert("This mobile number is already registered as Customer.");
@@ -249,35 +249,52 @@ function Customer_Master() {
         }
       }
 
-      // Proceed with saving the record (POST or PUT)
+      // MAIN API call
       const method = id ? "PUT" : "POST";
-      const endpoint = id
+      const endpoint1 = id
         ? `${baseURL}/update-account/${id}`
         : `${baseURL}/add-account`;
 
-      const saveResponse = await fetch(endpoint, {
+      const response1 = await fetch(endpoint1, {
         method,
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ ...formData }),
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
       });
 
-      if (saveResponse.ok) {
-        alert(`Customer ${id ? "updated" : "created"} successfully!`);
-        const from = location.state?.from || "/a-customertable";
-        navigate(from);
+
+      const endpoint2 = `${baseURL2}/account-details`;
+
+      const response2 = await fetch(endpoint2, {
+        method,
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
+
+      // Check success for both
+      if (response1.ok) {
+        if (response2.ok) {
+          alert(`Customer ${id ? "updated" : "created"} successfully!`);
+        } else {
+          alert(
+            `Customer ${id ? "updated" : "created"
+            } successfully!`
+          );
+        }
+
+        navigate(location.state?.from || "/a-customertable");
       } else {
-        alert("Failed to save customer.");
+        alert("Failed to save customer in MAIN database.");
       }
+
+
     } catch (error) {
       console.error("Error:", error);
-      alert("An error occurred while processing the request.");
-    }
-    finally {
-      setIsSaving(false); // Re-enable button after submission
+      alert("Error occurred while saving.");
+    } finally {
+      setIsSaving(false);
     }
   };
+
 
   const handleBack = () => {
     const from = location.state?.from || "/a-customertable";

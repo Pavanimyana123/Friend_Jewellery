@@ -46,15 +46,15 @@ const RepairsTable = () => {
             <FaEye
               style={{ cursor: 'pointer', marginLeft: '10px', color: 'green' }}
               onClick={() => handleView(row.original)}
-            />            
+            />
             <FaEdit
               style={{ cursor: 'pointer', marginLeft: '10px', color: 'blue', }}
               onClick={() => handleEdit(row.original.id)}
-            />            
+            />
             <FaTrash
               style={{ cursor: 'pointer', marginLeft: '10px', color: 'red', }}
               onClick={() => handleDelete(row.original.id)}
-            />            
+            />
           </div>
         ),
       },
@@ -112,7 +112,7 @@ const RepairsTable = () => {
 
         if (response.ok) {
           alert('Customer deleted successfully!');
-          setData((prevData) => prevData.filter((customer) => customer.id!== id));
+          setData((prevData) => prevData.filter((customer) => customer.id !== id));
         } else {
           console.error('Failed to delete customer');
           alert('Failed to delete customer.');
@@ -140,82 +140,82 @@ const RepairsTable = () => {
 
   return (
     <>
-    <Navbar />
-    <div className="main-container">
-      <div className="customers-table-container">
-        <Row className="mb-3">
-          <Col className="d-flex justify-content-between align-items-center">
-            <h3>Customers</h3>
-            <Button
-              className="create_but"
-              onClick={handleCreate}
-              style={{ backgroundColor: '#a36e29', borderColor: '#a36e29' }}
-            >
-              + Create
-            </Button>
-          </Col>
-        </Row>
-        {loading ? (
-          <div>Loading...</div>
-        ) : (
-          <DataTable columns={columns} data={[...data].reverse()} />
-        )}
-      </div>
-
-      {/* Modal for displaying full data */}
-      <Modal show={showModal} onHide={() => setShowModal(false)} size="lg">
-        <Modal.Header closeButton>
-          <Modal.Title>Customer Details</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          {modalData && (
-            <div className="modal-content-grid">
-              <Row>
-                <Col md={6}><strong>Trade Name:</strong> {modalData.account_name}</Col>
-                <Col md={6}><strong>Print Name:</strong> {modalData.print_name}</Col>
-              </Row>
-              <Row>
-                <Col md={6}><strong>Account Group:</strong> {modalData.account_group}</Col>
-                <Col md={6}><strong>Pincode:</strong> {modalData.pincode}</Col>
-              </Row>
-              <Row>
-                <Col md={6}><strong>State:</strong> {modalData.state}</Col>
-                <Col md={6}><strong>State Code:</strong> {modalData.state_code}</Col>
-              </Row>
-              <Row>
-                <Col md={6}><strong>Phone:</strong> {modalData.phone}</Col>
-                <Col md={6}><strong>Mobile:</strong> {modalData.mobile}</Col>
-              </Row>
-              <Row>
-                <Col md={6}><strong>Email:</strong> {modalData.email}</Col>
-                <Col md={6}><strong>Birthday:</strong> {modalData.birthday}</Col>
-              </Row>
-              <Row>
-                <Col md={6}><strong>Anniversary:</strong> {modalData.anniversary}</Col>
-                <Col md={6}><strong>Bank Account No:</strong> {modalData.bank_account_no}</Col>
-              </Row>
-              <Row>
-                <Col md={6}><strong>Bank Name:</strong> {modalData.bank_name}</Col>
-                <Col md={6}><strong>IFSC Code:</strong> {modalData.ifsc_code}</Col>
-              </Row>
-              <Row>
-                <Col md={6}><strong>Branch:</strong> {modalData.branch}</Col>
-                <Col md={6}><strong>GSTIN:</strong> {modalData.gst_in}</Col>
-              </Row>
-              <Row>
-                <Col md={6}><strong>Aadhar Card:</strong> {modalData.aadhar_card}</Col>
-                <Col md={6}><strong>PAN Card:</strong> {modalData.pan_card}</Col>
-              </Row>
-            </div>
+      <Navbar />
+      <div className="main-container">
+        <div className="customers-table-container">
+          <Row className="mb-3">
+            <Col className="d-flex justify-content-between align-items-center">
+              <h3>Customers</h3>
+              <Button
+                className="create_but"
+                onClick={handleCreate}
+                style={{ backgroundColor: '#a36e29', borderColor: '#a36e29' }}
+              >
+                + Create
+              </Button>
+            </Col>
+          </Row>
+          {loading ? (
+            <div>Loading...</div>
+          ) : (
+            <DataTable columns={columns} data={[...data].reverse()} />
           )}
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={() => setShowModal(false)}>
-            Close
-          </Button>
-        </Modal.Footer>
-      </Modal>
-    </div>
+        </div>
+
+        {/* Modal for displaying full data */}
+        <Modal show={showModal} onHide={() => setShowModal(false)} size="lg">
+          <Modal.Header closeButton>
+            <Modal.Title>Customer Details</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            {modalData && (
+              <div className="modal-content-grid">
+                <Row>
+                  <Col md={6}><strong>Trade Name:</strong> {modalData.account_name}</Col>
+                  <Col md={6}><strong>Print Name:</strong> {modalData.print_name}</Col>
+                </Row>
+                <Row>
+                  <Col md={6}><strong>Account Group:</strong> {modalData.account_group}</Col>
+                  <Col md={6}><strong>Pincode:</strong> {modalData.pincode}</Col>
+                </Row>
+                <Row>
+                  <Col md={6}><strong>State:</strong> {modalData.state}</Col>
+                  <Col md={6}><strong>State Code:</strong> {modalData.state_code}</Col>
+                </Row>
+                <Row>
+                  <Col md={6}><strong>Phone:</strong> {modalData.phone}</Col>
+                  <Col md={6}><strong>Mobile:</strong> {modalData.mobile}</Col>
+                </Row>
+                <Row>
+                  <Col md={6}><strong>Email:</strong> {modalData.email}</Col>
+                  <Col md={6}><strong>Birthday:</strong> {modalData.birthday}</Col>
+                </Row>
+                <Row>
+                  <Col md={6}><strong>Anniversary:</strong> {modalData.anniversary}</Col>
+                  <Col md={6}><strong>Bank Account No:</strong> {modalData.bank_account_no}</Col>
+                </Row>
+                <Row>
+                  <Col md={6}><strong>Bank Name:</strong> {modalData.bank_name}</Col>
+                  <Col md={6}><strong>IFSC Code:</strong> {modalData.ifsc_code}</Col>
+                </Row>
+                <Row>
+                  <Col md={6}><strong>Branch:</strong> {modalData.branch}</Col>
+                  <Col md={6}><strong>GSTIN:</strong> {modalData.gst_in}</Col>
+                </Row>
+                <Row>
+                  <Col md={6}><strong>Aadhar Card:</strong> {modalData.aadhar_card}</Col>
+                  <Col md={6}><strong>PAN Card:</strong> {modalData.pan_card}</Col>
+                </Row>
+              </div>
+            )}
+          </Modal.Body>
+          <Modal.Footer>
+            <Button variant="secondary" onClick={() => setShowModal(false)}>
+              Close
+            </Button>
+          </Modal.Footer>
+        </Modal>
+      </div>
     </>
   );
 };
