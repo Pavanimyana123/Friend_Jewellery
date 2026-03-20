@@ -43,7 +43,8 @@ function Order() {
     pan_card: "",
     date: "",
     order_number: "",
-    bill_number:'',
+    bill_number: '',
+    manual_order_number: '',
     estimated_delivery_date: "",
     metal: "Gold",
     category: "",
@@ -447,6 +448,7 @@ function Order() {
   const handleAddItem = () => {
     const newOrderNumber = formData.order_number || `ORD-${Date.now()}`;
     const billNumber = formData.bill_number;
+    const manualorderNumber = formData.manual_order_number;
 
     const updatedFormData = {
       ...formData,
@@ -454,7 +456,8 @@ function Order() {
       date: selectedDate,
       account_id: selectedCustomer?.id,
       order_number: newOrderNumber,
-      bill_number:billNumber,
+      bill_number: billNumber,
+      manual_order_number: manualorderNumber,
     };
 
     let updatedOrders;
@@ -518,7 +521,8 @@ function Order() {
       order_status: "Placed",
       qty,
       order_number: newOrderNumber,
-      bill_number:'',
+      bill_number: '',
+      manual_order_number: '',
       rate,
       pricing,
       pieace_cost: pieceCost,
@@ -712,17 +716,50 @@ function Order() {
                     />
                   </Row> */}
                   <Row>
-                    <InputField label="Order No" name="order_number" value={formData.order_number} readonly/>
+                    <Col xs={12} md={6}>
+                      <InputField
+                        label="Order No"
+                        name="order_number"
+                        value={formData.order_number}
+                        readOnly
+                      />
+                    </Col>
+                    <Col xs={12} md={6}>
+                      <InputField
+                        label="Bill No"
+                        name="bill_number"
+                        value={formData.bill_number}
+                        onChange={handleChange}
+                      />
+                    </Col>
                   </Row>
+
                   <Row>
-                    <InputField label="Bill No" name="bill_number" value={formData.bill_number} onChange={handleChange} />
+                    <Col xs={12} md={6}>
+                      <InputField
+                        label="Manual Order No"
+                        name="manual_order_number"
+                        value={formData.manual_order_number}
+                        onChange={handleChange}
+                      />
+                    </Col>
+                    <Col xs={12} md={6}>
+                      <InputField
+                        label="Est Delivery Date"
+                        name="estimated_delivery_date"
+                        type="date"
+                        value={formData.estimated_delivery_date}
+                        min={new Date().toISOString().split("T")[0]}
+                        onChange={handleChange}
+                      />
+                    </Col>
                   </Row>
                   {/* <Row style={{ marginBottom: "-12px" }}>
                     <InputField label="Estimated Delivery Date" name="estimated_delivery_date" type="date" value={formData.estimated_delivery_date} onChange={handleChange} />
                   </Row> */}
 
 
-                  <Row style={{ marginBottom: "-12px" }}>
+                  {/* <Row style={{ marginBottom: "-12px" }}>
                     <InputField
                       label="Est Delivery Date"
                       name="estimated_delivery_date"
@@ -731,7 +768,7 @@ function Order() {
                       min={new Date().toISOString().split("T")[0]}
                       onChange={handleChange}
                     />
-                  </Row>
+                  </Row> */}
 
 
 

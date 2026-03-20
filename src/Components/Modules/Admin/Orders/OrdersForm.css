@@ -28,11 +28,11 @@
   }
   
   .order-form-left {
-    flex: 0 0 85%; /* 80% width */
+    flex: 0 0 75%; /* 80% width */
   }
   
   .order-form-right {
-    flex: 0 0 15%; /* 20% width */
+    flex: 0 0 25%; /* 20% width */
   }
 
   .order-form-section {

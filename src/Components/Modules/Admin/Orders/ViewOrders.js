@@ -338,6 +338,11 @@ const ViewOrders = () => {
         id: 'order_no', // Add an ID for the order number column
       },
       {
+        Header: 'Manual Order No.',
+        accessor: 'manual_order_number',
+        id: 'manual_order_number', // Add an ID for the order number column
+      },
+      {
         Header: 'Bill No.',
         accessor: 'bill_number',
         id: 'bill_number', // Add an ID for the order number column
