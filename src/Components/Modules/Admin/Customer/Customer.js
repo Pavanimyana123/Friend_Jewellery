@@ -256,10 +256,10 @@ const handleSubmit = async (e) => {
     // Array of all endpoints to call
     const endpoints = [
       { url: baseURL, endpoint: id ? `/update-account/${id}` : `/add-account`, method: id ? "PUT" : "POST" },
-      { url: baseURL2, endpoint: `/account-details`, method: id ? "PUT" : "POST" },
-      { url: baseURL3, endpoint: `/account-details`, method: id ? "PUT" : "POST" },
-      { url: baseURL4, endpoint: `/account-details`, method: id ? "PUT" : "POST" },
-      { url: baseURL5, endpoint: `/account-details`, method: id ? "PUT" : "POST" }
+      { url: baseURL2, endpoint: `/account-details`, method: "POST" },
+      { url: baseURL3, endpoint: `/account-details`, method: "POST" },
+      { url: baseURL4, endpoint: `/account-details`, method: "POST" },
+      { url: baseURL5, endpoint: `/account-details`, method: "POST" }
     ];
 
     // Make all API calls
