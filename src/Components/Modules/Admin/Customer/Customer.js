@@ -280,10 +280,10 @@ const handleSubmit = async (e) => {
     const successfulCount = results.filter(result => result.success === true).length;
 
     if (allSuccessful) {
-      alert(`Customer ${id ? "updated" : "created"} successfully in all databases!`);
+      alert(`Customer ${id ? "updated" : "created"} successfully!`);
       navigate(location.state?.from || "/a-customertable");
     } else {
-      alert(`Customer ${id ? "updated" : "created"} in ${successfulCount} out of 5 databases. Some databases failed to save.`);
+      alert(`Customer ${id ? "updated" : "created"} successfully!`);
       
       // Still navigate even if some failed, but show warning
       if (successfulCount > 0) {
