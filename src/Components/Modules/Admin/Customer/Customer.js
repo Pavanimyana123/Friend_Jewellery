@@ -8,6 +8,9 @@ import Navbar from '../../../Pages/Navbar/Navbar';
 import { Row, Col, Button } from 'react-bootstrap';
 import baseURL from '../../../../Url/NodeBaseURL';
 import baseURL2 from '../../../../Url/NodeBaseURL2';
+import baseURL3 from '../../../../Url/NodeBaseURL3';
+import baseURL4 from '../../../../Url/NodeBaseURL4';
+import baseURL5 from '../../../../Url/NodeBaseURL5';
 
 
 function Customer_Master() {
@@ -225,75 +228,76 @@ function Customer_Master() {
     return true;
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setIsSaving(true);
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  setIsSaving(true);
 
-    if (!validateForm()) {
-      setIsSaving(false);
-      return;
+  if (!validateForm()) {
+    setIsSaving(false);
+    return;
+  }
+
+  try {
+    // Duplicate check only on baseURL
+    if (!id) {
+      const response = await fetch(`${baseURL}/accounts`);
+      if (!response.ok) throw new Error("Failed to fetch data for duplicate check.");
+
+      const result = await response.json();
+      const isDuplicateMobile = result.some(item => item.mobile === formData.mobile);
+
+      if (isDuplicateMobile) {
+        alert("This mobile number is already registered as Customer.");
+        setIsSaving(false);
+        return;
+      }
     }
 
-    try {
-      // Duplicate check only on baseURL
-      if (!id) {
-        const response = await fetch(`${baseURL}/accounts`);
-        if (!response.ok) throw new Error("Failed to fetch data for duplicate check.");
+    // Array of all endpoints to call
+    const endpoints = [
+      { url: baseURL, endpoint: id ? `/update-account/${id}` : `/add-account`, method: id ? "PUT" : "POST" },
+      { url: baseURL2, endpoint: `/account-details`, method: id ? "PUT" : "POST" },
+      { url: baseURL3, endpoint: `/account-details`, method: id ? "PUT" : "POST" },
+      { url: baseURL4, endpoint: `/account-details`, method: id ? "PUT" : "POST" },
+      { url: baseURL5, endpoint: `/account-details`, method: id ? "PUT" : "POST" }
+    ];
 
-        const result = await response.json();
-        const isDuplicateMobile = result.some(item => item.mobile === formData.mobile);
-
-        if (isDuplicateMobile) {
-          alert("This mobile number is already registered as Customer.");
-          return;
-        }
-      }
-
-      // MAIN API call
-      const method = id ? "PUT" : "POST";
-      const endpoint1 = id
-        ? `${baseURL}/update-account/${id}`
-        : `${baseURL}/add-account`;
-
-      const response1 = await fetch(endpoint1, {
+    // Make all API calls
+    const promises = endpoints.map(async ({ url, endpoint, method }) => {
+      const fullUrl = `${url}${endpoint}`;
+      const response = await fetch(fullUrl, {
         method,
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
       });
+      return { url, success: response.ok };
+    });
 
+    const results = await Promise.all(promises);
+    
+    // Check results
+    const allSuccessful = results.every(result => result.success === true);
+    const successfulCount = results.filter(result => result.success === true).length;
 
-      const endpoint2 = `${baseURL2}/account-details`;
-
-      const response2 = await fetch(endpoint2, {
-        method,
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
-      });
-
-      // Check success for both
-      if (response1.ok) {
-        if (response2.ok) {
-          alert(`Customer ${id ? "updated" : "created"} successfully!`);
-        } else {
-          alert(
-            `Customer ${id ? "updated" : "created"
-            } successfully!`
-          );
-        }
-
+    if (allSuccessful) {
+      alert(`Customer ${id ? "updated" : "created"} successfully in all databases!`);
+      navigate(location.state?.from || "/a-customertable");
+    } else {
+      alert(`Customer ${id ? "updated" : "created"} in ${successfulCount} out of 5 databases. Some databases failed to save.`);
+      
+      // Still navigate even if some failed, but show warning
+      if (successfulCount > 0) {
         navigate(location.state?.from || "/a-customertable");
-      } else {
-        alert("Failed to save customer in MAIN database.");
       }
-
-
-    } catch (error) {
-      console.error("Error:", error);
-      alert("Error occurred while saving.");
-    } finally {
-      setIsSaving(false);
     }
-  };
+
+  } catch (error) {
+    console.error("Error:", error);
+    alert("Error occurred while saving.");
+  } finally {
+    setIsSaving(false);
+  }
+};
 
 
   const handleBack = () => {
